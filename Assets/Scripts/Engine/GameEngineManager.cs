@@ -33,7 +33,9 @@ public class GameEngineManager : MonoBehaviour
     public SquareMapHolderObject SquareMap;
     public UserInterfaceObject UserInterface;
     public InputHandler InputHandler;
-    public Transform Camera;
+    public Transform CameraTransform;
+    public PlatformManager PlatformManager;
+    public ScreenOrientationManager ScreenOrientationManager;
 
     private Button updateButton;
     private Button actionButton;
@@ -109,7 +111,9 @@ public class GameEngineManager : MonoBehaviour
         updateButton.onClick.AddListener(UpdateButtonClick);
         actionButton = UserInterface.ActionButton;
         actionButton.onClick.AddListener(MoveDiscStart);
-        SQLiteHelper.Test();
+        //SQLiteHelper.Test();
+        PlatformManager.Initialize();
+        ScreenOrientationManager.Initialize(this);
     }
 
     private void UpdateButtonClick()
@@ -132,7 +136,7 @@ public class GameEngineManager : MonoBehaviour
 
     public void MoveCamera(Vector3 panVector)
     {
-        Camera.Translate(panVector, Space.World);
+        CameraTransform.Translate(panVector, Space.World);
     }
 
     private void RenderChanges(object sender, ActionCompletedEventArgs e)
@@ -156,7 +160,7 @@ public class GameEngineManager : MonoBehaviour
     //TODO: color from list, Find model 
     public void SelectObject(Vector3 position)
     {
-        var camera = Camera.GetComponentInChildren<Camera>();
+        var camera = CameraTransform.GetComponentInChildren<Camera>();
         Ray ray = camera.ScreenPointToRay(position);
         var collide = Physics.Raycast(ray);
         if (collide)
@@ -166,7 +170,7 @@ public class GameEngineManager : MonoBehaviour
             {
                 GameObject hitObject = hit.collider.gameObject;
                 SquareTileObject tile = hitObject.GetComponent<SquareTileObject>();
-                if(tile != null)
+                if (tile != null)
                 {
                     Renderer renderer = hitObject.GetComponentInChildren<Renderer>();
                     if (renderer != null)
@@ -175,8 +179,21 @@ public class GameEngineManager : MonoBehaviour
                         renderer.material = MaterialPool.GetMaterial("Materials/GreenMaterial");
                     }
                 }
-                
+
             }
+        }
+    }
+
+    public void ChangeOrientation(ScreenOrientation orientation)
+    {
+        Camera camera = CameraTransform.GetComponentInChildren<Camera>();
+        if(orientation==ScreenOrientation.Portrait || orientation == ScreenOrientation.PortraitUpsideDown)
+        {
+            camera.orthographicSize = 4;
+        }
+        else 
+        {
+            camera.orthographicSize = 2;
         }
     }
 }

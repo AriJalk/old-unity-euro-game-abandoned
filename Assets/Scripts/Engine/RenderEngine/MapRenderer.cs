@@ -1,12 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using ResourcePool;
-using UnityEngine.Tilemaps;
-using UnityEngine.Experimental.GlobalIllumination;
-using System.Net.Http.Headers;
-using TreeEditor;
-using OpenCover.Framework.Model;
 
 public class MapRenderer : MonoBehaviour
 {
