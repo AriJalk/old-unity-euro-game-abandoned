@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
+    private UserInterfaceObject userInterface;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,23 +18,24 @@ public class InputHandler : MonoBehaviour
 
     }
 
-    public void Initialize()
+    public void Initialize(UserInterfaceObject ui)
     {
-
+        userInterface = ui;
     }
 
-    public void Listen(GameEngineManager manager)
+    public void Listen()
     {
-        const float panDistance = 10f;
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-        float x = horizontalInput * panDistance * Time.deltaTime;
-        float z = verticalInput * panDistance * Time.deltaTime;
-        manager.MoveCamera(new Vector3(x, 0, z));
-        if (Input.GetMouseButtonDown(0))
+        if (horizontalInput != 0 || verticalInput != 0)
+            userInterface.AxisChanged(horizontalInput, verticalInput);
+        bool[] mouseButtons = new bool[2];
+        mouseButtons[0] = Input.GetMouseButton(0);
+        mouseButtons[1] = Input.GetMouseButton(1);
+        if (mouseButtons[0] || mouseButtons[1])
         {
-            var position = Input.mousePosition;
-            manager.SelectObject(position);
+            userInterface.MouseClicked(mouseButtons, Input.mousePosition);
         }
+        
     }
 }

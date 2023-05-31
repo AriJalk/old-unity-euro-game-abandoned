@@ -7,9 +7,10 @@ using UnityEngine.UI;
 public class UserInterfaceObject : MonoBehaviour
 {
     private TextMeshProUGUI textBox;
-    public Button UpdateButton;
-    public Button ActionButton;
+    private Button UpdateButton;
+    private Button ActionButton;
     private GameObject canvas;
+    private GameEngineManager gameEngineManager;
 
     // Start is called before the first frame update
     void Start()
@@ -28,16 +29,31 @@ public class UserInterfaceObject : MonoBehaviour
         textBox.SetText(value);
     }
 
-    public void Initialize()
+    public void Initialize(GameEngineManager manager)
     {
+        gameEngineManager = manager;
         canvas = transform.Find("Canvas").gameObject;
         textBox = canvas.transform.Find("TextBox").GetComponent<TextMeshProUGUI>();
         UpdateButton = canvas.transform.Find("UpdateButton").GetComponent<Button>();
         ActionButton = canvas.transform.Find("ActionButton").GetComponent<Button>();
+        UpdateButton.onClick.AddListener(Something);
     }
 
-    public Button GetButton()
+    private void Something()
     {
-        return UpdateButton;
+        gameEngineManager.MoveDiscs(0, 0, 1, 1);
+    }
+
+    public void AxisChanged(float horizonalInput, float verticalInput)
+    {
+        gameEngineManager.MoveCamera(horizonalInput,verticalInput);
+    }
+
+    public void MouseClicked(bool[] mouseButtons, Vector3 mousePos)
+    {
+        if (mouseButtons[0])
+        {
+            gameEngineManager.SelectObject(mousePos);
+        } 
     }
 }

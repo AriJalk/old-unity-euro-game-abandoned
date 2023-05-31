@@ -37,10 +37,8 @@ public class GameEngineManager : MonoBehaviour
     public PlatformManager PlatformManager;
     public ScreenOrientationManager ScreenOrientationManager;
 
-    private Button updateButton;
-    private Button actionButton;
     private GameStates gameState;
-    private UIStates uiState;
+
     private float time = 0f;
     private int counter = 0;
     private Dictionary<Names.EntityNames, object> logicGameState;
@@ -94,34 +92,31 @@ public class GameEngineManager : MonoBehaviour
         }
         if (gameState == GameStates.PlayerTurn)
         {
-            InputHandler.Listen(this);
+            InputHandler.Listen();
         }
     }
 
     void InitizalizeScripts()
     {
         PoolManager.Initialize();
+
         MaterialPool.Initialize();
         MapRenderer.Initialize(PoolManager);
         DiscRenderer.Initialize(PoolManager);
+
         SquareMap.Initialize();
-        UserInterface.Initialize();
+
+        UserInterface.Initialize(this);
+        InputHandler.Initialize(UserInterface);
+
         TileRulesLogic.Initialize(SquareMap.GetMap().Rows, SquareMap.GetMap().Columns);
-        updateButton = UserInterface.GetButton();
-        updateButton.onClick.AddListener(UpdateButtonClick);
-        actionButton = UserInterface.ActionButton;
-        actionButton.onClick.AddListener(MoveDiscStart);
-        //SQLiteHelper.Test();
+        
         PlatformManager.Initialize();
+
         ScreenOrientationManager.Initialize(this);
     }
 
-    private void UpdateButtonClick()
-    {
-        MoveDiscs(0, 0, 1, 0);
-    }
-
-    private void MoveDiscs(int sourceRow, int sourceCol, int targetRow, int targetCol)
+    public void MoveDiscs(int sourceRow, int sourceCol, int targetRow, int targetCol)
     {
         // Move the disc from the source stack to the destination stack
         gameState = GameStates.Action;
@@ -134,9 +129,12 @@ public class GameEngineManager : MonoBehaviour
         // Render the updated tiles
     }
 
-    public void MoveCamera(Vector3 panVector)
+    public void MoveCamera(float horizontal, float vertical)
     {
-        CameraTransform.Translate(panVector, Space.World);
+        float panSpeed = 10f;
+        float newX=horizontal * panSpeed *Time.deltaTime;
+        float newZ=vertical * panSpeed *Time.deltaTime;
+        CameraTransform.Translate(new Vector3(newX,0,newZ), Space.World);
     }
 
     private void RenderChanges(object sender, ActionCompletedEventArgs e)
