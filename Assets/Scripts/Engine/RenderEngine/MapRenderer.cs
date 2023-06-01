@@ -23,10 +23,10 @@ public class MapRenderer : MonoBehaviour
     public void Initialize(PoolManager pm)
     {
         poolManager = pm;
-        SquarePrefab = Resources.Load<GameObject>("Prefabs/SquareTilePrefab");
+        SquarePrefab = Resources.Load<GameObject>("Prefabs/3D/SquareTilePrefab");
         if (SquarePrefab == null)
         {
-            Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/SquareTilePrefab.");
+            Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/SquareTilePrefab.");
             return;
         }
         poolManager.RegisterPrefab<SquareTileObject>(SquarePrefab);

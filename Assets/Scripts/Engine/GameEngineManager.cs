@@ -36,6 +36,9 @@ public class GameEngineManager : MonoBehaviour
     public Transform CameraTransform;
     public PlatformManager PlatformManager;
     public ScreenOrientationManager ScreenOrientationManager;
+    public int PortraitZoom;
+    public int LandscapeZoom;
+    public int EditorZoom;
 
     private GameStates gameState;
 
@@ -114,6 +117,9 @@ public class GameEngineManager : MonoBehaviour
         PlatformManager.Initialize();
 
         ScreenOrientationManager.Initialize(this);
+
+        Camera camera = CameraTransform.GetComponentInChildren<Camera>();
+        camera.orthographicSize = EditorZoom;
     }
 
     public void MoveDiscs(int sourceRow, int sourceCol, int targetRow, int targetCol)
@@ -187,11 +193,11 @@ public class GameEngineManager : MonoBehaviour
         Camera camera = CameraTransform.GetComponentInChildren<Camera>();
         if(orientation==ScreenOrientation.Portrait || orientation == ScreenOrientation.PortraitUpsideDown)
         {
-            camera.orthographicSize = 4;
+            camera.orthographicSize = PortraitZoom;
         }
         else 
         {
-            camera.orthographicSize = 2;
+            camera.orthographicSize = LandscapeZoom;
         }
     }
 }

@@ -23,7 +23,7 @@ public class DiscRenderer : MonoBehaviour
     public void Initialize(PoolManager pm)
     {
         poolManager = pm;
-        DiscPrefab = Resources.Load<GameObject>("Prefabs/DiscPrefab");
+        DiscPrefab = Resources.Load<GameObject>("Prefabs/3D/DiscPrefab");
         if (DiscPrefab == null)
         {
             Debug.Log("DISC PREFAB NOT FOUND");

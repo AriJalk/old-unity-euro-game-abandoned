@@ -783,6 +783,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UserInterface
       objectReference: {fileID: 0}
+    - target: {fileID: 2570065696078789139, guid: 058482a0e6b997f44ba0c38482815f2a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 058482a0e6b997f44ba0c38482815f2a, type: 3}
 --- !u!1 &1570622573
@@ -824,6 +828,9 @@ MonoBehaviour:
   CameraTransform: {fileID: 50494741}
   PlatformManager: {fileID: 595850152}
   ScreenOrientationManager: {fileID: 2001725342}
+  PortraitZoom: 2
+  LandscapeZoom: 4
+  EditorZoom: 3
 --- !u!4 &1570622575
 Transform:
   m_ObjectHideFlags: 0
