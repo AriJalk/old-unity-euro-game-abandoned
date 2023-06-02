@@ -33,12 +33,10 @@ public class GameEngineManager : MonoBehaviour
     public SquareMapHolderObject SquareMap;
     public UserInterfaceObject UserInterface;
     public InputHandler InputHandler;
-    public Transform CameraTransform;
+    public CameraController CameraController;
     public PlatformManager PlatformManager;
     public ScreenOrientationManager ScreenOrientationManager;
-    public int PortraitZoom;
-    public int LandscapeZoom;
-    public int EditorZoom;
+
 
     private GameStates gameState;
 
@@ -118,8 +116,7 @@ public class GameEngineManager : MonoBehaviour
 
         ScreenOrientationManager.Initialize(this);
 
-        Camera camera = CameraTransform.GetComponentInChildren<Camera>();
-        camera.orthographicSize = EditorZoom;
+        CameraController.Initialize();
     }
 
     public void MoveDiscs(int sourceRow, int sourceCol, int targetRow, int targetCol)
@@ -137,10 +134,7 @@ public class GameEngineManager : MonoBehaviour
 
     public void MoveCamera(float horizontal, float vertical)
     {
-        float panSpeed = 10f;
-        float newX=horizontal * panSpeed *Time.deltaTime;
-        float newZ=vertical * panSpeed *Time.deltaTime;
-        CameraTransform.Translate(new Vector3(newX,0,newZ), Space.World);
+        CameraController.MoveCamera(horizontal, vertical);
     }
 
     private void RenderChanges(object sender, ActionCompletedEventArgs e)
@@ -164,7 +158,7 @@ public class GameEngineManager : MonoBehaviour
     //TODO: color from list, Find model 
     public void SelectObject(Vector3 position)
     {
-        var camera = CameraTransform.GetComponentInChildren<Camera>();
+        var camera = CameraController.GetComponentInChildren<Camera>();
         Ray ray = camera.ScreenPointToRay(position);
         var collide = Physics.Raycast(ray);
         if (collide)
@@ -190,14 +184,14 @@ public class GameEngineManager : MonoBehaviour
 
     public void ChangeOrientation(ScreenOrientation orientation)
     {
-        Camera camera = CameraTransform.GetComponentInChildren<Camera>();
+        CameraController.UpdateAspectRatio();
         if(orientation==ScreenOrientation.Portrait || orientation == ScreenOrientation.PortraitUpsideDown)
         {
-            camera.orthographicSize = PortraitZoom;
+            
         }
         else 
         {
-            camera.orthographicSize = LandscapeZoom;
+            
         }
     }
 }

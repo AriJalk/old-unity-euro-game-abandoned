@@ -12,8 +12,8 @@ public class ScreenOrientationManager : MonoBehaviour
     {
         
     }
-
     // Update is called once per frame
+    //TODO: Change in aspect ratio
     void Update()
     {
         if (Screen.orientation != currentOrientation)
