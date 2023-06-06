@@ -23,13 +23,13 @@ public class ScreenManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (screenWidth != Screen.width || screenHeight != Screen.height || aspectRatio != (float)Screen.width / Screen.height || screenOrientation != Screen.orientation)
+        if (screenWidth != Screen.width || screenHeight != Screen.height)
         {
             screenWidth = Screen.width;
             screenHeight = Screen.height;
             aspectRatio = Screen.width / Screen.height;
             screenOrientation = Screen.orientation;
-            ScreenChanged?.Invoke(this, new ScreenChangedEventArgs(screenWidth, screenHeight, Screen.orientation));
+            ScreenChanged?.Invoke(this, new ScreenChangedEventArgs(screenWidth, screenHeight, screenOrientation));
         }
     }
 

@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public int LandscapeZoom;
+    public int PortraitZoom;
     private Camera gameCamera;
     // Start is called before the first frame update
     void Start()
@@ -24,21 +26,57 @@ public class CameraController : MonoBehaviour
     {
         gameCamera = transform.Find("MainCamera").GetComponent<Camera>();
 
-        UpdateAspectRatio(Screen.width, Screen.height, Screen.orientation);
+        UpdateAspectRatio(Screen.width, Screen.height, ScreenOrientation.LandscapeLeft);
     }
 
     public void UpdateAspectRatio(int width, int height, ScreenOrientation screenOrientation)
     {
-        float aspectRatio = (width>height)? width/height : height/width;
+        float currentAspectRatio = (width > height) ? width / height : height / width;
+        float targetAspectRatio = 16f / 9f;
+        float scaleFactor = currentAspectRatio / targetAspectRatio;
+        float orthographicSize;
+        Vector3 position;
+        ScreenOrientation orientation;
+        if (width > height)
+        {
+            orientation = ScreenOrientation.LandscapeLeft;
+            position = new Vector3(3.5f, 2.5f, 0.5f);
+        }
 
-        // Set the desired zoom level for the camera
-        float desiredZoom = 7f; // Adjust this value to your preference
+        else
+        {
+            orientation = ScreenOrientation.Portrait;
+            position = new Vector3(3, 2, 0);
+        }
 
         // Calculate the orthographic size based on the desired zoom level and aspect ratio
-        float orthographicSize = desiredZoom / aspectRatio;
+        if (currentAspectRatio >= targetAspectRatio)
+        {
+            if (orientation == ScreenOrientation.LandscapeLeft || orientation == ScreenOrientation.LandscapeRight)
+            {
+                orthographicSize = LandscapeZoom * scaleFactor;
+            }
+            else
+            {
+                orthographicSize = PortraitZoom * scaleFactor;
+            }
 
-        // Set the orthographic size of the camera
-        gameCamera.orthographicSize = orthographicSize;
+        }
+        else
+        {
+            if (orientation == ScreenOrientation.LandscapeLeft || orientation == ScreenOrientation.LandscapeRight)
+            {
+                orthographicSize = LandscapeZoom / scaleFactor;
+            }
+            else
+            {
+                orthographicSize = PortraitZoom / scaleFactor;
+            }
+        }
+        if (orthographicSize >0)
+            gameCamera.orthographicSize = orthographicSize;
+        else Debug.LogError("Invalid camera size");
+        transform.position = position;
     }
 
     public void MoveCamera(float horizontal, float vertical)

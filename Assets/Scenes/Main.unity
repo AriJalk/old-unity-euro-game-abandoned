@@ -168,6 +168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 257a13f61424edf46865de2e4eef450e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LandscapeZoom: 2
+  PortraitZoom: 5
 --- !u!114 &108220720 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5866125751540417467, guid: 16398fb399d8a58469803270f9101ceb, type: 3}

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -55,5 +56,17 @@ public class UserInterfaceObject : MonoBehaviour
         {
             gameEngineManager.SelectObject(mousePos);
         } 
+    }
+
+    public void ScreenChanged(ScreenOrientation orientation)
+    {
+        if (orientation == ScreenOrientation.LandscapeLeft || orientation == ScreenOrientation.LandscapeRight)
+        {
+
+        }
+        else if (orientation == ScreenOrientation.Portrait || orientation == ScreenOrientation.PortraitUpsideDown)
+        {
+
+        }
     }
 }

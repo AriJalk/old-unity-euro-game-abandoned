@@ -181,6 +181,14 @@ public class GameEngineManager : MonoBehaviour
 
     private void ScreenChanged(object sender,  ScreenChangedEventArgs e)
     {
-        CameraController.UpdateAspectRatio(e.NewHeight,e.NewWidth, e.NewScreenOrientation);
+        CameraController.UpdateAspectRatio(e.NewWidth,e.NewHeight, e.NewScreenOrientation);
+        if (e.NewWidth > e.NewHeight)
+        {
+            UserInterface.ScreenChanged(ScreenOrientation.LandscapeLeft);
+        }
+        else
+        {
+            UserInterface.ScreenChanged(ScreenOrientation.LandscapeRight);
+        }
     }
 }
