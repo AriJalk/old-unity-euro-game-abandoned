@@ -52,8 +52,8 @@ namespace EDBG.MapSystem
         public SquareMap()
         {
             _tileGrid = new SquareTile[maxHeight, maxWidth];
-            _rows = 5;
-            _columns = 5;
+            _rows = 4;
+            _columns = 4;
             TestBuild();
         }
 

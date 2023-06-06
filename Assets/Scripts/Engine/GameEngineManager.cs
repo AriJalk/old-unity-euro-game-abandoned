@@ -35,7 +35,8 @@ public class GameEngineManager : MonoBehaviour
     public InputHandler InputHandler;
     public CameraController CameraController;
     public PlatformManager PlatformManager;
-    public ScreenOrientationManager ScreenOrientationManager;
+    //TODO: remove orientation manager
+    public ScreenManager ScreenManager;
 
 
     private GameStates gameState;
@@ -111,12 +112,13 @@ public class GameEngineManager : MonoBehaviour
         InputHandler.Initialize(UserInterface);
 
         TileRulesLogic.Initialize(SquareMap.GetMap().Rows, SquareMap.GetMap().Columns);
-        
+
         PlatformManager.Initialize();
 
-        ScreenOrientationManager.Initialize(this);
-
         CameraController.Initialize();
+
+        ScreenManager.Initialize();
+        ScreenManager.ScreenChanged += ScreenChanged;
     }
 
     public void MoveDiscs(int sourceRow, int sourceCol, int targetRow, int targetCol)
@@ -148,12 +150,7 @@ public class GameEngineManager : MonoBehaviour
         }
         gameState = GameStates.PlayerTurn;
     }
-    //TODO: WHOLE ACTION PHASE PROCCESS
-    private void MoveDiscStart()
-    {
-        IAction action = new MoveDiscAction();
-        action.ActionCompleted += RenderChanges;
-    }
+
 
     //TODO: color from list, Find model 
     public void SelectObject(Vector3 position)
@@ -182,16 +179,8 @@ public class GameEngineManager : MonoBehaviour
         }
     }
 
-    public void ChangeOrientation(ScreenOrientation orientation)
+    private void ScreenChanged(object sender,  ScreenChangedEventArgs e)
     {
-        CameraController.UpdateAspectRatio();
-        if(orientation==ScreenOrientation.Portrait || orientation == ScreenOrientation.PortraitUpsideDown)
-        {
-            
-        }
-        else 
-        {
-            
-        }
+        CameraController.UpdateAspectRatio(e.NewHeight,e.NewWidth, e.NewScreenOrientation);
     }
 }

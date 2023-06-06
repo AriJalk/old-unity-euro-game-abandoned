@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -21,14 +23,14 @@ public class CameraController : MonoBehaviour
     public void Initialize()
     {
         gameCamera = transform.Find("MainCamera").GetComponent<Camera>();
-        UpdateAspectRatio();
+
+        UpdateAspectRatio(Screen.width, Screen.height, Screen.orientation);
     }
 
-    public void UpdateAspectRatio()
+    public void UpdateAspectRatio(int width, int height, ScreenOrientation screenOrientation)
     {
-        float width = Screen.width;
-        float height = Screen.height;
-        float aspectRatio = (width > height) ? width / height : height / width;
+        float aspectRatio = (width>height)? width/height : height/width;
+
         // Set the desired zoom level for the camera
         float desiredZoom = 7f; // Adjust this value to your preference
 
