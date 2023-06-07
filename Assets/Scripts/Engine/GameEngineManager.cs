@@ -35,10 +35,9 @@ public class GameEngineManager : MonoBehaviour
     public InputHandler InputHandler;
     public CameraController CameraController;
     public PlatformManager PlatformManager;
-    //TODO: remove orientation manager
     public ScreenManager ScreenManager;
 
-
+    private ActionsManager ActionsManager;
     private GameStates gameState;
 
     private float time = 0f;
@@ -119,19 +118,19 @@ public class GameEngineManager : MonoBehaviour
 
         ScreenManager.Initialize();
         ScreenManager.ScreenChanged += ScreenChanged;
+        ActionsManager = new ActionsManager();
+        ActionsManager.RegisterAction("MoveDiscAction", new MoveDiscAction());
     }
 
     public void MoveDiscs(int sourceRow, int sourceCol, int targetRow, int targetCol)
     {
         // Move the disc from the source stack to the destination stack
         gameState = GameStates.Action;
-        IAction action = new MoveDiscAction();
+        IAction action = ActionsManager.GetAction("MoveDiscAction");
         action.ActionCompleted += RenderChanges;
         logicGameState[Names.EntityNames.SourceTile] = SquareMap.GetDataTile(sourceRow, sourceCol);
         logicGameState[Names.EntityNames.TargetTile] = SquareMap.GetDataTile(targetRow, targetCol);
         action.ExecuteAction(logicGameState);
-
-        // Render the updated tiles
     }
 
     public void MoveCamera(float horizontal, float vertical)
@@ -142,11 +141,25 @@ public class GameEngineManager : MonoBehaviour
     private void RenderChanges(object sender, ActionCompletedEventArgs e)
     {
         List<Names.EntityNames> fields = e.ItemsToUpdate;
+        //Go over list to update and render changes
         foreach (Names.EntityNames field in fields)
         {
-            SquareTile tile = (SquareTile)logicGameState[field];
-            if (tile != null)
-                DiscRenderer.RenderDiscsOnTileObject(MapRenderer.GetTileObject(tile.Row, tile.Column), MaterialPool);
+            switch (field)
+            {
+                case Names.EntityNames.SourceTile: case Names .EntityNames.TargetTile:
+                    {
+                        SquareTile tile = (SquareTile)logicGameState[field];
+                        if (tile != null)
+                            DiscRenderer.RenderDiscsOnTileObject(MapRenderer.GetTileObject(tile.Row, tile.Column), MaterialPool);
+                        break;
+                    }
+
+                default:
+                    {
+                        break;
+                    }
+            }
+            
         }
         gameState = GameStates.PlayerTurn;
     }
@@ -171,7 +184,7 @@ public class GameEngineManager : MonoBehaviour
                     if (renderer != null)
                     {
                         // Change the material of the renderer
-                        renderer.material = MaterialPool.GetMaterial("Materials/GreenMaterial");
+                        renderer.material = MaterialPool.GetMaterial("Materials/RedWoodMaterial");
                     }
                 }
 
@@ -179,9 +192,9 @@ public class GameEngineManager : MonoBehaviour
         }
     }
 
-    private void ScreenChanged(object sender,  ScreenChangedEventArgs e)
+    private void ScreenChanged(object sender, ScreenChangedEventArgs e)
     {
-        CameraController.UpdateAspectRatio(e.NewWidth,e.NewHeight, e.NewScreenOrientation);
+        CameraController.UpdateAspectRatio(e.NewWidth, e.NewHeight, e.NewScreenOrientation);
         if (e.NewWidth > e.NewHeight)
         {
             UserInterface.ScreenChanged(ScreenOrientation.LandscapeLeft);

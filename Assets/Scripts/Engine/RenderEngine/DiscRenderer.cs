@@ -65,13 +65,13 @@ public class DiscRenderer : MonoBehaviour
             switch (newDisc.discData.DiscColor)
             {
                 case Disc.DiscColorPalette.Blue:
-                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/BlueSomething"));
+                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/BlueWoodMaterial"));
                     break;
                 case Disc.DiscColorPalette.Red:
                     newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/RedWoodMaterial"));
                     break;
                 case Disc.DiscColorPalette.Green:
-                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/GreenMaterial"));
+                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/GreenWoodMaterial"));
                     break;
                 case Disc.DiscColorPalette.White:
                     newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/YellowMaterial"));
