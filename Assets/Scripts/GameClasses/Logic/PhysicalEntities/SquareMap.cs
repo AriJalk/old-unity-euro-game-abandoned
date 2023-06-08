@@ -90,11 +90,24 @@ namespace EDBG.MapSystem
             {
                 for (int j = 0; j < Columns; j++)
                 {
+
                     SquareTile tile = new SquareTile(i,j);
-                    tile.discStack.PushDisc(new Disc(Disc.DiscColorPalette.Red));
-                    tile.discStack.PushDisc(new Disc(Disc.DiscColorPalette.Green));
-                    tile.discStack.PushDisc(new Disc(Disc.DiscColorPalette.White));
-                    tile.discStack.PushDisc(new Disc(Disc.DiscColorPalette.Blue));
+                    tile.discStack.PushItem(new Disc(Disc.DiscColorPalette.Red));
+                    tile.discStack.PushItem(new Disc(Disc.DiscColorPalette.Green));
+                    tile.discStack.PushItem(new Disc(Disc.DiscColorPalette.White));
+                    tile.discStack.PushItem(new Disc(Disc.DiscColorPalette.Blue));
+                    //Set quadrants
+                    for(int k = 0; k < 2; k++)
+                    {
+                        for(int l = 0; l < 2; l++)
+                        {
+                            tile.DiscStacks[k,l].PushItem(new Disc(Disc.DiscColorPalette.Red));
+                            tile.DiscStacks[k, l].PushItem(new Disc(Disc.DiscColorPalette.Green));
+                            tile.DiscStacks[k, l].PushItem(new Disc(Disc.DiscColorPalette.White));
+                            tile.DiscStacks[k, l].PushItem(new Disc(Disc.DiscColorPalette.Blue));
+                        }
+                    }
+
                     SetTile(i, j, tile);
                 }
             }

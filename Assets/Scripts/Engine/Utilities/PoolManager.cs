@@ -14,7 +14,7 @@ namespace ResourcePool
 
         void Start()
         {
-            
+
         }
 
         void Update()
@@ -26,7 +26,7 @@ namespace ResourcePool
         {
             pools = new Dictionary<Type, object>();
             prefabDict = new Dictionary<Type, GameObject>();
-            unactiveObjects= transform.Find("UnactiveObjects");
+            unactiveObjects = transform.Find("UnactiveObjects");
         }
 
         public void RegisterPrefab<T>(GameObject prefab) where T : Component
@@ -95,7 +95,7 @@ namespace ResourcePool
 
             if (retrieval == null)
                 Debug.Log("Can't retrieve object");
-
+            retrieval.gameObject.SetActive(true);
             return retrieval;
         }
 

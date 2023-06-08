@@ -28,7 +28,7 @@ public class GameEngineManager : MonoBehaviour
 
     public PoolManager PoolManager;
     public MapRenderer MapRenderer;
-    public DiscRenderer DiscRenderer;
+    public ObjectsRenderer DiscRenderer;
     public MaterialPool MaterialPool;
     public SquareMapHolderObject SquareMap;
     public UserInterfaceObject UserInterface;
@@ -62,8 +62,8 @@ public class GameEngineManager : MonoBehaviour
                 else
                 {
                     moves += "x ";
-                    SquareMap.GetDataTile(i, j).discStack.PopDisc();
-                    SquareMap.GetDataTile(i, j).discStack.PopDisc();
+                    //SquareMap.GetDataTile(i, j).discStack.PopItem();
+                    //SquareMap.GetDataTile(i, j).discStack.PopItem();
                 }
 
             }
@@ -117,7 +117,10 @@ public class GameEngineManager : MonoBehaviour
         CameraController.Initialize();
 
         ScreenManager.Initialize();
+
+        //Listen to screen change event
         ScreenManager.ScreenChanged += ScreenChanged;
+
         ActionsManager = new ActionsManager();
         ActionsManager.RegisterAction("MoveDiscAction", new MoveDiscAction());
     }
@@ -150,7 +153,7 @@ public class GameEngineManager : MonoBehaviour
                     {
                         SquareTile tile = (SquareTile)logicGameState[field];
                         if (tile != null)
-                            DiscRenderer.RenderDiscsOnTileObject(MapRenderer.GetTileObject(tile.Row, tile.Column), MaterialPool);
+                            DiscRenderer.RenderObjectsOnTileObject(MapRenderer.GetTileObject(tile.Row, tile.Column), MaterialPool);
                         break;
                     }
 
@@ -201,7 +204,7 @@ public class GameEngineManager : MonoBehaviour
         }
         else
         {
-            UserInterface.ScreenChanged(ScreenOrientation.LandscapeRight);
+            UserInterface.ScreenChanged(ScreenOrientation.Portrait);
         }
     }
 }

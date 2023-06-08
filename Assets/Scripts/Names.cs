@@ -18,4 +18,13 @@ public class Names
         DiscStack,
         Cube
     }
+
+    public enum Colors
+    {
+        Neutral,
+        Red,
+        Green,
+        Blue,
+        Yellow
+    }
 }

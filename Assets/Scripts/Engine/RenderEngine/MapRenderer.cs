@@ -32,7 +32,7 @@ public class MapRenderer : MonoBehaviour
         poolManager.RegisterPrefab<SquareTileObject>(SquarePrefab);
     }
 
-    public void RenderMap(SquareMapHolderObject mapHolder, MaterialPool materialPool, DiscRenderer discRenderer)
+    public void RenderMap(SquareMapHolderObject mapHolder, MaterialPool materialPool, ObjectsRenderer discRenderer)
     {
         tiles = new SquareTileObject[mapHolder.GetMap().Rows, mapHolder.GetMap().Columns];
         RemovePreviousTiles(mapHolder.GetGrid().transform);
@@ -52,7 +52,7 @@ public class MapRenderer : MonoBehaviour
                 tile.gameObject.SetActive(true);
                 tile.name = "Tile [" + row + "," + col + "]";
                 tiles[row, col] = tile;
-                discRenderer.RenderDiscsOnTileObject(tile, materialPool);
+                discRenderer.RenderObjectsOnTileObject(tile, materialPool);
             }
         }
     }

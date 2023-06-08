@@ -40,8 +40,8 @@ public class MoveDiscAction : IAction
         }
 
         // Move the disc from the source stack to the destination stack
-        Disc disc = sourceTile.discStack.PopDisc();
-        targetTile.discStack.PushDisc(disc);
+        Disc disc = sourceTile.discStack.PopItem();
+        targetTile.discStack.PushItem(disc);
         OnActionCompleted();
     }
 
@@ -62,8 +62,8 @@ public class MoveDiscAction : IAction
         }
 
         // Move the disc from the source stack to the destination stack
-        Disc disc = sourceTile.discStack.PopDisc();
-        targetTile.discStack.PushDisc(disc);
+        Disc disc = sourceTile.discStack.PopItem();
+        targetTile.discStack.PushItem(disc);
         OnActionCompleted();
     }
 

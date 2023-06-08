@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1006427849220263643}
   - component: {fileID: -8065651199060996308}
   m_Layer: 0
-  m_Name: SquareTilePrefab 1
+  m_Name: TestSquare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
