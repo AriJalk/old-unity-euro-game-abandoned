@@ -3,8 +3,10 @@ Shader "Unlit/HighlightShader"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _EdgeThreshold ("EdgeThreshold", Range(0,1)) = 1
-        _HighlightColor("Highlight Color", Color) = (0, 0, 0, 0)
+        _UVTex ("UV Texture", 2D) = "white" {}
+        _EdgeThreshold ("Edge Threshold", Range(0, 1)) = 0.5
+        _HightlightColor("Highlight Color", Color) = (1,1,1,1)
+
     }
     SubShader
     {
@@ -35,9 +37,12 @@ Shader "Unlit/HighlightShader"
             };
 
             sampler2D _MainTex;
-            float4 _MainTex_ST;
+            sampler2D _UVTex;
             float _EdgeThreshold;
-            float4 _HighlightColor;
+            float4 _MainTex_ST;
+            float4 _HightlightColor;
+
+            bool IsColorSame(fixed4 colorA, fixed4 colorB);
 
             v2f vert (appdata v)
             {
@@ -50,45 +55,38 @@ Shader "Unlit/HighlightShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 currentColor = tex2D(_MainTex, i.uv);
-                fixed4 neighborColor;
+                // sample the texture
+                fixed4 col = tex2D(_MainTex, i.uv);
 
-                float2 texelSize = 1.0 / _ScreenParams.xy;
+                fixed4 uvCol=tex2D(_UVTex, i.uv);
 
-                // Sample left neighbor
-                neighborColor = tex2D(_MainTex, i.uv - float2(texelSize.x, 0));
-                // Perform the edge test
-                if (length(currentColor.rgb - neighborColor.rgb) > _EdgeThreshold)
+                fixed4 leftNeighbor=tex2D(_UVTex,i.uv+float2(-1,0));
+                fixed4 rightNeighbor=tex2D(_UVTex,i.uv+float2(1,0));
+
+                fixed4 topNeighbor=tex2D(_UVTex,i.uv+float2(0,1));
+                fixed4 bottomNeighbor=tex2D(_UVTex,i.uv+float2(0,-1));
+
+                fixed4 topLeftNeighbor=tex2D(_UVTex,i.uv+float2(-1,1));
+                fixed4 topRightNeighbor=tex2D(_UVTex,i.uv+float2(1,1));
+
+                fixed4 bottomLeftNeighbor=tex2D(_UVTex,i.uv+float2(-1,-1));
+                fixed4 bottomRightNeighbor=tex2D(_UVTex,i.uv+float2(1,-1));
+
+                if(leftNeighbor.a<_EdgeThreshold||rightNeighbor.a<_EdgeThreshold||topLeftNeighbor.a<_EdgeThreshold||topRightNeighbor.a<_EdgeThreshold||
+                bottomLeftNeighbor.a<_EdgeThreshold||bottomRightNeighbor.a<_EdgeThreshold)
                 {
-                    return _HighlightColor;
+                    return _HightlightColor;
                 }
 
-                // Sample right neighbor
-                neighborColor = tex2D(_MainTex, i.uv + float2(texelSize.x, 0));
-                // Perform the edge test
-                if (length(currentColor.rgb - neighborColor.rgb) > _EdgeThreshold)
-                {
-                    return _HighlightColor;
-                }
+                // apply fog
+                UNITY_APPLY_FOG(i.fogCoord, col);
+                return col;
+            }
 
-                // Sample top neighbor
-                neighborColor = tex2D(_MainTex, i.uv + float2(0, texelSize.y));
-                // Perform the edge test
-                if (length(currentColor.rgb - neighborColor.rgb) > _EdgeThreshold)
-                {
-                    return _HighlightColor;
-                }
-
-                // Sample bottom neighbor
-                neighborColor = tex2D(_MainTex, i.uv - float2(0, texelSize.y));
-                // Perform the edge test
-                if (length(currentColor.rgb - neighborColor.rgb) > _EdgeThreshold)
-                {
-                    return _HighlightColor;
-                }
-
-                // No edge detected, return the original color
-                return currentColor;
+            bool IsColorSame(fixed4 colorA, fixed4 colorB){
+                if(colorA.r==colorB.r&&colorA.g==colorB.g&&colorA.b==colorB.b)
+                return true;
+                return false;
             }
 
             ENDCG

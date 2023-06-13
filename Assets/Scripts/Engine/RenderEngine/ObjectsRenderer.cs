@@ -119,7 +119,7 @@ public class ObjectsRenderer : MonoBehaviour
             // Apply Material based on disc color
             switch (newDisc.discData.DiscColor)
             {
-                case Disc.DiscColorPalette.Blue:
+                /*case Disc.DiscColorPalette.Blue:
                     newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/BlueWoodMaterial"));
                     break;
                 case Disc.DiscColorPalette.Red:
@@ -130,8 +130,9 @@ public class ObjectsRenderer : MonoBehaviour
                     break;
                 case Disc.DiscColorPalette.White:
                     newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/YellowMaterial"));
-                    break;
+                    break;*/
                 default:
+                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/HighlightMaterial"));
                     break;
             }
         }
