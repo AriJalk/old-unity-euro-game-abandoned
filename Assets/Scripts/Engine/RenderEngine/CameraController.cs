@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -73,7 +74,7 @@ public class CameraController : MonoBehaviour
                 orthographicSize = PortraitZoom / scaleFactor;
             }
         }
-        if (orthographicSize >0)
+        if (orthographicSize > 0)
             gameCamera.orthographicSize = orthographicSize;
         else Debug.LogError("Invalid camera size");
         transform.position = position;
@@ -81,9 +82,23 @@ public class CameraController : MonoBehaviour
 
     public void MoveCamera(float horizontal, float vertical)
     {
-        float panSpeed = 10f;
+        float panSpeed = gameCamera.orthographicSize*10f;
         float newX = horizontal * panSpeed * Time.deltaTime;
         float newZ = vertical * panSpeed * Time.deltaTime;
-        transform.Translate(new Vector3(newX, 0, newZ), Space.World);
+        if (transform.position.x + newX > 10 || transform.position.x + newX < -4)
+            newX = 0;
+        if (transform.position.y + newZ > 10 || transform.position.y + newZ < -4)
+            newZ = 0;
+        transform.Translate(new Vector3(newX, newZ, newX), Space.World);
+
+    }
+
+    public void ZoomCamera(float deltaY)
+    {
+        if (gameCamera.orthographicSize - deltaY >= 0 && gameCamera.orthographicSize - deltaY <= 15)
+        {
+            gameCamera.orthographicSize -= deltaY;
+
+        }
     }
 }

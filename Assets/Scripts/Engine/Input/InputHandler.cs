@@ -36,6 +36,11 @@ public class InputHandler : MonoBehaviour
         {
             userInterface.MouseClicked(mouseButtons, Input.mousePosition);
         }
-        
+        Vector2 scroll = Input.mouseScrollDelta;
+
+        if(scroll!= Vector2.zero)
+        {
+            userInterface.MouseScrolled(scroll.y);
+        }
     }
 }

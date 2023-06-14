@@ -132,7 +132,7 @@ public class ObjectsRenderer : MonoBehaviour
                     newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/YellowMaterial"));
                     break;*/
                 default:
-                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/HighlightMaterial"));
+                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/WoodMaterial"));
                     break;
             }
         }

@@ -207,4 +207,9 @@ public class GameEngineManager : MonoBehaviour
             UserInterface.ScreenChanged(ScreenOrientation.Portrait);
         }
     }
+
+    public void ZoomCamera(float deltaY)
+    {
+        CameraController.ZoomCamera(deltaY);
+    }
 }

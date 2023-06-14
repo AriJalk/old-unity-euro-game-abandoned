@@ -12,6 +12,7 @@ public class UserInterfaceObject : MonoBehaviour
     private Button ActionButton;
     private GameObject canvas;
     private GameEngineManager gameEngineManager;
+    private Image[] dice;
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +39,23 @@ public class UserInterfaceObject : MonoBehaviour
         UpdateButton = canvas.transform.Find("UpdateButton").GetComponent<Button>();
         ActionButton = canvas.transform.Find("ActionButton").GetComponent<Button>();
         UpdateButton.onClick.AddListener(Something);
+
+        Transform panel = canvas.transform.Find("PlayerHandPanel");
+
+        dice = new Image[3];
+        
+        for(int i = 0; i < 3; i++)
+        {
+            dice[i]= panel.transform.Find("Die" + (i + 1)).Find("Image").GetComponent<Image>();
+        }
+
+        for (int i = 0; i < dice.Length; i++)
+        {
+            dice[i].sprite = Resources.Load<Sprite>("Images/DieFaces/" + (i+1));
+
+        }
+
+        Debug.Log(dice.Length);
     }
 
     private void Something()
@@ -47,7 +65,7 @@ public class UserInterfaceObject : MonoBehaviour
 
     public void AxisChanged(float horizonalInput, float verticalInput)
     {
-        gameEngineManager.MoveCamera(horizonalInput,verticalInput);
+        gameEngineManager.MoveCamera(horizonalInput, verticalInput);
     }
 
     public void MouseClicked(bool[] mouseButtons, Vector3 mousePos)
@@ -55,7 +73,7 @@ public class UserInterfaceObject : MonoBehaviour
         if (mouseButtons[0])
         {
             gameEngineManager.SelectObject(mousePos);
-        } 
+        }
     }
 
     public void ScreenChanged(ScreenOrientation orientation)
@@ -68,5 +86,10 @@ public class UserInterfaceObject : MonoBehaviour
         {
 
         }
+    }
+
+    public void MouseScrolled(float deltaY)
+    {
+        gameEngineManager.ZoomCamera(deltaY);
     }
 }

@@ -25,6 +25,8 @@ public class Names
         Red,
         Green,
         Blue,
-        Yellow
+        Yellow,
+        Black,
+        White
     }
 }
