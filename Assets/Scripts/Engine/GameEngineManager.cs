@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using EDBG.Rules;
+using EDBG.MapSystem;
 
 public class GameEngineManager : MonoBehaviour
 {
@@ -62,8 +63,8 @@ public class GameEngineManager : MonoBehaviour
                 else
                 {
                     moves += "x ";
-                    //SquareMap.GetDataTile(i, j).discStack.PopItem();
-                    //SquareMap.GetDataTile(i, j).discStack.PopItem();
+                    //MapGrid.GetDataTile(i, j).discStack.PopItem();
+                    //MapGrid.GetDataTile(i, j).discStack.PopItem();
                 }
 
             }
@@ -151,9 +152,9 @@ public class GameEngineManager : MonoBehaviour
             {
                 case Names.EntityNames.SourceTile: case Names .EntityNames.TargetTile:
                     {
-                        SquareTile tile = (SquareTile)logicGameState[field];
+                        MapTile tile = (MapTile)logicGameState[field];
                         if (tile != null)
-                            DiscRenderer.RenderObjectsOnTileObject(MapRenderer.GetTileObject(tile.Row, tile.Column), MaterialPool);
+                            DiscRenderer.RenderObjectsOnTileObject(MapRenderer.GetTileObject(tile.GamePosition.X, tile.GamePosition.Y), MaterialPool);
                         break;
                     }
 
@@ -210,6 +211,6 @@ public class GameEngineManager : MonoBehaviour
 
     public void ZoomCamera(float deltaY)
     {
-        CameraController.ZoomCamera(deltaY);
+        CameraController.ZoomCamera(deltaY/5);
     }
 }

@@ -7,15 +7,15 @@ namespace EDBG.Rules
 {
     public class MatchManager
     {
-        private SquareMap matchMap;
+        private MapGrid matchMap;
         private Player[] matchPlayers;
 
-        public MatchManager(SquareMap squareMap, params Player[] players)
+        public MatchManager(MapGrid squareMap, params Player[] players)
         {
             matchPlayers = new Player[players.Length];
             for (int i = 0; i < players.Length; i++)
                 matchPlayers[i] = players[i];
-            matchMap=new SquareMap(squareMap);
+            matchMap=new MapGrid(squareMap);
         }
     }
 }

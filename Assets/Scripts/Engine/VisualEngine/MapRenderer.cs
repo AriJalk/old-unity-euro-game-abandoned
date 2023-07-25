@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using ResourcePool;
+using EDBG.MapSystem;
 
 public class MapRenderer : MonoBehaviour
 {
@@ -62,7 +63,7 @@ public class MapRenderer : MonoBehaviour
         return tiles[row, col];
     }
 
-    public void SetTileObjectAndRender(SquareTile tile)
+    public void SetTileObjectAndRender(MapTile tile)
     {
         if (tile == null)
         {

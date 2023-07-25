@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EDBG.Rules;
+using EDBG.MapSystem;
 using System;
 
 public class MoveDiscAction : IAction
 {
     public event EventHandler<ActionCompletedEventArgs> ActionCompleted;
 
-    private SquareTile sourceTile;
-    private SquareTile targetTile;
+    private MapTile sourceTile;
+    private MapTile targetTile;
     
     private enum Phases
     {
@@ -22,8 +23,8 @@ public class MoveDiscAction : IAction
 
     public void ExecuteAction(Dictionary<Names.EntityNames, object> logicGameState)
     {
-        sourceTile = (SquareTile)logicGameState[Names.EntityNames.SourceTile];
-        targetTile = (SquareTile)logicGameState[Names.EntityNames.TargetTile];
+        sourceTile = (MapTile)logicGameState[Names.EntityNames.SourceTile];
+        targetTile = (MapTile)logicGameState[Names.EntityNames.TargetTile];
 
         // Check if both source and destination tiles are valid
         if (sourceTile == null || targetTile == null)
@@ -33,15 +34,15 @@ public class MoveDiscAction : IAction
         }
 
         // Check if the source tile has at least one disc
-        if (sourceTile.discStack.Count == 0 || sourceTile.discStack.Count == 0)
+        if (sourceTile.InnerGrid[0,0].DiscStack.Count == 0)
         {
             Debug.Log("Source tile is empty");
             return;
         }
 
         // Move the disc from the source stack to the destination stack
-        Disc disc = sourceTile.discStack.PopItem();
-        targetTile.discStack.PushItem(disc);
+        Disc disc = sourceTile.InnerGrid[0, 0].DiscStack.PopItem();
+        targetTile.InnerGrid[0, 0].DiscStack.PushItem(disc);
         OnActionCompleted();
     }
 
@@ -55,15 +56,15 @@ public class MoveDiscAction : IAction
         }
 
         // Check if the source tile has at least one disc
-        if (sourceTile.discStack.Count == 0 || sourceTile.discStack.Count == 0)
+        if (sourceTile.InnerGrid[0, 0].DiscStack.Count == 0 || sourceTile.InnerGrid[0, 0].DiscStack.Count == 0)
         {
             Debug.Log("Source tile is empty");
             return;
         }
 
         // Move the disc from the source stack to the destination stack
-        Disc disc = sourceTile.discStack.PopItem();
-        targetTile.discStack.PushItem(disc);
+        Disc disc = sourceTile.InnerGrid[0, 0].DiscStack.PopItem();
+        targetTile.InnerGrid[0, 0].DiscStack.PushItem(disc);
         OnActionCompleted();
     }
 

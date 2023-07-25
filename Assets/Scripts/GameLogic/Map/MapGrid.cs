@@ -1,19 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
+using System.Net.Http.Headers;
 
 namespace EDBG.MapSystem
 {
-    public class SquareMap
+    public class MapGrid
     {
-        public enum Direction
-        {
-            Up,
-            Down,
-            Left,
-            Right
-        }
-
         private const int maxHeight = 100;
         private const int maxWidth = 100;
         private int _rows;
@@ -34,9 +25,9 @@ namespace EDBG.MapSystem
         }
 
         //Private Fields
-        private SquareTile[,] _tileGrid;
+        private MapTile[,] _tileGrid;
 
-        public SquareTile[,] TileGrid
+        public MapTile[,] TileGrid
         {
             get
             {
@@ -49,37 +40,37 @@ namespace EDBG.MapSystem
 
         //Constructors
 
-        public SquareMap()
+        public MapGrid()
         {
-            _tileGrid = new SquareTile[maxHeight, maxWidth];
+            _tileGrid = new MapTile[maxHeight, maxWidth];
             _rows = 4;
             _columns = 4;
             TestBuild();
         }
 
-        public SquareMap(SquareMap other)
+        public MapGrid(MapGrid other)
         {
-            this._rows = other.Rows;
-            this._columns = other.Columns;
-            this._tileGrid = other.TileGrid;
+            _rows = other.Rows;
+            _columns = other.Columns;
+            _tileGrid = other.TileGrid;
         }
 
-        public SquareMap(int maxHeight, int maxWidth)
+        public MapGrid(int maxHeight, int maxWidth)
         {
-            _tileGrid = new SquareTile[maxHeight, maxWidth];
+            _tileGrid = new MapTile[maxHeight, maxWidth];
         }
 
-        public void SetGrid(SquareTile[,] tileGrid)
+        public void SetGrid(MapTile[,] tileGrid)
         {
             _tileGrid = tileGrid;
         }
 
-        public void SetTile(int x, int y, SquareTile tile)
+        public void SetTile(int x, int y, MapTile tile)
         {
             TileGrid[x, y] = tile;
         }
 
-        public SquareTile GetTile(int x, int y)
+        public MapTile GetTile(int x, int y)
         {
             return TileGrid[x, y];
         }
@@ -90,21 +81,27 @@ namespace EDBG.MapSystem
             {
                 for (int j = 0; j < Columns; j++)
                 {
-
-                    SquareTile tile = new SquareTile(i,j);
-                    tile.discStack.PushItem(new Disc(Disc.DiscColorPalette.Red));
-                    tile.discStack.PushItem(new Disc(Disc.DiscColorPalette.Green));
-                    tile.discStack.PushItem(new Disc(Disc.DiscColorPalette.White));
-                    tile.discStack.PushItem(new Disc(Disc.DiscColorPalette.Blue));
+                    MapTile tile = new MapTile(new GamePosition(i,j,Rows,Columns));
                     //Set quadrants
-                    for(int k = 0; k < 2; k++)
+                    for(int k = 0; k < tile.Rows; k++)
                     {
-                        for(int l = 0; l < 2; l++)
+                        for(int l = 0; l < tile.Columns; l++)
                         {
-                            tile.DiscStacks[k,l].PushItem(new Disc(Disc.DiscColorPalette.Red));
-                            tile.DiscStacks[k, l].PushItem(new Disc(Disc.DiscColorPalette.Green));
-                            tile.DiscStacks[k, l].PushItem(new Disc(Disc.DiscColorPalette.White));
-                            tile.DiscStacks[k, l].PushItem(new Disc(Disc.DiscColorPalette.Blue));
+                            Random rnd=new Random();
+                            switch(rnd.Next(0, 3))
+                            {
+                                case 0:
+
+                                case 1:
+
+                                default:
+                                    break;
+                            }
+
+                            tile.InnerGrid[k,l].DiscStack.PushItem(new Disc(UtilityFunctions.GetRandomComponentColor()));
+                            tile.InnerGrid[k, l].DiscStack.PushItem(new Disc(UtilityFunctions.GetRandomComponentColor()));
+                            tile.InnerGrid[k, l].DiscStack.PushItem(new Disc(UtilityFunctions.GetRandomComponentColor()));
+                            tile.InnerGrid[k, l].DiscStack.PushItem(new Disc(UtilityFunctions.GetRandomComponentColor()));
                         }
                     }
 
@@ -113,7 +110,7 @@ namespace EDBG.MapSystem
             }
         }
 
-        public SquareTile GetNeighbor(SquareTile tile, Direction direction)
+        public MapTile GetNeighbor(MapTile tile, Direction direction)
         {
             int offsetX = 0;
             int offsetY = 0;
@@ -134,8 +131,8 @@ namespace EDBG.MapSystem
                     break;
             }
 
-            int neighborX = tile.Row + offsetX;
-            int neighborY = tile.Column + offsetY;
+            int neighborX = tile.GamePosition.X + offsetX;
+            int neighborY = tile.GamePosition.Y + offsetY;
 
             if (IsValidCoordinate(neighborX, neighborY))
             {

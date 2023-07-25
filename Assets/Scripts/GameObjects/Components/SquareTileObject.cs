@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EDBG.MapSystem;
 
 public class SquareTileObject : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class SquareTileObject : MonoBehaviour
     public const float TILE_SPACING = 0.01f;
     public const float TILE_HEIGHT = 0.05f;
 
-    public SquareTile TileData
+    public MapTile TileData
     {
         get;
         set;

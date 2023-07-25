@@ -9,7 +9,7 @@ public class SquareMapHolderObject : MonoBehaviour
 {
     public MapRenderer MapRenderer;
     private GameObject grid;
-    private SquareMap map;
+    private MapGrid map;
    
 
     // Start is called before the first frame update
@@ -26,14 +26,14 @@ public class SquareMapHolderObject : MonoBehaviour
 
     public void Initialize()
     {
-        map = new SquareMap();
+        map = new MapGrid();
         grid = new GameObject("Grid");
         grid.transform.SetParent(transform); // Set the parent transform
         grid.transform.localScale = Vector3.one;
     }
 
 
-    public SquareTile GetDataTile(int row, int col)
+    public MapTile GetDataTile(int row, int col)
     {
         return map.GetTile(row, col);
     }
@@ -43,7 +43,7 @@ public class SquareMapHolderObject : MonoBehaviour
         map.SetTile(row, col, tile.TileData);
     }
 
-    public SquareMap GetMap()
+    public MapGrid GetMap()
     {
         return map;
     }

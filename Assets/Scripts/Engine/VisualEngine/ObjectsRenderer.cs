@@ -48,92 +48,50 @@ public class ObjectsRenderer : MonoBehaviour
 
     private void CreateNewDiscs(SquareTileObject tile, MaterialPool materialPool)
     {
-        GameStack<Disc> discStack = tile.TileData.discStack; // Assuming only one disc stack per tile
 
         float tileHeight = SquareTileObject.TILE_HEIGHT;
         float discHeight = DiscObject.DISC_HEIGHT;
         float initialHeightOffset = 0.0f; // Adjust this value to control the initial height offset of the first disc
+        float gridCellSize = SquareTileObject.TILE_LENGTH / 3;
 
-        for (int i = 0; i < 2; i++)
+
+        for (int i = 0; i < tile.TileData.Rows; i++)
         {
-            float xOffset;
-            if (i == 0)
+            float xOffset = (i - 1) * gridCellSize;
+            for (int j = 0; j < tile.TileData.Columns; j++)
             {
-                xOffset = -SquareTileObject.TILE_LENGTH / 4;
-            }
-            else
-            {
-                xOffset = SquareTileObject.TILE_LENGTH / 4;
-            }
-            for (int j = 0; j < 2; j++)
-            {
-                float zOffset;
-                if (j == 0)
+                float zOffset = (j - 1) * gridCellSize;
+                for (int k = 0; k < tile.TileData.InnerGrid[i, j].DiscStack.Count; k++)
                 {
-                    zOffset = -SquareTileObject.TILE_LENGTH / 4;
-                }
-                else
-                {
-                    zOffset = SquareTileObject.TILE_LENGTH / 4;
-                }
 
-                for (int k = 0; k < tile.TileData.DiscStacks[i, j].Count; k++)
-                {
+
                     DiscObject newDisc = poolManager.RetrievePoolObject<DiscObject>();
                     newDisc.enabled = true;
-                    newDisc.discData = tile.TileData.DiscStacks[i, j].GetItemByIndex(k);
+                    newDisc.discData = tile.TileData.InnerGrid[i, j].DiscStack.GetItemByIndex(k);
                     newDisc.transform.SetParent(tile.transform);
                     newDisc.transform.localScale = Vector3.one;
+
+
                     newDisc.transform.localPosition = new Vector3(xOffset, (k * discHeight) + initialHeightOffset + tileHeight, zOffset);
 
                     // Apply Material based on disc color
                     switch (newDisc.discData.DiscColor)
                     {
-                        case Disc.DiscColorPalette.Blue:
+                        case EDBG.Rules.ComponentColor.Blue:
                             newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/BlueWoodMaterial"));
                             break;
-                        case Disc.DiscColorPalette.Red:
+                        case EDBG.Rules.ComponentColor.Red:
                             newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/RedWoodMaterial"));
                             break;
-                        case Disc.DiscColorPalette.Green:
+                        case EDBG.Rules.ComponentColor.Green:
                             newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/GreenWoodMaterial"));
                             break;
-                        case Disc.DiscColorPalette.White:
-                            newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/YellowMaterial"));
+                        case EDBG.Rules.ComponentColor.White:
+                            newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/WhiteMaterial"));
                             break;
-                        default:
-                            break;
+
                     }
                 }
-            }
-        }
-        for (int i = 0; i < discStack.Count; i++)
-        {
-            DiscObject newDisc = poolManager.RetrievePoolObject<DiscObject>();
-            newDisc.enabled = true;
-            newDisc.discData = tile.TileData.discStack.GetItemByIndex(i);
-            newDisc.transform.SetParent(tile.transform);
-            newDisc.transform.localScale = Vector3.one;
-            newDisc.transform.localPosition = new Vector3(0f, (i * discHeight) + initialHeightOffset + tileHeight, 0f);
-
-            // Apply Material based on disc color
-            switch (newDisc.discData.DiscColor)
-            {
-                /*case Disc.DiscColorPalette.Blue:
-                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/BlueWoodMaterial"));
-                    break;
-                case Disc.DiscColorPalette.Red:
-                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/RedWoodMaterial"));
-                    break;
-                case Disc.DiscColorPalette.Green:
-                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/GreenWoodMaterial"));
-                    break;
-                case Disc.DiscColorPalette.White:
-                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/YellowMaterial"));
-                    break;*/
-                default:
-                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/WoodMaterial"));
-                    break;
             }
         }
     }
