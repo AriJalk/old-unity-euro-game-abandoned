@@ -18,6 +18,8 @@ namespace EDBG.Rules
         Tile,
         SourceTile,
         TargetTile,
+        SourceLocation,
+        TargetLocation,
         ActionToken,
         ActionCard,
         DiscStack,

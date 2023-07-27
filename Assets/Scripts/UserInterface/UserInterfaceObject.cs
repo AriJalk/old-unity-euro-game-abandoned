@@ -60,7 +60,7 @@ public class UserInterfaceObject : MonoBehaviour
 
     private void Something()
     {
-        gameEngineManager.MoveDiscs(0, 0, 1, 1);
+        gameEngineManager.TestMove();
     }
 
     public void AxisChanged(float horizonalInput, float verticalInput)

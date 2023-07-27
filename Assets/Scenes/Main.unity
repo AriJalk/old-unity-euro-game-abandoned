@@ -170,6 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LandscapeZoom: 2
   PortraitZoom: 5
+  PanAcceleration: 4
 --- !u!114 &108220720 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5866125751540417467, guid: 16398fb399d8a58469803270f9101ceb, type: 3}
@@ -1001,7 +1002,7 @@ MonoBehaviour:
   MapRenderer: {fileID: 823469139}
   DiscRenderer: {fileID: 973338700}
   MaterialPool: {fileID: 1887737066}
-  SquareMap: {fileID: 1968065631}
+  MapHolder: {fileID: 1968065631}
   UserInterface: {fileID: 774718765}
   InputHandler: {fileID: 420088148}
   CameraController: {fileID: 50494742}
@@ -1215,7 +1216,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5190afd5d6afb01428ec77b71c31cf6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapRenderer: {fileID: 823469139}
 --- !u!1001 &5866125751503671947
 PrefabInstance:
   m_ObjectHideFlags: 0

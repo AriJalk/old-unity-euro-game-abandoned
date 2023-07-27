@@ -31,7 +31,7 @@ public class GameEngineManager : MonoBehaviour
     public MapRenderer MapRenderer;
     public ObjectsRenderer DiscRenderer;
     public MaterialPool MaterialPool;
-    public SquareMapHolderObject SquareMap;
+    public SquareMapHolderObject MapHolder;
     public UserInterfaceObject UserInterface;
     public InputHandler InputHandler;
     public CameraController CameraController;
@@ -50,7 +50,7 @@ public class GameEngineManager : MonoBehaviour
     void Start()
     {
         string moves = string.Empty;
-        bool[,] grid = TileRulesLogic.GetPossibleMoves(SquareMap.GetMap(), SquareMap.GetDataTile(0, 0), 3);
+        bool[,] grid = TileRulesLogic.GetPossibleMoves(MapHolder.GetMap(), MapHolder.GetDataTile(0, 0), 3);
         for (int i = 0; i < grid.GetLength(0); i++)
         {
             for (int j = 0; j < grid.GetLength(1); j++)
@@ -71,7 +71,7 @@ public class GameEngineManager : MonoBehaviour
             moves += "\n";
         }
         Debug.Log(moves);
-        GridContainer container = SquareMap.GetMap().GetCellAsContainer(0, 0);
+        GridContainer container = MapHolder.GetMap().GetCellAsContainer(0, 0);
         grid = TileRulesLogic.GetPossibleMoves(container, container.GetCell(0, 0), 1);
         for (int i = 0; i < grid.GetLength(0); i++)
         {
@@ -93,7 +93,7 @@ public class GameEngineManager : MonoBehaviour
             }
             moves += "\n";
         }
-        MapRenderer.RenderMap(SquareMap, MaterialPool, DiscRenderer);
+        MapRenderer.RenderMap(MapHolder, MaterialPool, DiscRenderer);
         Debug.Log(moves);
     }
 
@@ -102,7 +102,7 @@ public class GameEngineManager : MonoBehaviour
         InitizalizeScripts();
         gameState = GameStates.PlayerTurn;
         logicGameState = new Dictionary<EntityNames, object>();
-        logicGameState[EntityNames.Map] = SquareMap;
+        logicGameState[EntityNames.Map] = MapHolder;
     }
 
     // Update is called once per frame
@@ -129,7 +129,7 @@ public class GameEngineManager : MonoBehaviour
         MapRenderer.Initialize(PoolManager);
         DiscRenderer.Initialize(PoolManager);
 
-        SquareMap.Initialize();
+        MapHolder.Initialize();
 
         UserInterface.Initialize(this);
         InputHandler.Initialize(UserInterface);
@@ -147,14 +147,14 @@ public class GameEngineManager : MonoBehaviour
         ActionsManager.RegisterAction("MoveDiscAction", new MoveDiscAction());
     }
 
-    public void MoveDiscs(int sourceRow, int sourceCol, int targetRow, int targetCol)
+    public void MoveDiscs(MapLocation sourceLocation, MapLocation targetLocation)
     {
         // Move the disc from the source stack to the destination stack
         gameState = GameStates.Action;
         IAction action = ActionsManager.GetAction("MoveDiscAction");
         action.ActionCompleted += RenderChanges;
-        logicGameState[EntityNames.SourceTile] = SquareMap.GetDataTile(sourceRow, sourceCol);
-        logicGameState[EntityNames.TargetTile] = SquareMap.GetDataTile(targetRow, targetCol);
+        logicGameState[EntityNames.SourceLocation] = sourceLocation;
+        logicGameState[EntityNames.TargetLocation] = targetLocation;
         action.ExecuteAction(logicGameState);
     }
 
@@ -171,6 +171,7 @@ public class GameEngineManager : MonoBehaviour
         {
             switch (field)
             {
+
                 case EntityNames.SourceTile:
                 case EntityNames.TargetTile:
                     {
@@ -179,7 +180,6 @@ public class GameEngineManager : MonoBehaviour
                             DiscRenderer.RenderObjectsOnTileObject(MapRenderer.GetTileObject(tile.GamePosition.X, tile.GamePosition.Y), MaterialPool);
                         break;
                     }
-
                 default:
                     {
                         break;
@@ -235,4 +235,14 @@ public class GameEngineManager : MonoBehaviour
     {
         CameraController.ZoomCamera(deltaY / 5);
     }
+
+    public void TestMove()
+    {
+        logicGameState[EntityNames.SourceTile] = MapHolder.GetDataTile(1, 0);
+        logicGameState[EntityNames.TargetTile] = MapHolder.GetDataTile(1, 1);
+        logicGameState[EntityNames.SourceLocation] = MapHolder.GetDataTile(1, 0).GetCell(0, 0);
+        logicGameState[EntityNames.TargetLocation] = MapHolder.GetDataTile(1, 1).GetCell(0, 0);
+        MoveDiscs((MapLocation)logicGameState[EntityNames.SourceLocation], (MapLocation)logicGameState[EntityNames.TargetLocation]);
+    }
+
 }

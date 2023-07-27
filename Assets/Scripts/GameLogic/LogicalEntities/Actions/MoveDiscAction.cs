@@ -23,17 +23,13 @@ public class MoveDiscAction : IAction
     }
 
     private Phases actionPhase;
-
     public void ExecuteAction(Dictionary<EntityNames, object> logicGameState)
     {
-        sourceTile = (MapTile)logicGameState[EntityNames.SourceTile];
-        targetTile = (MapTile)logicGameState[EntityNames.TargetTile];
-
-        MapLocation sourceLocation=(MapLocation)sourceTile.GetCell(0,0);
-        MapLocation targetLocation=(MapLocation)targetTile.GetCell(0,0);
+        MapLocation sourceLocation = (MapLocation)logicGameState[EntityNames.SourceLocation];
+        MapLocation targetLocation = (MapLocation)logicGameState[EntityNames.TargetLocation];
 
         // Check if both source and destination tiles are valid
-        if (sourceTile == null || targetTile == null)
+        if (sourceLocation == null || targetLocation == null)
         {
             Debug.Log("Invalid source or destination tile");
             OnActionCompleted();
@@ -80,8 +76,10 @@ public class MoveDiscAction : IAction
     {
         List<EntityNames> toChange = new List<EntityNames>
         {
+            EntityNames.SourceLocation,
+            EntityNames.TargetLocation,
             EntityNames.SourceTile,
-            EntityNames.TargetTile
+            EntityNames.TargetTile,
         };
         ActionCompleted?.Invoke(this, new ActionCompletedEventArgs(toChange));
     }
