@@ -42,10 +42,4 @@ public struct GamePosition
 }
 
 
-public enum Direction
-{
-    Up,
-    Down,
-    Left,
-    Right
-}
+public enum Direction { Left, Right, Up, Down, UpLeft, DownLeft, UpRight, DownRight, Neutral }

@@ -11,6 +11,11 @@ public class CameraController : MonoBehaviour
     public int LandscapeZoom;
     public int PortraitZoom;
     private Camera gameCamera;
+
+
+    [Range(0.5f, 10.0f)]
+    public float PanAcceleration = 4;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +33,7 @@ public class CameraController : MonoBehaviour
         gameCamera = transform.Find("MainCamera").GetComponent<Camera>();
 
         UpdateAspectRatio(Screen.width, Screen.height, ScreenOrientation.LandscapeLeft);
+        
     }
 
     public void UpdateAspectRatio(int width, int height, ScreenOrientation screenOrientation)
@@ -82,7 +88,8 @@ public class CameraController : MonoBehaviour
 
     public void MoveCamera(float horizontal, float vertical)
     {
-        float panSpeed = gameCamera.orthographicSize*10f;
+        
+        float panSpeed = gameCamera.orthographicSize*PanAcceleration;
         float newX = horizontal * panSpeed * Time.deltaTime;
         float newZ = vertical * panSpeed * Time.deltaTime;
         if (transform.position.x + newX > 10 || transform.position.x + newX < -4)

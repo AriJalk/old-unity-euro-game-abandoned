@@ -10,22 +10,22 @@ public static class UtilityFunctions
         _random = new Random();
     }
 
-    public static ComponentColor GetRandomComponentColor()
+    public static Colors GetRandomComponentColor()
     {
-        ComponentColor color=ComponentColor.White;
+        Colors color=Colors.White;
         switch (_random.Next(0,4))
         {
             case 0:
-                color= ComponentColor.White;
+                color= Colors.White;
                 break;
             case 1:
-                color= ComponentColor.Blue;
+                color= Colors.Blue;
                 break;
             case 2:
-                color= ComponentColor.Green;
+                color= Colors.Green;
                 break;
             case 3:
-                color= ComponentColor.Red;
+                color= Colors.Red;
                 break;
             default:
                break;

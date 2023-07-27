@@ -42,7 +42,7 @@ public class MapRenderer : MonoBehaviour
             for (int col = 0; col < mapHolder.GetMap().Columns; col++)
             {
                 SquareTileObject tile = poolManager.RetrievePoolObject<SquareTileObject>();
-                tile.TileData = mapHolder.GetMap().GetTile(row, col);
+                tile.TileData = (MapTile)mapHolder.GetMap().GetCell(row, col);
                 tile.transform.SetParent(mapHolder.GetGrid().transform);
                 tile.transform.localScale = Vector3.one;
                 Vector3 position = new Vector3(row * (SquareTileObject.TILE_SPACING + SquareTileObject.TILE_LENGTH)

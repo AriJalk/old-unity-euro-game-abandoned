@@ -1,7 +1,9 @@
 namespace EDBG.MapSystem
 {
-    public class MapLocation
+    public class MapLocation: ICell
     {
+        public GamePosition GamePosition { get; set; }
+
         private GameStack<Disc> _discStack;
 
         public GameStack<Disc> DiscStack
@@ -11,9 +13,10 @@ namespace EDBG.MapSystem
         }
 
 
-        public MapLocation()
+        public MapLocation(GamePosition position)
         {
             DiscStack= new GameStack<Disc>();
+            GamePosition = position;
         }
     }
 }

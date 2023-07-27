@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using EDBG.Rules;
 
 public class Die
 {
@@ -23,9 +24,9 @@ public class Die
 		}
 	}
 
-	private Names.Colors _color;
+	private Colors _color;
 
-	public Names.Colors Color
+	public Colors Color
 	{
 		get { return _color; }
 		set { _color = value; }
@@ -35,7 +36,7 @@ public class Die
 	public Die()
 	{
 		_face = 1;
-		_color = Names.Colors.White;
+		_color = Colors.White;
 	}
 
 	//Copy Constructor
@@ -45,7 +46,7 @@ public class Die
 		_color = die.Color;
 	}
 
-	public Die(int face, Names.Colors color)
+	public Die(int face, Colors color)
 	{
 		_face = face;
 		_color = color;

@@ -3,7 +3,7 @@ public class Disc
 {
 
 
-    public ComponentColor DiscColor
+    public Colors DiscColor
     {
         get; private set;
     } 
@@ -13,7 +13,7 @@ public class Disc
         DiscColor = otherDisc.DiscColor;
     }
 
-    public Disc(ComponentColor discColor)
+    public Disc(Colors discColor)
     {
         DiscColor = discColor;
     }

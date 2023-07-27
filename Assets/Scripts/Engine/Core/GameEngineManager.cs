@@ -43,7 +43,7 @@ public class GameEngineManager : MonoBehaviour
 
     private float time = 0f;
     private int counter = 0;
-    private Dictionary<Names.EntityNames, object> logicGameState;
+    private Dictionary<EntityNames, object> logicGameState;
 
 
     // Start is called before the first frame update
@@ -71,15 +71,38 @@ public class GameEngineManager : MonoBehaviour
             moves += "\n";
         }
         Debug.Log(moves);
+        GridContainer container = SquareMap.GetMap().GetCellAsContainer(0, 0);
+        grid = TileRulesLogic.GetPossibleMoves(container, container.GetCell(0, 0), 1);
+        for (int i = 0; i < grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
+                if (grid[i, j] == true)
+                {
+                    moves += "O ";
+                }
+
+                else
+                {
+                    moves += "x ";
+                    MapLocation location = container.GetCell(i, j) as MapLocation;
+                    location.DiscStack.PopItem();
+                    location.DiscStack.PopItem();
+                }
+
+            }
+            moves += "\n";
+        }
         MapRenderer.RenderMap(SquareMap, MaterialPool, DiscRenderer);
+        Debug.Log(moves);
     }
 
     void Awake()
     {
         InitizalizeScripts();
         gameState = GameStates.PlayerTurn;
-        logicGameState = new Dictionary<Names.EntityNames, object>();
-        logicGameState[Names.EntityNames.Map] = SquareMap;
+        logicGameState = new Dictionary<EntityNames, object>();
+        logicGameState[EntityNames.Map] = SquareMap;
     }
 
     // Update is called once per frame
@@ -111,8 +134,6 @@ public class GameEngineManager : MonoBehaviour
         UserInterface.Initialize(this);
         InputHandler.Initialize(UserInterface);
 
-        TileRulesLogic.Initialize(SquareMap.GetMap().Rows, SquareMap.GetMap().Columns);
-
         PlatformManager.Initialize();
 
         CameraController.Initialize();
@@ -132,8 +153,8 @@ public class GameEngineManager : MonoBehaviour
         gameState = GameStates.Action;
         IAction action = ActionsManager.GetAction("MoveDiscAction");
         action.ActionCompleted += RenderChanges;
-        logicGameState[Names.EntityNames.SourceTile] = SquareMap.GetDataTile(sourceRow, sourceCol);
-        logicGameState[Names.EntityNames.TargetTile] = SquareMap.GetDataTile(targetRow, targetCol);
+        logicGameState[EntityNames.SourceTile] = SquareMap.GetDataTile(sourceRow, sourceCol);
+        logicGameState[EntityNames.TargetTile] = SquareMap.GetDataTile(targetRow, targetCol);
         action.ExecuteAction(logicGameState);
     }
 
@@ -144,13 +165,14 @@ public class GameEngineManager : MonoBehaviour
 
     private void RenderChanges(object sender, ActionCompletedEventArgs e)
     {
-        List<Names.EntityNames> fields = e.ItemsToUpdate;
+        List<EntityNames> fields = e.ItemsToUpdate;
         //Go over list to update and render changes
-        foreach (Names.EntityNames field in fields)
+        foreach (EntityNames field in fields)
         {
             switch (field)
             {
-                case Names.EntityNames.SourceTile: case Names .EntityNames.TargetTile:
+                case EntityNames.SourceTile:
+                case EntityNames.TargetTile:
                     {
                         MapTile tile = (MapTile)logicGameState[field];
                         if (tile != null)
@@ -163,7 +185,7 @@ public class GameEngineManager : MonoBehaviour
                         break;
                     }
             }
-            
+
         }
         gameState = GameStates.PlayerTurn;
     }
@@ -211,6 +233,6 @@ public class GameEngineManager : MonoBehaviour
 
     public void ZoomCamera(float deltaY)
     {
-        CameraController.ZoomCamera(deltaY/5);
+        CameraController.ZoomCamera(deltaY / 5);
     }
 }

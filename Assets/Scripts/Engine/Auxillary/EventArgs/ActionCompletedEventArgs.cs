@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using EDBG.Rules;
 using UnityEngine;
 
 public class ActionCompletedEventArgs : EventArgs
 {
-    public List<Names.EntityNames> ItemsToUpdate;
+    public List<EntityNames> ItemsToUpdate;
 
-    public ActionCompletedEventArgs(List<Names.EntityNames> items)
+    public ActionCompletedEventArgs(List<EntityNames> items)
     {
         ItemsToUpdate = items;
     }

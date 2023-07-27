@@ -1,3 +1,4 @@
+using EDBG.MapSystem;
 using ResourcePool;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,13 +62,14 @@ public class ObjectsRenderer : MonoBehaviour
             for (int j = 0; j < tile.TileData.Columns; j++)
             {
                 float zOffset = (j - 1) * gridCellSize;
-                for (int k = 0; k < tile.TileData.InnerGrid[i, j].DiscStack.Count; k++)
+                MapLocation location = (MapLocation)tile.TileData.GetCell(i, j);
+                for (int k = 0; k < location.DiscStack.Count; k++)
                 {
 
 
                     DiscObject newDisc = poolManager.RetrievePoolObject<DiscObject>();
                     newDisc.enabled = true;
-                    newDisc.discData = tile.TileData.InnerGrid[i, j].DiscStack.GetItemByIndex(k);
+                    newDisc.discData = location.DiscStack.GetItemByIndex(k);
                     newDisc.transform.SetParent(tile.transform);
                     newDisc.transform.localScale = Vector3.one;
 
@@ -77,17 +79,17 @@ public class ObjectsRenderer : MonoBehaviour
                     // Apply Material based on disc color
                     switch (newDisc.discData.DiscColor)
                     {
-                        case EDBG.Rules.ComponentColor.Blue:
+                        case EDBG.Rules.Colors.Blue:
                             newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/BlueWoodMaterial"));
                             break;
-                        case EDBG.Rules.ComponentColor.Red:
+                        case EDBG.Rules.Colors.Red:
                             newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/RedWoodMaterial"));
                             break;
-                        case EDBG.Rules.ComponentColor.Green:
+                        case EDBG.Rules.Colors.Green:
                             newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/GreenWoodMaterial"));
                             break;
-                        case EDBG.Rules.ComponentColor.White:
-                            newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/WhiteMaterial"));
+                        case EDBG.Rules.Colors.White:
+                            newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/OrangeWoodMaterial"));
                             break;
 
                     }

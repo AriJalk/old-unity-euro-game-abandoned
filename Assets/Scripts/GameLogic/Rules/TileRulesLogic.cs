@@ -9,58 +9,55 @@ namespace EDBG.Rules
 {
     public class TileRulesLogic
     {
-        static int gridRows;
-        static int gridColumns;
         static bool[,] possibleMoves;
         static bool[,] visitedTiles;
         static int[,] distanceArray;
         static int maxDistance;
-        static Queue<MapTile> searchQueue;
-        static MapGrid squareMap;
+        static Queue<ICell> searchQueue;
+        static GridContainer squareMap;
 
-        public static void Initialize(int rows, int columns)
+        public static void Initialize()
         {
-            gridRows = rows;
-            gridColumns = columns;
+
         }
 
-        public static bool[,] GetPossibleMoves(MapGrid map, MapTile tile, int distance)
+        public static bool[,] GetPossibleMoves(GridContainer map, ICell tile, int distance)
         {
             squareMap = map;
-            possibleMoves = new bool[gridRows, gridColumns];
-            visitedTiles = new bool[gridRows, gridColumns];
-            distanceArray = new int[gridRows, gridColumns];
-            for (int i = 0; i < squareMap.Rows; i++)
+            possibleMoves = new bool[map.Rows, map.Columns];
+            visitedTiles = new bool[map.Rows, map.Columns];
+            distanceArray = new int[map.Rows, map.Columns];
+            for (int i = 0; i < map.Rows; i++)
             {
-                for (int j = 0; j < squareMap.Columns; j++)
+                for (int j = 0; j < map.Columns; j++)
                 {
                     distanceArray[i, j] = 0;
                 }
             }
             maxDistance = distance;
-            UpdatePossibleTiles(squareMap.GetTile(tile.GamePosition.X, tile.GamePosition.Y));
+            UpdatePossibleTiles(squareMap.GetCell(tile.GamePosition.X, tile.GamePosition.Y));
             return possibleMoves;
         }
 
-        static void UpdatePossibleTiles(MapTile tile)
+        static void UpdatePossibleTiles(ICell tile)
         {
-            searchQueue = new Queue<MapTile>();
+            searchQueue = new Queue<ICell>();
             searchQueue.Enqueue(tile);
             distanceArray[tile.GamePosition.X, tile.GamePosition.Y] = 0;
             BFS(tile);
         }
 
-        static void BFS(MapTile tile)
+        static void BFS(ICell tile)
         {
             if (tile == null)
                 return;
 
             while (searchQueue.Count > 0)
             {
-                MapTile upNeighbor;
-                MapTile downNeighbor;
-                MapTile leftNeighbor;
-                MapTile rightNeighbor;
+                ICell upNeighbor;
+                ICell downNeighbor;
+                ICell leftNeighbor;
+                ICell rightNeighbor;
                 tile = searchQueue.Dequeue();
                 visitedTiles[tile.GamePosition.X, tile.GamePosition.Y] = true;
                 if (distanceArray[tile.GamePosition.X, tile.GamePosition.Y] <= maxDistance)

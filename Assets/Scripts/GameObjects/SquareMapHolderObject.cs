@@ -7,7 +7,6 @@ using Unity.VisualScripting;
 
 public class SquareMapHolderObject : MonoBehaviour
 {
-    public MapRenderer MapRenderer;
     private GameObject grid;
     private MapGrid map;
    
@@ -35,12 +34,12 @@ public class SquareMapHolderObject : MonoBehaviour
 
     public MapTile GetDataTile(int row, int col)
     {
-        return map.GetTile(row, col);
+        return (MapTile)map.GetCell(row, col);
     }
 
     public void SetTile(int row, int col, SquareTileObject tile)
     {
-        map.SetTile(row, col, tile.TileData);
+        map.SetCell(row, col, tile.TileData);
     }
 
     public MapGrid GetMap()

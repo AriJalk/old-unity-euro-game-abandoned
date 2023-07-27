@@ -1,9 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Names
+namespace EDBG.Rules
 {
+    public enum TileTypes
+    {
+        Mountain,
+        Desert,
+        Forest,
+        City,
+        Snowy,
+        Default
+    }
     public enum EntityNames
     {
         Map,

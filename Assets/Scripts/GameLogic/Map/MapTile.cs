@@ -1,30 +1,15 @@
 using EDBG.Rules;
+using UnityEngine;
 
 namespace EDBG.MapSystem
 {
-    public class MapTile
+    public class MapTile : GridContainer, ICell
     {
         public GamePosition GamePosition { get; set; }
 
-        private int _rows;
+        private TileTypes _tileType;
 
-        public int Rows
-        {
-            get { return _rows; }
-            set { _rows = value; }
-        }
-
-        private int _columns;
-
-        public int Columns
-        {
-            get { return _columns; }
-            set { _columns = value; }
-        }
-
-        private TileType _tileType;
-
-        public TileType TileType
+        public TileTypes TileType
         {
             get
             {
@@ -36,44 +21,30 @@ namespace EDBG.MapSystem
             }
         }
 
-        private MapLocation[,] _innerGrid;
 
-        public MapLocation[,] InnerGrid
+        public MapTile(GamePosition gamePosition) : base(3, 3)
         {
-            get { return _innerGrid; }
-            set { _innerGrid = value; }
-        }
-
-
-
-        public MapTile(GamePosition gamePosition)
-        {
-            TileType = TileType.Default;
+            TileType = TileTypes.Default;
             GamePosition = gamePosition;
-            InnerGrid= new MapLocation[3, 3];
             for(int i=0; i < 3; i++)
             {
                 for(int j=0; j < 3; j++)
                 {
-                    InnerGrid[i, j]=new MapLocation();
+                    SetCell(i, j, new MapLocation(new GamePosition(i, j, 3, 3)));
                 }
             }
-            Rows = 3;
-            Columns = 3;
         }
 
-        public MapTile(MapTile tile)
+        public MapTile(MapTile tile) : base(tile)
         {
             TileType = tile.TileType;
             GamePosition = tile.GamePosition;
-            InnerGrid= tile.InnerGrid;
         }
 
-        public MapTile(TileType type, GamePosition gamePosition)
+        public MapTile(TileTypes type, GamePosition gamePosition) : base(3, 3)
         {
             TileType = type;
             GamePosition=gamePosition;
-            InnerGrid= new MapLocation[3, 3];
         }
     }
 
