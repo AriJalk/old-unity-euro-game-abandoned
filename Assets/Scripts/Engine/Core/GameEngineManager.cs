@@ -95,6 +95,7 @@ public class GameEngineManager : MonoBehaviour
         }
         MapRenderer.RenderMap(MapHolder, MaterialPool, DiscRenderer);
         Debug.Log(moves);
+
     }
 
     void Awake()

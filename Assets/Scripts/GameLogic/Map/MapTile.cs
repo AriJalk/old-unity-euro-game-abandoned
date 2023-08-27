@@ -30,7 +30,7 @@ namespace EDBG.MapSystem
             {
                 for(int j=0; j < 3; j++)
                 {
-                    SetCell(i, j, new MapLocation(new GamePosition(i, j, 3, 3)));
+                    SetCell(i, j, new MapLocation(new GamePosition(i, j)));
                 }
             }
         }

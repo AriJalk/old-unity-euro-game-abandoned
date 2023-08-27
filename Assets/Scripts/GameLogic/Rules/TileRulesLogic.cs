@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace EDBG.Rules
 {
+    //TODO: Rename class
     public class TileRulesLogic
     {
         static bool[,] possibleMoves;
@@ -21,7 +22,7 @@ namespace EDBG.Rules
 
         }
 
-        public static bool[,] GetPossibleMoves(GridContainer map, ICell tile, int distance)
+        public static bool[,] GetPossibleMoves(GridContainer map, ICell cell, int distance)
         {
             squareMap = map;
             possibleMoves = new bool[map.Rows, map.Columns];
@@ -35,11 +36,11 @@ namespace EDBG.Rules
                 }
             }
             maxDistance = distance;
-            UpdatePossibleTiles(squareMap.GetCell(tile.GamePosition.X, tile.GamePosition.Y));
+            UpdatePossibleTiles(squareMap.GetCell(cell.GamePosition.X, cell.GamePosition.Y));
             return possibleMoves;
         }
 
-        static void UpdatePossibleTiles(ICell tile)
+        private static void UpdatePossibleTiles(ICell tile)
         {
             searchQueue = new Queue<ICell>();
             searchQueue.Enqueue(tile);
@@ -47,7 +48,7 @@ namespace EDBG.Rules
             BFS(tile);
         }
 
-        static void BFS(ICell tile)
+        private static void BFS(ICell tile)
         {
             if (tile == null)
                 return;
