@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameStack<T> where T : class
+public class GameStack<T> : GameComponent where T : class
 {
     private List<T> itemsList;
 

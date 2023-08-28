@@ -36,10 +36,10 @@ namespace EDBG.MapSystem
                                     break;
                             }
                             MapLocation location = (MapLocation)tile.GetCell(k, l);
-                            location.DiscStack.PushItem(new Disc(UtilityFunctions.GetRandomComponentColor()));
-                            location.DiscStack.PushItem(new Disc(UtilityFunctions.GetRandomComponentColor()));
-                            location.DiscStack.PushItem(new Disc(UtilityFunctions.GetRandomComponentColor()));
-                            location.DiscStack.PushItem(new Disc(UtilityFunctions.GetRandomComponentColor()));
+                            ((GameStack<Disc>)location.LocationComponent.Component).PushItem(new Disc(UtilityFunctions.GetRandomComponentColor()));
+                            ((GameStack<Disc>)location.LocationComponent.Component).PushItem(new Disc(UtilityFunctions.GetRandomComponentColor()));
+                            ((GameStack<Disc>)location.LocationComponent.Component).PushItem(new Disc(UtilityFunctions.GetRandomComponentColor()));
+                            ((GameStack<Disc>)location.LocationComponent.Component).PushItem(new Disc(UtilityFunctions.GetRandomComponentColor()));
                         }
                     }
 

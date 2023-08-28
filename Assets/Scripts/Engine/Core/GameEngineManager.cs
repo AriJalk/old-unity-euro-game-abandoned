@@ -86,8 +86,8 @@ public class GameEngineManager : MonoBehaviour
                 {
                     moves += "x ";
                     MapLocation location = container.GetCell(i, j) as MapLocation;
-                    location.DiscStack.PopItem();
-                    location.DiscStack.PopItem();
+                    ((GameStack<Disc>)location.LocationComponent.Component).PopItem();
+                    ((GameStack<Disc>)location.LocationComponent.Component).PopItem();
                 }
 
             }

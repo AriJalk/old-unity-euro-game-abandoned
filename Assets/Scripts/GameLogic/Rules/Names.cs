@@ -9,11 +9,20 @@ namespace EDBG.Rules
         Snowy,
         Default
     }
+
+    public enum LocationTypes
+    {
+        Blue=Colors.Blue,
+        Green=Colors.Green,
+        Red=Colors.Red
+    }
+
     public enum EntityNames
     {
         Map,
         Player,
         Automata,
+        Neutral,
         Disc,
         Tile,
         SourceTile,
@@ -24,6 +33,13 @@ namespace EDBG.Rules
         ActionCard,
         DiscStack,
         Cube
+    }
+
+    public enum Ownership
+    {
+        Player = EntityNames.Player,
+        Automata= EntityNames.Automata,
+        Neutral= EntityNames.Neutral
     }
 
     public enum Colors

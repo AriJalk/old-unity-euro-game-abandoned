@@ -37,7 +37,7 @@ public class MoveDiscAction : IAction
         }
 
         // Check if the source tile has at least one disc
-        if (sourceLocation.DiscStack.Count == 0)
+        if (((GameStack<Disc>)sourceLocation.LocationComponent.Component).Count == 0)
         {
             Debug.Log("Source tile is empty");
             OnActionCompleted();
@@ -45,8 +45,8 @@ public class MoveDiscAction : IAction
         }
 
         // Move the disc from the source stack to the destination stack
-        Disc disc = sourceLocation.DiscStack.PopItem();
-        targetLocation.DiscStack.PushItem(disc);
+        Disc disc = ((GameStack<Disc>)sourceLocation.LocationComponent.Component).PopItem();
+        ((GameStack<Disc>)targetLocation.LocationComponent.Component).PushItem(disc);
         OnActionCompleted();
     }
 
@@ -60,15 +60,15 @@ public class MoveDiscAction : IAction
         }
 
         // Check if the source tile has at least one disc
-        if (sourceLocation.DiscStack.Count == 0 || sourceLocation.DiscStack.Count == 0)
+        if (((GameStack<Disc>)sourceLocation.LocationComponent.Component).Count == 0 || ((GameStack<Disc>)sourceLocation.LocationComponent.Component).Count == 0)
         {
             Debug.Log("Source tile is empty");
             return;
         }
 
         // Move the disc from the source stack to the destination stack
-        Disc disc = sourceLocation.DiscStack.PopItem();
-        targetLocation.DiscStack.PushItem(disc);
+        Disc disc = ((GameStack<Disc>)sourceLocation.LocationComponent.Component).PopItem();
+        ((GameStack<Disc>)targetLocation.LocationComponent.Component).PushItem(disc);
         OnActionCompleted();
     }
 

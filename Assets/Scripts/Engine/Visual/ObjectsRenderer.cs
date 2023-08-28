@@ -63,13 +63,13 @@ public class ObjectsRenderer : MonoBehaviour
             {
                 float zOffset = (j - 1) * gridCellSize;
                 MapLocation location = (MapLocation)tile.TileData.GetCell(i, j);
-                for (int k = 0; k < location.DiscStack.Count; k++)
+                for (int k = 0; k < ((GameStack<Disc>)location.LocationComponent.Component).Count; k++)
                 {
 
 
                     DiscObject newDisc = poolManager.RetrievePoolObject<DiscObject>();
                     newDisc.enabled = true;
-                    newDisc.discData = location.DiscStack.GetItemByIndex(k);
+                    newDisc.discData = ((GameStack<Disc>)location.LocationComponent.Component).GetItemByIndex(k);
                     newDisc.transform.SetParent(tile.transform);
                     newDisc.transform.localScale = Vector3.one;
 
