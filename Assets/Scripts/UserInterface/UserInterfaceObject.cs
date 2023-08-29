@@ -70,9 +70,9 @@ public class UserInterfaceObject : MonoBehaviour
 
     public void MouseClicked(bool[] mouseButtons, Vector3 mousePos)
     {
-        if (mouseButtons[0])
+        if (mouseButtons[0] || mouseButtons[1])
         {
-            gameEngineManager.SelectObject(mousePos);
+            gameEngineManager.SelectObject(mousePos, mouseButtons);
         }
     }
 

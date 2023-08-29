@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EDBG.MapSystem
 {
-    public class MapTile : GridContainer, ICell
+    public class MapTile : ICell
     {
         public GamePosition GamePosition { get; set; }
 
@@ -21,27 +21,24 @@ namespace EDBG.MapSystem
             }
         }
 
+        public int DieFace { get; private set; }
 
-        public MapTile(GamePosition gamePosition) : base(3, 3)
+        public GameComponent ComponentOnTile { get; set; }
+
+        public MapTile(GamePosition gamePosition)
         {
             TileType = TileTypes.Default;
             GamePosition = gamePosition;
-            for(int i=0; i < 3; i++)
-            {
-                for(int j=0; j < 3; j++)
-                {
-                    SetCell(i, j, new MapLocation(new GamePosition(i, j)));
-                }
-            }
+            DieFace = 1;
         }
 
-        public MapTile(MapTile tile) : base(tile)
+        public MapTile(MapTile tile)
         {
             TileType = tile.TileType;
             GamePosition = tile.GamePosition;
         }
 
-        public MapTile(TileTypes type, GamePosition gamePosition) : base(3, 3)
+        public MapTile(TileTypes type, GamePosition gamePosition)
         {
             TileType = type;
             GamePosition=gamePosition;

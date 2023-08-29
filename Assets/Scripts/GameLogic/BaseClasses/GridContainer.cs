@@ -45,11 +45,11 @@ namespace EDBG.MapSystem
             return null;
         }
 
-        public virtual bool SetCell(int row, int column, ICell cell)
+        public virtual bool SetCell(ICell cell)
         {
-            if (IsValidCoordinate(row,column))
+            if (IsValidCoordinate(cell.GamePosition.Y,cell.GamePosition.X))
             {
-                _grid[row, column] = cell;
+                _grid[cell.GamePosition.Y, cell.GamePosition.X] = cell;
                 return true;
             }
             return false;

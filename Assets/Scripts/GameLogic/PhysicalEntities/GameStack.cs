@@ -61,4 +61,9 @@ public class GameStack<T> : GameComponent where T : class
 
         return itemsList[itemsList.Count - 1];
     }
+
+    public void RemoveItem(T item)
+    {
+        itemsList.Remove(item);
+    }
 }

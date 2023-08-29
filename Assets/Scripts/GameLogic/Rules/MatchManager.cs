@@ -7,7 +7,7 @@ namespace EDBG.Rules
 {
     public class MatchManager
     {
-        private GameState gameState;
+        private LogicGameState gameState;
         private readonly Player[] matchPlayers;
 
         public MatchManager(MapGrid squareMap, params Player[] players)
@@ -15,7 +15,7 @@ namespace EDBG.Rules
             matchPlayers = new Player[players.Length];
             for (int i = 0; i < players.Length; i++)
                 matchPlayers[i] = players[i];
-            gameState = new GameState(squareMap);
+            gameState = new LogicGameState(squareMap);
         }
     }
 }

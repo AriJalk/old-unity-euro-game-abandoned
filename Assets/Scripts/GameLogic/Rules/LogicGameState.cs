@@ -2,14 +2,16 @@ using EDBG.MapSystem;
 
 namespace EDBG.Rules
 {
-    public class GameState
+    public class LogicGameState
     {
-        private MapGrid mapGrid;
-        private GameStack<Die> rolledDice;
+        public MapGrid mapGrid;
+        public GameStack<Die> rolledDice;
+
+        public MapTile SourceTile = null;
+        public MapTile TargetTile = null;
 
 
-
-        public GameState(MapGrid mapGrid)
+        public LogicGameState(MapGrid mapGrid)
         {
             this.mapGrid = mapGrid;
         }

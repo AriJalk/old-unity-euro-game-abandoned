@@ -13,7 +13,7 @@ public static class UtilityFunctions
     public static Colors GetRandomComponentColor()
     {
         Colors color=Colors.White;
-        switch (_random.Next(0,4))
+        switch (UnityEngine.Random.Range(0,4))
         {
             case 0:
                 color= Colors.White;

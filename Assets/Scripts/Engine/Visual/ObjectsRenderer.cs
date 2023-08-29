@@ -53,46 +53,34 @@ public class ObjectsRenderer : MonoBehaviour
         float tileHeight = SquareTileObject.TILE_HEIGHT;
         float discHeight = DiscObject.DISC_HEIGHT;
         float initialHeightOffset = 0.0f; // Adjust this value to control the initial height offset of the first disc
-        float gridCellSize = SquareTileObject.TILE_LENGTH / 3;
-
-
-        for (int i = 0; i < tile.TileData.Rows; i++)
+        //float gridCellSize = SquareTileObject.TILE_LENGTH / 3;
+        if (tile.TileData.ComponentOnTile is GameStack<Disc> discStack && discStack.Count > 0)
         {
-            float xOffset = (i - 1) * gridCellSize;
-            for (int j = 0; j < tile.TileData.Columns; j++)
+            for (int i = 0; i < discStack.Count; i++)
             {
-                float zOffset = (j - 1) * gridCellSize;
-                MapLocation location = (MapLocation)tile.TileData.GetCell(i, j);
-                for (int k = 0; k < ((GameStack<Disc>)location.LocationComponent.Component).Count; k++)
+                DiscObject newDisc = poolManager.RetrievePoolObject<DiscObject>();
+                newDisc.enabled = true;
+                newDisc.discData = discStack.GetItemByIndex(i);
+                newDisc.transform.SetParent(tile.transform);
+                newDisc.transform.localScale = Vector3.one;
+                newDisc.transform.localPosition = new Vector3(0, (i * discHeight) + initialHeightOffset + tileHeight, 0);
+
+                // Apply Material based on disc color
+                switch (newDisc.discData.DiscColor)
                 {
+                    case EDBG.Rules.Colors.Blue:
+                        newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/BlueWoodMaterial"));
+                        break;
+                    case EDBG.Rules.Colors.Red:
+                        newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/RedWoodMaterial"));
+                        break;
+                    case EDBG.Rules.Colors.Green:
+                        newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/GreenWoodMaterial"));
+                        break;
+                    case EDBG.Rules.Colors.White:
+                        newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/OrangeWoodMaterial"));
+                        break;
 
-
-                    DiscObject newDisc = poolManager.RetrievePoolObject<DiscObject>();
-                    newDisc.enabled = true;
-                    newDisc.discData = ((GameStack<Disc>)location.LocationComponent.Component).GetItemByIndex(k);
-                    newDisc.transform.SetParent(tile.transform);
-                    newDisc.transform.localScale = Vector3.one;
-
-
-                    newDisc.transform.localPosition = new Vector3(xOffset, (k * discHeight) + initialHeightOffset + tileHeight, zOffset);
-
-                    // Apply Material based on disc color
-                    switch (newDisc.discData.DiscColor)
-                    {
-                        case EDBG.Rules.Colors.Blue:
-                            newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/BlueWoodMaterial"));
-                            break;
-                        case EDBG.Rules.Colors.Red:
-                            newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/RedWoodMaterial"));
-                            break;
-                        case EDBG.Rules.Colors.Green:
-                            newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/GreenWoodMaterial"));
-                            break;
-                        case EDBG.Rules.Colors.White:
-                            newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/OrangeWoodMaterial"));
-                            break;
-
-                    }
                 }
             }
         }

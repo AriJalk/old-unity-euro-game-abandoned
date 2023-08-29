@@ -7,5 +7,5 @@ using UnityEngine;
 public interface IAction
 {
     event EventHandler<ActionCompletedEventArgs> ActionCompleted;
-    void ExecuteAction(Dictionary<EntityNames, object> logicGameState);
+    void ExecuteAction(LogicGameState gameState);
 }

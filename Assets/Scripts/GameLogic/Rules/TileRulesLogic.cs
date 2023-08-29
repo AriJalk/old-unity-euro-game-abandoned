@@ -36,7 +36,7 @@ namespace EDBG.Rules
                 }
             }
             maxDistance = distance;
-            UpdatePossibleTiles(squareMap.GetCell(cell.GamePosition.X, cell.GamePosition.Y));
+            UpdatePossibleTiles(cell);
             return possibleMoves;
         }
 
