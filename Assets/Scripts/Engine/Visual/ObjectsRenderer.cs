@@ -8,6 +8,7 @@ public class ObjectsRenderer : MonoBehaviour
 {
     private PoolManager poolManager;
     public GameObject DiscPrefab;
+    public float DiscScale = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -62,8 +63,8 @@ public class ObjectsRenderer : MonoBehaviour
                 newDisc.enabled = true;
                 newDisc.discData = discStack.GetItemByIndex(i);
                 newDisc.transform.SetParent(tile.transform);
-                newDisc.transform.localScale = Vector3.one;
-                newDisc.transform.localPosition = new Vector3(0, (i * discHeight) + initialHeightOffset + tileHeight, 0);
+                newDisc.transform.localScale = Vector3.one * DiscScale;
+                newDisc.transform.localPosition = new Vector3(0, ((i * discHeight) + initialHeightOffset) * DiscScale + tileHeight, 0);
 
                 // Apply Material based on disc color
                 switch (newDisc.discData.DiscColor)

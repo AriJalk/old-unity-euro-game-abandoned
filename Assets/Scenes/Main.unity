@@ -705,6 +705,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DiscPrefab: {fileID: 1165439769703277351, guid: d8b0db0269a36da4f88e1305c2e4fe73, type: 3}
+  DiscScale: 2.5
 --- !u!1 &1279772755
 GameObject:
   m_ObjectHideFlags: 0
