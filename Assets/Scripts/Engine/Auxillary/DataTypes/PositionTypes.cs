@@ -7,7 +7,7 @@ public struct GamePosition
     public int Y { get { return _y; } }
 
 
-    public GamePosition(int x, int y)
+    public GamePosition(int y, int x)
     {
         _x = x;
         _y = y;
@@ -19,7 +19,7 @@ public struct GamePosition
         _y += deltaY;
     }
 
-    public void SetPosition(int x, int y)
+    public void SetPosition(int y, int x)
     {
         _x = x;
         _y = y;
@@ -27,7 +27,7 @@ public struct GamePosition
 
     public override string ToString()
     {
-        return $"({X}, {Y})";
+        return $"({Y}, {X})";
     }
 }
 

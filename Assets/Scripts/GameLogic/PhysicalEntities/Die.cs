@@ -52,9 +52,10 @@ public class Die
 		_color = color;
 	}
 
-	public void Roll()
+	public int Roll()
 	{
 		_face = Random.Range(1, 6);
+		return _face;
 	}
 
 	public void ChangeValue(int value)

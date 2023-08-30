@@ -26,7 +26,7 @@ public class SquareMapHolderObject : MonoBehaviour
 
     public void Initialize(MapGrid map)
     {
-        this.map = map;
+        this.map = (MapGrid)map.Clone();
         grid = new GameObject("Grid");
         grid.transform.SetParent(transform); // Set the parent transform
         grid.transform.localScale = Vector3.one;
@@ -35,7 +35,7 @@ public class SquareMapHolderObject : MonoBehaviour
 
     public MapTile GetDataTile(int row, int col)
     {
-        return (MapTile)map.GetCell(col, row);
+        return (MapTile)map.GetCell(row, col);
     }
 
     public void SetTile(SquareTileObject tile)
@@ -48,6 +48,10 @@ public class SquareMapHolderObject : MonoBehaviour
         return map;
     }
 
+    public void SetMap(MapGrid map)
+    {
+        this.map = (MapGrid)map.Clone();
+    }
 
     public GameObject GetGridObject()
     {

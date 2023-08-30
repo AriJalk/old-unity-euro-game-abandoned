@@ -1,4 +1,5 @@
 using EDBG.Rules;
+using System;
 using UnityEngine;
 
 namespace EDBG.MapSystem
@@ -36,12 +37,19 @@ namespace EDBG.MapSystem
         {
             TileType = tile.TileType;
             GamePosition = tile.GamePosition;
+            DieFace = tile.DieFace;
+            ComponentOnTile = (GameComponent)tile.ComponentOnTile.Clone();
         }
 
         public MapTile(TileTypes type, GamePosition gamePosition)
         {
             TileType = type;
             GamePosition=gamePosition;
+        }
+
+        public object Clone()
+        {
+            return new MapTile(this);
         }
     }
 

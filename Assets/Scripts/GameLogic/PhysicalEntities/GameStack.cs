@@ -66,4 +66,9 @@ public class GameStack<T> : GameComponent where T : class
     {
         itemsList.Remove(item);
     }
+
+    public override object Clone()
+    {
+        return new GameStack<T>(this);
+    }
 }

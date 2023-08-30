@@ -9,6 +9,7 @@ public class UserInterfaceObject : MonoBehaviour
 {
     private TextMeshProUGUI textBox;
     private Button UpdateButton;
+    private Button UndoButton;
     private Button ActionButton;
     private GameObject canvas;
     private GameEngineManager gameEngineManager;
@@ -38,7 +39,9 @@ public class UserInterfaceObject : MonoBehaviour
         textBox = canvas.transform.Find("TextBox").GetComponent<TextMeshProUGUI>();
         UpdateButton = canvas.transform.Find("UpdateButton").GetComponent<Button>();
         ActionButton = canvas.transform.Find("ActionButton").GetComponent<Button>();
-        UpdateButton.onClick.AddListener(Something);
+        UndoButton = canvas.transform.Find("UndoButton").GetComponent<Button>();
+        UpdateButton.onClick.AddListener(MoveTestUI);
+        UndoButton.onClick.AddListener(UndoUI);
 
         Transform panel = canvas.transform.Find("PlayerHandPanel");
 
@@ -58,9 +61,14 @@ public class UserInterfaceObject : MonoBehaviour
         Debug.Log(dice.Length);
     }
 
-    private void Something()
+    private void MoveTestUI()
     {
         gameEngineManager.TestMove();
+    }
+
+    private void UndoUI()
+    {
+        gameEngineManager.Undo();
     }
 
     public void AxisChanged(float horizonalInput, float verticalInput)

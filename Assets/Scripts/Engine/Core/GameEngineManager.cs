@@ -44,6 +44,7 @@ public class GameEngineManager : MonoBehaviour
     private float time = 0f;
     private int counter = 0;
     private LogicGameState logicGameState;
+    private LogicGameState confirmedLogicGameState;
 
 
     // Start is called before the first frame update
@@ -98,6 +99,7 @@ public class GameEngineManager : MonoBehaviour
     {
 
         logicGameState = new LogicGameState(new MapGrid());
+        confirmedLogicGameState = (LogicGameState)logicGameState.Clone();
 
         PoolManager.Initialize();
 
@@ -154,7 +156,7 @@ public class GameEngineManager : MonoBehaviour
                         MapTile tile = logicGameState.SourceTile;
                         if (tile != null)
                         {
-                            SquareTileObject tileObject = MapRenderer.GetTileObject(tile.GamePosition.X, tile.GamePosition.Y);
+                            SquareTileObject tileObject = MapRenderer.GetTileObject(tile.GamePosition.Y, tile.GamePosition.X);
                             tileObject.TileData = tile;
                             DiscRenderer.RenderObjectsOnTileObject(tileObject, MaterialPool);
                         }
@@ -165,11 +167,11 @@ public class GameEngineManager : MonoBehaviour
                         MapTile tile = logicGameState.TargetTile;
                         if (tile != null)
                         {
-                            SquareTileObject tileObject = MapRenderer.GetTileObject(tile.GamePosition.X, tile.GamePosition.Y);
+                            SquareTileObject tileObject = MapRenderer.GetTileObject(tile.GamePosition.Y, tile.GamePosition.X);
                             tileObject.TileData = tile;
                             DiscRenderer.RenderObjectsOnTileObject(tileObject, MaterialPool);
                         }
-                            
+
                         break;
                     }
                 default:
@@ -230,6 +232,15 @@ public class GameEngineManager : MonoBehaviour
         logicGameState.SourceTile = MapHolder.GetDataTile(1, 0);
         logicGameState.TargetTile = MapHolder.GetDataTile(1, 1);
         MoveDiscs(logicGameState.SourceTile, logicGameState.TargetTile);
+        confirmedLogicGameState = (LogicGameState)logicGameState.Clone();
+        MapHolder.SetMap((MapGrid)confirmedLogicGameState.mapGrid.Clone());
+
     }
 
+    public void Undo()
+    {
+        logicGameState = (LogicGameState)confirmedLogicGameState.Clone();
+        MapHolder.SetMap((MapGrid)confirmedLogicGameState.mapGrid.Clone());
+        MapRenderer.RenderMap(MapHolder, MaterialPool, DiscRenderer);
+    }
 }

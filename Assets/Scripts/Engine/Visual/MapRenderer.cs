@@ -52,6 +52,7 @@ public class MapRenderer : MonoBehaviour
                 tile.gameObject.isStatic = true;
                 tile.gameObject.SetActive(true);
                 tile.name = "Tile [" + row + "," + col + "]";
+                tile.ApplyMaterial(materialPool.GetMaterial("Materials/WhiteTileMaterial"));
                 tiles[row, col] = tile;
                 discRenderer.RenderObjectsOnTileObject(tile, materialPool);
             }

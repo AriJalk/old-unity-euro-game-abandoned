@@ -12,6 +12,11 @@ namespace EDBG.MapSystem
 
         public MapGrid(MapGrid other) : base(other) { }
 
+        public override object Clone()
+        {
+            return new MapGrid(this);
+        }
+
         private void TestBuild()
         {
             for (int i = 0; i < Rows; i++)

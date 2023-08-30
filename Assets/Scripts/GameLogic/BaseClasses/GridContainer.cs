@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace EDBG.MapSystem
 {
-    public abstract class GridContainer
+    public abstract class GridContainer : ICloneable
     {
         private ICell[,] _grid;
 
@@ -16,19 +17,26 @@ namespace EDBG.MapSystem
         {
             Rows = rows;
             Columns = columns;
-            _grid= new ICell[Rows, Columns];
+            _grid = new ICell[Rows, Columns];
         }
 
         public GridContainer(GridContainer other)
         {
+            _grid = new ICell[other.Rows, other.Columns];
             Rows = other.Rows;
             Columns = other.Columns;
-            _grid = other._grid;
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    _grid[i, j] = (ICell)other._grid[i, j].Clone();
+                }
+            }
         }
 
         public virtual ICell GetCell(int row, int column)
         {
-            if (IsValidCoordinate(row,column)) 
+            if (IsValidCoordinate(row, column))
             {
                 return _grid[row, column];
             }
@@ -37,7 +45,7 @@ namespace EDBG.MapSystem
 
         public virtual GridContainer GetCellAsContainer(int row, int column)
         {
-            ICell cell=_grid[row,column];
+            ICell cell = _grid[row, column];
             if (cell is GridContainer container)
             {
                 return container;
@@ -45,9 +53,11 @@ namespace EDBG.MapSystem
             return null;
         }
 
+
+        //TODO: deep copy
         public virtual bool SetCell(ICell cell)
         {
-            if (IsValidCoordinate(cell.GamePosition.Y,cell.GamePosition.X))
+            if (IsValidCoordinate(cell.GamePosition.Y, cell.GamePosition.X))
             {
                 _grid[cell.GamePosition.Y, cell.GamePosition.X] = cell;
                 return true;
@@ -84,17 +94,19 @@ namespace EDBG.MapSystem
             int neighborX = cell.GamePosition.X + offsetX;
             int neighborY = cell.GamePosition.Y + offsetY;
 
-            if (IsValidCoordinate(neighborX, neighborY))
+            if (IsValidCoordinate(neighborY, neighborX))
             {
-                return _grid[neighborX, neighborY];
+                return _grid[neighborY, neighborX];
             }
 
             return null;
         }
 
-        private bool IsValidCoordinate(int x, int y)
+        private bool IsValidCoordinate(int row, int col)
         {
-            return x >= 0 && x < Rows && y >= 0 && y < Columns;
+            return row >= 0 && row < Rows && col >= 0 && col < Columns;
         }
+
+        public abstract object Clone();
     }
 }

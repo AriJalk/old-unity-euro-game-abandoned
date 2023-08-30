@@ -29,7 +29,7 @@ public class SquareTileObject : MonoBehaviour
     public void ApplyMaterial(Material material)
     {
         // Find the child GameObject with the model
-        GameObject modelObject = transform.Find("DiscModel").gameObject;
+        GameObject modelObject = transform.Find("SquareTileModel").gameObject;
 
         // Get the Renderer component of the modelObject
         Renderer modelRenderer = modelObject.GetComponent<Renderer>();

@@ -10,4 +10,14 @@ public class Disc : GameComponent
     {
         DiscColor = discColor;
     }
+
+    public Disc(Disc other)
+    {
+        DiscColor = other.DiscColor;
+    }
+
+    public override object Clone()
+    {
+        return new Disc(this);
+    }
 }
