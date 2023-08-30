@@ -52,8 +52,10 @@ public class ObjectsRenderer : MonoBehaviour
     {
 
         float tileHeight = SquareTileObject.TILE_HEIGHT;
-        float discHeight = DiscObject.DISC_HEIGHT;
+        float discHeight = DiscObject.DISC_HEIGHT * DiscScale;
         float initialHeightOffset = 0.0f; // Adjust this value to control the initial height offset of the first disc
+        float fillerDiscFactor = 4;
+        float fillerDiscHeight = discHeight / fillerDiscFactor;
         //float gridCellSize = SquareTileObject.TILE_LENGTH / 3;
         if (tile.TileData.ComponentOnTile is GameStack<Disc> discStack && discStack.Count > 0)
         {
@@ -64,7 +66,8 @@ public class ObjectsRenderer : MonoBehaviour
                 newDisc.discData = discStack.GetItemByIndex(i);
                 newDisc.transform.SetParent(tile.transform);
                 newDisc.transform.localScale = Vector3.one * DiscScale;
-                newDisc.transform.localPosition = new Vector3(0, ((i * discHeight) + initialHeightOffset) * DiscScale + tileHeight, 0);
+                Vector3 position = new Vector3(0, i * discHeight + initialHeightOffset + tileHeight + ((i != 0) ? fillerDiscHeight * i : 0), 0);
+                newDisc.transform.localPosition = position;
 
                 // Apply Material based on disc color
                 switch (newDisc.discData.DiscColor)
@@ -82,6 +85,16 @@ public class ObjectsRenderer : MonoBehaviour
                         newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/OrangeWoodMaterial"));
                         break;
 
+                }
+                //Create filler disc
+                if (i < discStack.Count - 1)
+                {
+                    newDisc = poolManager.RetrievePoolObject<DiscObject>();
+                    newDisc.transform.SetParent(tile.transform);
+                    newDisc.transform.localScale = new Vector3(DiscScale, DiscScale / fillerDiscFactor, DiscScale);
+                    float fillerYPos = position.y + discHeight;
+                    newDisc.transform.localPosition = new Vector3(0, fillerYPos, 0);
+                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/WhiteMaterial"));
                 }
             }
         }
