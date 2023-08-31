@@ -232,7 +232,8 @@ public class GameEngineManager : MonoBehaviour
         gameStateStack.Peek().SourceTile = (MapTile)gameStateStack.Peek().mapGrid.GetCell(1, 0);
         gameStateStack.Peek().TargetTile = (MapTile)gameStateStack.Peek().mapGrid.GetCell(1, 1);
 
-        MoveDiscs(gameStateStack.Peek().SourceTile, gameStateStack.Peek().TargetTile);
+        if (((GameStack<Disc>)gameStateStack.Peek().SourceTile.ComponentOnTile).Count > 0)
+            MoveDiscs(gameStateStack.Peek().SourceTile, gameStateStack.Peek().TargetTile);
 
 
 

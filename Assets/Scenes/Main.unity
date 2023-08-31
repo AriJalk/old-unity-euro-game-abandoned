@@ -1003,7 +1003,7 @@ MonoBehaviour:
   MapRenderer: {fileID: 823469139}
   DiscRenderer: {fileID: 973338700}
   MaterialPool: {fileID: 1887737066}
-  MapHolder: {fileID: 1968065631}
+  MapHolderObject: {fileID: 1968065630}
   UserInterface: {fileID: 774718765}
   InputHandler: {fileID: 420088148}
   CameraController: {fileID: 50494742}

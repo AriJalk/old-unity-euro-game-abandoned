@@ -2,12 +2,15 @@ using EDBG.MapSystem;
 using System;
 using Unity.VisualScripting;
 
+
 namespace EDBG.Rules
 {
     public class LogicGameState : ICloneable
     {
         public MapGrid mapGrid;
         public GameStack<Die> rolledDice;
+
+        //TODO: remove tile properties
 
         private MapTile _sourceTile;
         public MapTile SourceTile
