@@ -33,17 +33,17 @@ public class MapRenderer : MonoBehaviour
         poolManager.RegisterPrefab<SquareTileObject>(SquarePrefab);
     }
 
-    public void RenderMap(SquareMapHolderObject mapHolder, MaterialPool materialPool, ObjectsRenderer discRenderer)
+    public void RenderMap(MapGrid map, Transform mapHolderObject, MaterialPool materialPool, ObjectsRenderer discRenderer)
     {
-        tiles = new SquareTileObject[mapHolder.GetMap().Rows, mapHolder.GetMap().Columns];
-        RemovePreviousTiles(mapHolder.GetGridObject().transform);
-        for (int row = 0; row < mapHolder.GetMap().Rows; row++)
+        tiles = new SquareTileObject[map.Rows, map.Columns];
+        RemovePreviousTiles(mapHolderObject.transform);
+        for (int row = 0; row < map.Rows; row++)
         {
-            for (int col = 0; col < mapHolder.GetMap().Columns; col++)
+            for (int col = 0; col < map.Columns; col++)
             {
                 SquareTileObject tile = poolManager.RetrievePoolObject<SquareTileObject>();
-                tile.TileData = (MapTile)mapHolder.GetMap().GetCell(row, col);
-                tile.transform.SetParent(mapHolder.GetGridObject().transform);
+                tile.TileData = (MapTile)map.GetCell(row, col);
+                tile.transform.SetParent(mapHolderObject);
                 tile.transform.localScale = Vector3.one;
                 Vector3 position = new Vector3(row * (SquareTileObject.TILE_SPACING + SquareTileObject.TILE_LENGTH)
                     , 0.1f

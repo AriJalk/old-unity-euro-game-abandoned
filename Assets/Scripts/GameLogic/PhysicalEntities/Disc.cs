@@ -1,5 +1,5 @@
 using EDBG.Rules;
-public class Disc : GameComponent
+public class Disc : IGameComponent
 {
     public Colors DiscColor
     {

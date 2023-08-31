@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using EDBG.Rules;
 
-public class Die
+public class Die : IGameComponent
 {
 	private int _face;
 
@@ -40,7 +40,7 @@ public class Die
 	}
 
 	//Copy Constructor
-	public Die(Die die)
+	private Die(Die die)
 	{
 		_face = die.Face;
 		_color = die.Color;
@@ -63,4 +63,8 @@ public class Die
         _face = ((_face - 1 + value) % 6 + 6) % 6 + 1;
     }
 
+    public override object Clone()
+    {
+		return new Die(this);
+    }
 }

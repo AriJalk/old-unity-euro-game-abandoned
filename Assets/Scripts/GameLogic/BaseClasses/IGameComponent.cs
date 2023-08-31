@@ -1,6 +1,6 @@
 using System;
 
-public abstract class GameComponent : ICloneable
+public abstract class IGameComponent : ICloneable
 {
     public abstract object Clone();
 }

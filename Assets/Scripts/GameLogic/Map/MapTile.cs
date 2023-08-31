@@ -24,7 +24,7 @@ namespace EDBG.MapSystem
 
         public int DieFace { get; private set; }
 
-        public GameComponent ComponentOnTile { get; set; }
+        public IGameComponent ComponentOnTile { get; set; }
 
         public MapTile(GamePosition gamePosition)
         {
@@ -38,7 +38,7 @@ namespace EDBG.MapSystem
             TileType = tile.TileType;
             GamePosition = tile.GamePosition;
             DieFace = tile.DieFace;
-            ComponentOnTile = (GameComponent)tile.ComponentOnTile.Clone();
+            ComponentOnTile = (IGameComponent)tile.ComponentOnTile.Clone();
         }
 
         public MapTile(TileTypes type, GamePosition gamePosition)

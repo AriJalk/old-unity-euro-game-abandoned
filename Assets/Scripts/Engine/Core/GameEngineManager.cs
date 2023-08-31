@@ -31,7 +31,7 @@ public class GameEngineManager : MonoBehaviour
     public MapRenderer MapRenderer;
     public ObjectsRenderer DiscRenderer;
     public MaterialPool MaterialPool;
-    public SquareMapHolderObject MapHolder;
+    public Transform MapHolderObject;
     public UserInterfaceObject UserInterface;
     public InputHandler InputHandler;
     public CameraController CameraController;
@@ -51,7 +51,7 @@ public class GameEngineManager : MonoBehaviour
     void Start()
     {
         string moves = string.Empty;
-        bool[,] grid = TileRulesLogic.GetPossibleMoves(MapHolder.GetMap(), MapHolder.GetDataTile(0, 0), 3);
+        bool[,] grid = TileRulesLogic.GetPossibleMoves(logicGameState.mapGrid, logicGameState.mapGrid.GetCell(0, 0), 3);
         for (int i = 0; i < grid.GetLength(0); i++)
         {
             for (int j = 0; j < grid.GetLength(1); j++)
@@ -64,8 +64,8 @@ public class GameEngineManager : MonoBehaviour
                 else
                 {
                     moves += "x ";
-                    ((GameStack<Disc>)(MapHolder.GetDataTile(i, j).ComponentOnTile)).PopItem();
-                    ((GameStack<Disc>)(MapHolder.GetDataTile(i, j).ComponentOnTile)).PopItem();
+                    ((GameStack<Disc>)((MapTile)logicGameState.mapGrid.GetCell(i, j)).ComponentOnTile).PopItem();
+                    ((GameStack<Disc>)((MapTile)logicGameState.mapGrid.GetCell(i, j)).ComponentOnTile).PopItem();
                 }
 
             }
@@ -73,8 +73,8 @@ public class GameEngineManager : MonoBehaviour
         }
         Debug.Log(moves);
         confirmedLogicGameState = (LogicGameState)logicGameState.Clone();
-        MapRenderer.RenderMap(MapHolder, MaterialPool, DiscRenderer);
-
+        //TODO: MAP RENDERER
+        MapRenderer.RenderMap(logicGameState.mapGrid, MapHolderObject, MaterialPool, DiscRenderer);
     }
 
     void Awake()
@@ -108,7 +108,6 @@ public class GameEngineManager : MonoBehaviour
         MapRenderer.Initialize(PoolManager);
         DiscRenderer.Initialize(PoolManager);
 
-        MapHolder.Initialize(logicGameState.mapGrid);
 
         UserInterface.Initialize(this);
         InputHandler.Initialize(UserInterface);
@@ -231,17 +230,26 @@ public class GameEngineManager : MonoBehaviour
     public void TestMove()
     {
         confirmedLogicGameState = (LogicGameState)logicGameState.Clone();
-        logicGameState.SourceTile = MapHolder.GetDataTile(1, 0);
-        logicGameState.TargetTile = MapHolder.GetDataTile(1, 1);
-        MoveDiscs(logicGameState.SourceTile, logicGameState.TargetTile);
-        MapHolder.SetMap((MapGrid)logicGameState.mapGrid.Clone());
 
+        logicGameState.SourceTile = (MapTile)logicGameState.mapGrid.GetCell(1, 0);
+        logicGameState.TargetTile = (MapTile)logicGameState.mapGrid.GetCell(1, 1);
+
+        MoveDiscs(logicGameState.SourceTile, logicGameState.TargetTile);
+
+
+
+        Debug.Log($"Confirmed {((GameStack<Disc>)((MapTile)confirmedLogicGameState.mapGrid.GetCell(1,0)).ComponentOnTile).Count}" +
+            $"\nCurrent {((GameStack<Disc>)((MapTile)logicGameState.mapGrid.GetCell(1, 0)).ComponentOnTile).Count}");
     }
 
     public void Undo()
     {
         logicGameState = (LogicGameState)confirmedLogicGameState.Clone();
-        MapHolder.SetMap((MapGrid)confirmedLogicGameState.mapGrid.Clone());
-        MapRenderer.RenderMap(MapHolder, MaterialPool, DiscRenderer);
+
+        MapRenderer.RenderMap(logicGameState.mapGrid, MapHolderObject, MaterialPool, DiscRenderer);
+
+        Debug.Log($"Confirmed {((GameStack<Disc>)((MapTile)confirmedLogicGameState.mapGrid.GetCell(1, 0)).ComponentOnTile).Count}" +
+            $"\nCurrent {((GameStack<Disc>)((MapTile)logicGameState.mapGrid.GetCell(1, 0)).ComponentOnTile).Count}");
+
     }
 }
