@@ -39,19 +39,18 @@ public class GameEngineManager : MonoBehaviour
     public ScreenManager ScreenManager;
 
     private ActionsManager ActionsManager;
-    private LoopGameStates loopGameState;
 
     private float time = 0f;
     private int counter = 0;
-    private LogicGameState logicGameState;
-    private LogicGameState confirmedLogicGameState;
+
+    private Stack<LogicGameState> gameStateStack;
 
 
     // Start is called before the first frame update
     void Start()
     {
         string moves = string.Empty;
-        bool[,] grid = TileRulesLogic.GetPossibleMoves(logicGameState.mapGrid, logicGameState.mapGrid.GetCell(0, 0), 3);
+        bool[,] grid = TileRulesLogic.GetPossibleMoves(gameStateStack.Peek().mapGrid, gameStateStack.Peek().mapGrid.GetCell(0, 0), 3);
         for (int i = 0; i < grid.GetLength(0); i++)
         {
             for (int j = 0; j < grid.GetLength(1); j++)
@@ -64,17 +63,16 @@ public class GameEngineManager : MonoBehaviour
                 else
                 {
                     moves += "x ";
-                    ((GameStack<Disc>)((MapTile)logicGameState.mapGrid.GetCell(i, j)).ComponentOnTile).PopItem();
-                    ((GameStack<Disc>)((MapTile)logicGameState.mapGrid.GetCell(i, j)).ComponentOnTile).PopItem();
+                    ((GameStack<Disc>)((MapTile)gameStateStack.Peek().mapGrid.GetCell(i, j)).ComponentOnTile).PopItem();
+                    ((GameStack<Disc>)((MapTile)gameStateStack.Peek().mapGrid.GetCell(i, j)).ComponentOnTile).PopItem();
                 }
 
             }
             moves += "\n";
         }
         Debug.Log(moves);
-        confirmedLogicGameState = (LogicGameState)logicGameState.Clone();
-        //TODO: MAP RENDERER
-        MapRenderer.RenderMap(logicGameState.mapGrid, MapHolderObject, MaterialPool, DiscRenderer);
+
+        MapRenderer.RenderMap(gameStateStack.Peek().mapGrid, MapHolderObject, MaterialPool, DiscRenderer);
     }
 
     void Awake()
@@ -99,8 +97,9 @@ public class GameEngineManager : MonoBehaviour
     void InitizalizeScripts()
     {
 
-        logicGameState = new LogicGameState(new MapGrid());
-        confirmedLogicGameState = (LogicGameState)logicGameState.Clone();
+        gameStateStack = new Stack<LogicGameState>();
+
+        gameStateStack.Push(new LogicGameState(new MapGrid()));
 
         PoolManager.Initialize();
 
@@ -127,13 +126,15 @@ public class GameEngineManager : MonoBehaviour
 
     public void MoveDiscs(MapTile sourceTile, MapTile targetTile)
     {
+        LogicGameState newState = (LogicGameState)gameStateStack.Peek().Clone();
         // Move the disc from the source stack to the destination stack
-        loopGameState = LoopGameStates.Action;
         IAction action = ActionsManager.GetAction("MoveDiscAction");
         action.ActionCompleted += RenderChanges;
-        logicGameState.SourceTile = sourceTile;
-        logicGameState.TargetTile = targetTile;
-        action.ExecuteAction(logicGameState);
+        newState.SourceTile = (MapTile)sourceTile.Clone();
+        newState.TargetTile = (MapTile)targetTile.Clone();
+        gameStateStack.Push(newState);
+        action.ExecuteAction(newState);
+
     }
 
     public void MoveCamera(float horizontal, float vertical)
@@ -153,7 +154,7 @@ public class GameEngineManager : MonoBehaviour
 
                 case EntityNames.SourceTile:
                     {
-                        MapTile tile = logicGameState.SourceTile;
+                        MapTile tile = gameStateStack.Peek().SourceTile;
                         if (tile != null)
                         {
                             SquareTileObject tileObject = MapRenderer.GetTileObject(tile.GamePosition.Y, tile.GamePosition.X);
@@ -164,7 +165,7 @@ public class GameEngineManager : MonoBehaviour
                     }
                 case EntityNames.TargetTile:
                     {
-                        MapTile tile = logicGameState.TargetTile;
+                        MapTile tile = gameStateStack.Peek().TargetTile;
                         if (tile != null)
                         {
                             SquareTileObject tileObject = MapRenderer.GetTileObject(tile.GamePosition.Y, tile.GamePosition.X);
@@ -181,7 +182,6 @@ public class GameEngineManager : MonoBehaviour
             }
 
         }
-        loopGameState = LoopGameStates.PlayerTurn;
     }
 
 
@@ -229,27 +229,29 @@ public class GameEngineManager : MonoBehaviour
 
     public void TestMove()
     {
-        confirmedLogicGameState = (LogicGameState)logicGameState.Clone();
+        gameStateStack.Peek().SourceTile = (MapTile)gameStateStack.Peek().mapGrid.GetCell(1, 0);
+        gameStateStack.Peek().TargetTile = (MapTile)gameStateStack.Peek().mapGrid.GetCell(1, 1);
 
-        logicGameState.SourceTile = (MapTile)logicGameState.mapGrid.GetCell(1, 0);
-        logicGameState.TargetTile = (MapTile)logicGameState.mapGrid.GetCell(1, 1);
-
-        MoveDiscs(logicGameState.SourceTile, logicGameState.TargetTile);
+        MoveDiscs(gameStateStack.Peek().SourceTile, gameStateStack.Peek().TargetTile);
 
 
 
-        Debug.Log($"Confirmed {((GameStack<Disc>)((MapTile)confirmedLogicGameState.mapGrid.GetCell(1,0)).ComponentOnTile).Count}" +
-            $"\nCurrent {((GameStack<Disc>)((MapTile)logicGameState.mapGrid.GetCell(1, 0)).ComponentOnTile).Count}");
+        /* Debug.Log($"Current: {((GameStack<Disc>)newState.SourceTile.ComponentOnTile).Count}" +
+             $"\nPrevious {((GameStack<Disc>)gameStateStack.Peek().SourceTile.ComponentOnTile).Count}");*/
+
+        //gameStateStack.Push(newState);
     }
 
     public void Undo()
     {
-        logicGameState = (LogicGameState)confirmedLogicGameState.Clone();
+        if (gameStateStack.Count > 1)
+        {
+            gameStateStack.Pop();
+        }
 
-        MapRenderer.RenderMap(logicGameState.mapGrid, MapHolderObject, MaterialPool, DiscRenderer);
+        MapRenderer.RenderMap(gameStateStack.Peek().mapGrid, MapHolderObject, MaterialPool, DiscRenderer);
 
-        Debug.Log($"Confirmed {((GameStack<Disc>)((MapTile)confirmedLogicGameState.mapGrid.GetCell(1, 0)).ComponentOnTile).Count}" +
-            $"\nCurrent {((GameStack<Disc>)((MapTile)logicGameState.mapGrid.GetCell(1, 0)).ComponentOnTile).Count}");
+
 
     }
 }
