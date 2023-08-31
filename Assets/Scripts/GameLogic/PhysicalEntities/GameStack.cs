@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,9 +17,14 @@ public class GameStack<T> : GameComponent where T : class
         itemsList = new List<T>();
     }
 
-    public GameStack(GameStack<T> otherStack)
+    protected GameStack(GameStack<T> otherStack)
     {
-        itemsList = new List<T>(otherStack.itemsList);
+        int count= otherStack.Count;
+        itemsList = new List<T>(count);
+        for(int i = 0; i < count; i++)
+        {
+            itemsList.Add(otherStack.GetItemByIndex(i));
+        }
     }
 
     public void PushItem(T item)

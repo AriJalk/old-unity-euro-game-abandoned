@@ -11,7 +11,7 @@ public class Disc : GameComponent
         DiscColor = discColor;
     }
 
-    public Disc(Disc other)
+    protected Disc(Disc other)
     {
         DiscColor = other.DiscColor;
     }

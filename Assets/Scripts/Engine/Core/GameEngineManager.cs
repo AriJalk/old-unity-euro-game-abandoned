@@ -72,6 +72,7 @@ public class GameEngineManager : MonoBehaviour
             moves += "\n";
         }
         Debug.Log(moves);
+        confirmedLogicGameState = (LogicGameState)logicGameState.Clone();
         MapRenderer.RenderMap(MapHolder, MaterialPool, DiscRenderer);
 
     }
@@ -229,11 +230,11 @@ public class GameEngineManager : MonoBehaviour
 
     public void TestMove()
     {
+        confirmedLogicGameState = (LogicGameState)logicGameState.Clone();
         logicGameState.SourceTile = MapHolder.GetDataTile(1, 0);
         logicGameState.TargetTile = MapHolder.GetDataTile(1, 1);
         MoveDiscs(logicGameState.SourceTile, logicGameState.TargetTile);
-        confirmedLogicGameState = (LogicGameState)logicGameState.Clone();
-        MapHolder.SetMap((MapGrid)confirmedLogicGameState.mapGrid.Clone());
+        MapHolder.SetMap((MapGrid)logicGameState.mapGrid.Clone());
 
     }
 

@@ -44,7 +44,7 @@ namespace EDBG.Rules
         {
             searchQueue = new Queue<ICell>();
             searchQueue.Enqueue(tile);
-            distanceArray[tile.GamePosition.Y, tile.GamePosition.X] = 0;
+            distanceArray[tile.GamePosition.X, tile.GamePosition.Y] = 0;
             BFS(tile);
         }
 

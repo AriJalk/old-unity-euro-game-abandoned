@@ -20,7 +20,7 @@ namespace EDBG.MapSystem
             _grid = new ICell[Rows, Columns];
         }
 
-        public GridContainer(GridContainer other)
+        protected GridContainer(GridContainer other)
         {
             _grid = new ICell[other.Rows, other.Columns];
             Rows = other.Rows;
