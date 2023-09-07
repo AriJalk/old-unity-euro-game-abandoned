@@ -18,7 +18,7 @@ public class UserInterfaceObject : MonoBehaviour
     private Transform topPanel;
     private GameEngineManager gameEngineManager;
     private Image[] dice;
-    private UILockManager lockManager = new UILockManager();
+    private UILockManager lockManager = new();
 
 
     // Start is called before the first frame update

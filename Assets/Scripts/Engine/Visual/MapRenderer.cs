@@ -6,6 +6,7 @@ public class MapRenderer : MonoBehaviour
 {
     private PoolManager poolManager;
     public GameObject SquarePrefab;
+    public SpriteManager SpriteManager;
     //TODO: move to SquareMapHolder
     private SquareTileObject[,] tiles;
 
@@ -54,6 +55,7 @@ public class MapRenderer : MonoBehaviour
                 tile.name = "Tile [" + row + "," + col + "]";
                 tile.ApplyMaterial(materialPool.GetMaterial("Materials/WhiteTileMaterial"));
                 tiles[row, col] = tile;
+                DrawDieFace(tile);
                 discRenderer.RenderObjectsOnTileObject(tile, materialPool);
             }
         }
@@ -83,5 +85,12 @@ public class MapRenderer : MonoBehaviour
         {
             poolManager.ReturnPoolObject(tile);
         }
+    }
+
+    private void DrawDieFace(SquareTileObject tile)
+    {
+        SpriteRenderer spriteRenderer = tile.transform.GetComponentInChildren<SpriteRenderer>();
+        spriteRenderer.sprite=SpriteManager.LoadSprite($"DieFaces/{tile.TileData.DieFace}");
+
     }
 }

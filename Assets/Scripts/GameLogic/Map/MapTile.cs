@@ -30,7 +30,7 @@ namespace EDBG.MapSystem
         {
             TileType = TileTypes.Default;
             GamePosition = gamePosition;
-            DieFace = 1;
+            DieFace = UnityEngine.Random.Range(1,7);
         }
 
         public MapTile(MapTile tile)

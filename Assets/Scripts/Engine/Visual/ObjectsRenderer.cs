@@ -54,7 +54,7 @@ public class ObjectsRenderer : MonoBehaviour
         float tileHeight = SquareTileObject.TILE_HEIGHT;
         float discHeight = DiscObject.DISC_HEIGHT * DiscScale;
         float initialHeightOffset = 0.0f; // Adjust this value to control the initial height offset of the first disc
-        float fillerDiscFactor = 4;
+        float fillerDiscFactor = 6;
         float fillerDiscHeight = discHeight / fillerDiscFactor;
         //float gridCellSize = SquareTileObject.TILE_LENGTH / 3;
         if (tile.TileData.ComponentOnTile is GameStack<Disc> discStack && discStack.Count > 0)

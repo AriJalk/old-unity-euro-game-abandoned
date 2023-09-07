@@ -50,6 +50,7 @@ public class GameEngineManager : MonoBehaviour
     void Start()
     {
         string moves = string.Empty;
+        //Possible moves test
         bool[,] grid = TileRulesLogic.GetPossibleMoves(gameStateStack.Peek().mapGrid, gameStateStack.Peek().mapGrid.GetCell(0, 0), 3);
         for (int i = 0; i < grid.GetLength(0); i++)
         {
@@ -63,6 +64,7 @@ public class GameEngineManager : MonoBehaviour
                 else
                 {
                     moves += "x ";
+                    //Mark far away stacks
                     ((GameStack<Disc>)((MapTile)gameStateStack.Peek().mapGrid.GetCell(i, j)).ComponentOnTile).PopItem();
                     ((GameStack<Disc>)((MapTile)gameStateStack.Peek().mapGrid.GetCell(i, j)).ComponentOnTile).PopItem();
                 }
@@ -71,6 +73,18 @@ public class GameEngineManager : MonoBehaviour
             moves += "\n";
         }
         Debug.Log(moves);
+
+        //Randonly clear up to 10 tiles
+        for(int i = 0; i < 10; i++)
+        {
+            int x = UnityEngine.Random.Range(0, 9);
+            int y = UnityEngine.Random.Range(0, 9);
+
+            ((GameStack<Disc>)((MapTile)gameStateStack.Peek().mapGrid.GetCell(x, y)).ComponentOnTile).PopItem();
+            ((GameStack<Disc>)((MapTile)gameStateStack.Peek().mapGrid.GetCell(x, y)).ComponentOnTile).PopItem();
+            ((GameStack<Disc>)((MapTile)gameStateStack.Peek().mapGrid.GetCell(x, y)).ComponentOnTile).PopItem();
+            ((GameStack<Disc>)((MapTile)gameStateStack.Peek().mapGrid.GetCell(x, y)).ComponentOnTile).PopItem();
+        }
 
         MapRenderer.RenderMap(gameStateStack.Peek().mapGrid, MapHolderObject, MaterialPool, DiscRenderer);
     }
