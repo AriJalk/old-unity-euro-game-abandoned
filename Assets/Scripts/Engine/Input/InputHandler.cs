@@ -1,11 +1,11 @@
+using ResourcePool;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
-    private UserInterfaceObject userInterface;
-
+    private GameUIManager userInterface;
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +19,7 @@ public class InputHandler : MonoBehaviour
 
     }
 
-    public void Initialize(UserInterfaceObject ui)
+    public void Initialize(GameUIManager ui)
     {
         userInterface = ui;
     }

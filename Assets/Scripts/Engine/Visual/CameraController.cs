@@ -32,11 +32,11 @@ public class CameraController : MonoBehaviour
     {
         gameCamera = transform.Find("MainCamera").GetComponent<Camera>();
 
-        UpdateAspectRatio(Screen.width, Screen.height, ScreenOrientation.LandscapeLeft);
+        UpdateAspectRatio(Screen.width, Screen.height);
         
     }
 
-    public void UpdateAspectRatio(int width, int height, ScreenOrientation screenOrientation)
+    public void UpdateAspectRatio(int width, int height)
     {
         float currentAspectRatio = (width > height) ? width / height : height / width;
         float targetAspectRatio = 16f / 9f;

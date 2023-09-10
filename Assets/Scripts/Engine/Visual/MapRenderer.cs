@@ -4,16 +4,15 @@ using EDBG.MapSystem;
 
 public class MapRenderer : MonoBehaviour
 {
-    private PoolManager poolManager;
-    public GameObject SquarePrefab;
-    public SpriteManager SpriteManager;
+  
+
     //TODO: move to SquareMapHolder
     private SquareTileObject[,] tiles;
 
     // Start is called before the first frame update
     void Start()
     {
-
+      
     }
 
     // Update is called once per frame
@@ -22,19 +21,12 @@ public class MapRenderer : MonoBehaviour
 
     }
 
-    public void Initialize(PoolManager pm)
+    public void Initialize()
     {
-        poolManager = pm;
-        SquarePrefab = Resources.Load<GameObject>("Prefabs/3D/SquareTilePrefab");
-        if (SquarePrefab == null)
-        {
-            Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/SquareTilePrefab.");
-            return;
-        }
-        poolManager.RegisterPrefab<SquareTileObject>(SquarePrefab);
+
     }
 
-    public void RenderMap(MapGrid map, Transform mapHolderObject, MaterialPool materialPool, ObjectsRenderer discRenderer)
+    public void RenderMap(MapGrid map, Transform mapHolderObject, MaterialManager materialPool, ObjectsRenderer discRenderer)
     {
         tiles = new SquareTileObject[map.Rows, map.Columns];
         RemovePreviousTiles(mapHolderObject.transform);
@@ -42,7 +34,7 @@ public class MapRenderer : MonoBehaviour
         {
             for (int col = 0; col < map.Columns; col++)
             {
-                SquareTileObject tile = poolManager.RetrievePoolObject<SquareTileObject>();
+                SquareTileObject tile = GameEngineManager.Instance.PoolManager.RetrievePoolObject<SquareTileObject>();
                 tile.TileData = (MapTile)map.GetCell(row, col);
                 tile.transform.SetParent(mapHolderObject);
                 tile.transform.localScale = Vector3.one;
@@ -70,7 +62,7 @@ public class MapRenderer : MonoBehaviour
     {
         if (tile != null)
         {
-            SquareTileObject squareTileObject = poolManager.RetrievePoolObject<SquareTileObject>();
+            SquareTileObject squareTileObject = GameEngineManager.Instance.PoolManager.RetrievePoolObject<SquareTileObject>();
             squareTileObject.TileData = tile;
 
         }
@@ -83,14 +75,14 @@ public class MapRenderer : MonoBehaviour
         SquareTileObject[] tiles = grid.GetComponentsInChildren<SquareTileObject>();
         foreach (SquareTileObject tile in tiles)
         {
-            poolManager.ReturnPoolObject(tile);
+            GameEngineManager.Instance.PoolManager.ReturnPoolObject(tile);
         }
     }
 
     private void DrawDieFace(SquareTileObject tile)
     {
         SpriteRenderer spriteRenderer = tile.transform.GetComponentInChildren<SpriteRenderer>();
-        spriteRenderer.sprite=SpriteManager.LoadSprite($"DieFaces/{tile.TileData.DieFace}");
+        spriteRenderer.sprite = GameEngineManager.Instance.SpriteManager.LoadSprite($"DieFaces/{tile.TileData.DieFace}");
 
     }
 }

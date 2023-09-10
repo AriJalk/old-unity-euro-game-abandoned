@@ -1,8 +1,9 @@
+using ResourcePool;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MaterialPool : MonoBehaviour
+public class MaterialManager : MonoBehaviour
 {
     private Dictionary<string, Material> materialPool;
 

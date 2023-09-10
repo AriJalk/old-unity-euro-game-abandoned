@@ -1,23 +1,10 @@
+using ResourcePool;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlatformManager : MonoBehaviour
 {
-    private static PlatformManager instance;
-
-    public static PlatformManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<PlatformManager>();
-            }
-            return instance;
-        }
-    }
-
     // Start is called before the first frame update
     void Start()
     {

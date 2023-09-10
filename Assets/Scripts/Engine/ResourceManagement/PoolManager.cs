@@ -4,47 +4,33 @@ using UnityEngine;
 
 namespace ResourcePool
 {
+    /// <summary>
+    /// Pool Manager for reusable objects
+    /// </summary>
     public class PoolManager : MonoBehaviour
     {
-        private static PoolManager instance; // Singleton instance
+       
 
         private Dictionary<Type, object> pools;
         private Dictionary<Type, GameObject> prefabDict;
         private Transform unactiveObjects;
         private int initialPoolSize = 100;
 
-        public static PoolManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    // Try to find an existing instance in the scene
-                    instance = FindObjectOfType<PoolManager>();
-
-                    if (instance == null)
-                    {
-                        // If no instance exists, create a new GameObject with PoolManager and attach it
-                        GameObject managerObject = new GameObject("PoolManager");
-                        instance = managerObject.AddComponent<PoolManager>();
-                    }
-
-                    // Ensure the instance persists across scenes
-                    DontDestroyOnLoad(instance.gameObject);
-                }
-
-                return instance;
-            }
-        }
+       
 
         void Start()
         {
-
+           
         }
 
         void Update()
         {
             // Your update logic here
+        }
+
+        void Awake()
+        {
+
         }
 
         public void Initialize()

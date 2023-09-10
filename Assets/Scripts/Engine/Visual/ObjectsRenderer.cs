@@ -6,8 +6,33 @@ using UnityEngine;
 
 public class ObjectsRenderer : MonoBehaviour
 {
-    private PoolManager poolManager;
-    public GameObject DiscPrefab;
+    private static ObjectsRenderer instance;
+    public static ObjectsRenderer Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                // Try to find an existing instance in the scene
+                instance = FindObjectOfType<ObjectsRenderer>();
+
+                if (instance == null)
+                {
+                    // If no instance exists, create a new GameObject with PoolManager and attach it
+                    GameObject managerObject = new GameObject("ObjectRenderer");
+                    instance = managerObject.AddComponent<ObjectsRenderer>();
+                }
+
+                // Ensure the instance persists across scenes
+                DontDestroyOnLoad(instance.gameObject);
+            }
+
+            return instance;
+        }
+    }
+
+
+    //TODO: range
     public float DiscScale = 1;
 
     // Start is called before the first frame update
@@ -22,19 +47,12 @@ public class ObjectsRenderer : MonoBehaviour
 
     }
 
-    public void Initialize(PoolManager pm)
+    public void Initialize()
     {
-        poolManager = pm;
-        DiscPrefab = Resources.Load<GameObject>("Prefabs/3D/DiscPrefab");
-        if (DiscPrefab == null)
-        {
-            Debug.Log("DISC PREFAB NOT FOUND");
-            return;
-        }
-        poolManager.RegisterPrefab<DiscObject>(DiscPrefab);
+        
     }
 
-    public void RenderObjectsOnMap(SquareTileObject[,] tiles, MaterialPool materialPool)
+    public void RenderObjectsOnMap(SquareTileObject[,] tiles, MaterialManager materialPool)
     {
         foreach (SquareTileObject tile in tiles)
         {
@@ -42,13 +60,23 @@ public class ObjectsRenderer : MonoBehaviour
         }
     }
 
-    public void RenderObjectsOnTileObject(SquareTileObject tile, MaterialPool materialPool)
+    public void RenderObjectsOnTileObject(SquareTileObject tile, MaterialManager materialPool)
     {
         RemovePreviousDiscs(tile);
         CreateNewDiscs(tile, materialPool);
     }
 
-    private void CreateNewDiscs(SquareTileObject tile, MaterialPool materialPool)
+
+    private void RemovePreviousDiscs(SquareTileObject tile)
+    {
+        DiscObject[] discs = tile.GetComponentsInChildren<DiscObject>();
+        foreach (DiscObject disc in discs)
+        {
+            GameEngineManager.Instance.PoolManager.ReturnPoolObject(disc);
+        }
+    }
+
+    private void CreateNewDiscs(SquareTileObject tile, MaterialManager materialPool)
     {
 
         float tileHeight = SquareTileObject.TILE_HEIGHT;
@@ -61,7 +89,7 @@ public class ObjectsRenderer : MonoBehaviour
         {
             for (int i = 0; i < discStack.Count; i++)
             {
-                DiscObject newDisc = poolManager.RetrievePoolObject<DiscObject>();
+                DiscObject newDisc = GameEngineManager.Instance.PoolManager.RetrievePoolObject<DiscObject>();
                 newDisc.enabled = true;
                 newDisc.discData = discStack.GetItemByIndex(i);
                 newDisc.transform.SetParent(tile.transform);
@@ -89,7 +117,7 @@ public class ObjectsRenderer : MonoBehaviour
                 //Create filler disc
                 if (i < discStack.Count - 1)
                 {
-                    newDisc = poolManager.RetrievePoolObject<DiscObject>();
+                    newDisc = GameEngineManager.Instance.PoolManager.RetrievePoolObject<DiscObject>();
                     newDisc.transform.SetParent(tile.transform);
                     newDisc.transform.localScale = new Vector3(DiscScale, DiscScale / fillerDiscFactor, DiscScale);
                     float fillerYPos = position.y + discHeight;
@@ -97,15 +125,6 @@ public class ObjectsRenderer : MonoBehaviour
                     newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/WhiteMaterial"));
                 }
             }
-        }
-    }
-
-    private void RemovePreviousDiscs(SquareTileObject tile)
-    {
-        DiscObject[] discs = tile.GetComponentsInChildren<DiscObject>();
-        foreach (DiscObject disc in discs)
-        {
-            poolManager.ReturnPoolObject(disc);
         }
     }
 }
