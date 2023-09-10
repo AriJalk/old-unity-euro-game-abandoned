@@ -4,7 +4,7 @@ using EDBG.MapSystem;
 
 public class MapRenderer : MonoBehaviour
 {
-  
+
 
     //TODO: move to SquareMapHolder
     private SquareTileObject[,] tiles;
@@ -12,7 +12,7 @@ public class MapRenderer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-      
+
     }
 
     // Update is called once per frame
@@ -23,13 +23,27 @@ public class MapRenderer : MonoBehaviour
 
     public void Initialize()
     {
+        GameObject squarePrefab = Resources.Load<GameObject>("Prefabs/3D/SquareTilePrefab");
+        if (squarePrefab == null)
+        {
+            Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/SquareTilePrefab.");
+            return;
+        }
+        GameEngineManager.Instance.PoolManager.RegisterPrefab<SquareTileObject>(squarePrefab);
 
+        GameObject discPrefab = Resources.Load<GameObject>("Prefabs/3D/DiscPrefab");
+        if (discPrefab == null)
+        {
+            Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/DiscPrefab.");
+            return;
+        }
+        GameEngineManager.Instance.PoolManager.RegisterPrefab<DiscObject>(discPrefab);
     }
 
-    public void RenderMap(MapGrid map, Transform mapHolderObject, MaterialManager materialPool, ObjectsRenderer discRenderer)
+    public void RenderMap(MapGrid map, Transform mapHolderObject)
     {
         tiles = new SquareTileObject[map.Rows, map.Columns];
-        RemovePreviousTiles(mapHolderObject.transform);
+        RemovePreviousTiles(mapHolderObject);
         for (int row = 0; row < map.Rows; row++)
         {
             for (int col = 0; col < map.Columns; col++)
@@ -45,10 +59,10 @@ public class MapRenderer : MonoBehaviour
                 tile.gameObject.isStatic = true;
                 tile.gameObject.SetActive(true);
                 tile.name = "Tile [" + row + "," + col + "]";
-                tile.ApplyMaterial(materialPool.GetMaterial("Materials/WhiteTileMaterial"));
+                tile.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/WhiteTileMaterial"));
                 tiles[row, col] = tile;
                 DrawDieFace(tile);
-                discRenderer.RenderObjectsOnTileObject(tile, materialPool);
+                GameEngineManager.Instance.DiscRenderer.RenderObjectsOnTileObject(tile);
             }
         }
     }

@@ -6,32 +6,6 @@ using UnityEngine;
 
 public class ObjectsRenderer : MonoBehaviour
 {
-    private static ObjectsRenderer instance;
-    public static ObjectsRenderer Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                // Try to find an existing instance in the scene
-                instance = FindObjectOfType<ObjectsRenderer>();
-
-                if (instance == null)
-                {
-                    // If no instance exists, create a new GameObject with PoolManager and attach it
-                    GameObject managerObject = new GameObject("ObjectRenderer");
-                    instance = managerObject.AddComponent<ObjectsRenderer>();
-                }
-
-                // Ensure the instance persists across scenes
-                DontDestroyOnLoad(instance.gameObject);
-            }
-
-            return instance;
-        }
-    }
-
-
     //TODO: range
     public float DiscScale = 1;
 
@@ -52,18 +26,18 @@ public class ObjectsRenderer : MonoBehaviour
         
     }
 
-    public void RenderObjectsOnMap(SquareTileObject[,] tiles, MaterialManager materialPool)
+    public void RenderObjectsOnMap(SquareTileObject[,] tiles)
     {
         foreach (SquareTileObject tile in tiles)
         {
-            RenderObjectsOnTileObject(tile, materialPool);
+            RenderObjectsOnTileObject(tile);
         }
     }
 
-    public void RenderObjectsOnTileObject(SquareTileObject tile, MaterialManager materialPool)
+    public void RenderObjectsOnTileObject(SquareTileObject tile)
     {
         RemovePreviousDiscs(tile);
-        CreateNewDiscs(tile, materialPool);
+        CreateNewDiscs(tile);
     }
 
 
@@ -76,7 +50,7 @@ public class ObjectsRenderer : MonoBehaviour
         }
     }
 
-    private void CreateNewDiscs(SquareTileObject tile, MaterialManager materialPool)
+    private void CreateNewDiscs(SquareTileObject tile)
     {
 
         float tileHeight = SquareTileObject.TILE_HEIGHT;
@@ -101,16 +75,16 @@ public class ObjectsRenderer : MonoBehaviour
                 switch (newDisc.discData.DiscColor)
                 {
                     case EDBG.Rules.Colors.Blue:
-                        newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/BlueWoodMaterial"));
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/BlueWoodMaterial"));
                         break;
                     case EDBG.Rules.Colors.Red:
-                        newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/RedWoodMaterial"));
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/RedWoodMaterial"));
                         break;
                     case EDBG.Rules.Colors.Green:
-                        newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/GreenWoodMaterial"));
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/GreenWoodMaterial"));
                         break;
                     case EDBG.Rules.Colors.White:
-                        newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/OrangeWoodMaterial"));
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/OrangeWoodMaterial"));
                         break;
 
                 }
@@ -122,7 +96,7 @@ public class ObjectsRenderer : MonoBehaviour
                     newDisc.transform.localScale = new Vector3(DiscScale, DiscScale / fillerDiscFactor, DiscScale);
                     float fillerYPos = position.y + discHeight;
                     newDisc.transform.localPosition = new Vector3(0, fillerYPos, 0);
-                    newDisc.ApplyMaterial(materialPool.GetMaterial("Materials/WhiteMaterial"));
+                    newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/WhiteMaterial"));
                 }
             }
         }

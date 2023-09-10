@@ -9,18 +9,18 @@ namespace ResourcePool
     /// </summary>
     public class PoolManager : MonoBehaviour
     {
-       
+
 
         private Dictionary<Type, object> pools;
         private Dictionary<Type, GameObject> prefabDict;
         private Transform unactiveObjects;
-        private int initialPoolSize = 100;
+        private readonly int initialPoolSize = 100;
 
-       
+
 
         void Start()
         {
-           
+
         }
 
         void Update()

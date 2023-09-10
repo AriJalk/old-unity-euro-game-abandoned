@@ -6,6 +6,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+//TODO: middle class between inputhandler and gameengine
+
 public class GameUIManager : MonoBehaviour
 {
     private Transform canvas;

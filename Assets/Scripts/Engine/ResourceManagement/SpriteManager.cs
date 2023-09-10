@@ -8,11 +8,6 @@ public class SpriteManager : MonoBehaviour
     // A dictionary to store loaded sprites by their names
     private Dictionary<string, Sprite> loadedSprites = new Dictionary<string, Sprite>();
 
-    void Start()
-    {
-       
-    }
-
     // Load a sprite by name
     public Sprite LoadSprite(string spriteName)
     {

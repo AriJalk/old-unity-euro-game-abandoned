@@ -7,9 +7,11 @@ using System.Linq;
 
 namespace EDBG.Rules
 {
-    //TODO: Rename class
+    //TODO: Rename class, singleton
     public class TileRulesLogic
     {
+
+
         static bool[,] possibleMoves;
         static bool[,] visitedTiles;
         static int[,] distanceArray;

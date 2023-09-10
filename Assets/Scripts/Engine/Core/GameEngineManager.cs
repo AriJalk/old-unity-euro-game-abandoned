@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using EDBG.Rules;
 using EDBG.MapSystem;
+using UnityEngine.SceneManagement;
 
 public class GameEngineManager : MonoBehaviour
 {
@@ -80,5 +81,10 @@ public class GameEngineManager : MonoBehaviour
     private void ScreenChanged(object sender, ScreenChangedEventArgs e)
     {
 
+    }
+
+    public void LoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
     }
 }
