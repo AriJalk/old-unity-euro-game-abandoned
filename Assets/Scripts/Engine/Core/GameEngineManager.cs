@@ -7,6 +7,10 @@ using EDBG.Rules;
 using EDBG.MapSystem;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Core engine manager, implemented as singleton to persist across scenes.
+/// Contains all unity technical managers
+/// </summary>
 public class GameEngineManager : MonoBehaviour
 {
     private static GameEngineManager instance;
@@ -43,6 +47,7 @@ public class GameEngineManager : MonoBehaviour
     public PlatformManager PlatformManager;
     public ScreenManager ScreenManager;
     public SpriteManager SpriteManager;
+    public InputEvents InputEvents;
 
 
 
@@ -66,7 +71,8 @@ public class GameEngineManager : MonoBehaviour
 
     void InitizalizeScripts()
     {
-
+        InputEvents = new InputEvents();
+        InputHandler.Initialize();
         PoolManager.Initialize();
         MaterialManager.Initialize();
         MapRenderer.Initialize();

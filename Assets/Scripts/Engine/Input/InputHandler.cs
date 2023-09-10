@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
-    private GameUIManager userInterface;
+    private InputEvents inputEvents;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -19,35 +19,37 @@ public class InputHandler : MonoBehaviour
 
     }
 
-    public void Initialize(GameUIManager ui)
+    public void Initialize()
     {
-        userInterface = ui;
+        inputEvents = GameEngineManager.Instance.InputEvents;
     }
 
     public void Listen()
     {
+        //Get mouse movement
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
         if (horizontalInput != 0 || verticalInput != 0)
         {
+            //Use raw axis to make opposites neutral
             if (Input.GetAxisRaw("Horizontal") == 0)
                 horizontalInput = 0;
             if (Input.GetAxisRaw("Vertical") == 0)
                 verticalInput = 0;
-            userInterface.AxisChanged(horizontalInput, verticalInput);
+            inputEvents.AxisChanged(new Vector2(horizontalInput, verticalInput));
         }
         bool[] mouseButtons = new bool[2];
         mouseButtons[0] = Input.GetMouseButton(0);
         mouseButtons[1] = Input.GetMouseButton(1);
         if (mouseButtons[0] || mouseButtons[1])
         {
-            userInterface.MouseClicked(mouseButtons, Input.mousePosition);
+            inputEvents.MouseClicked(mouseButtons, Input.mousePosition);
         }
         Vector2 scroll = Input.mouseScrollDelta;
 
         if (scroll != Vector2.zero)
         {
-            userInterface.MouseScrolled(scroll.y);
+            inputEvents.MouseScrolled(scroll.y);
         }
     }
 }
