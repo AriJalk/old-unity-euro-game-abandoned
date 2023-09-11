@@ -22,7 +22,19 @@ public static class UtilityFunctions
             array[i] = array[j];
             array[j] = temp;
         }
+    }
 
+    public static void ShuffleList<T>(List<T> list)
+    {
+        int length = list.Count;
+        //Fischer-Yates implementation
+        for (int i = length - 1; i > 0; i--)
+        {
+            int j = i + UnityEngine.Random.Range(0, length - i);
+            T temp = list[i];
+            list[i] = list[j];
+            list[j] = temp;
+        }
     }
 
     public static PieceColors GetRandomComponentColor()

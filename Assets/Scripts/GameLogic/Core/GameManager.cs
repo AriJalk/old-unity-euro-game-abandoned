@@ -19,6 +19,8 @@ namespace EDBG.Rules
 
         public CameraController CameraController;
 
+        public GameUI gameUI;
+
         void Start()
         {
             CameraController.Initialize();
@@ -90,9 +92,33 @@ namespace EDBG.Rules
                     mapGrid.SetCell(tile);
                 }
             }
+            LogicGameState newState = new LogicGameState(mapGrid);
 
-            gameStateStack.Push(new LogicGameState(mapGrid));
+            List<ActionToken> tokens = new List<ActionToken>
+            {
+                new ActionToken(TokenColors.Red),
+                new ActionToken(TokenColors.Blue),
+                new ActionToken(TokenColors.Green),
+                new ActionToken(TokenColors.Red),
+                new ActionToken(TokenColors.Blue),
+                new ActionToken(TokenColors.Green),
+                new ActionToken(TokenColors.Red),
+                new ActionToken(TokenColors.Blue),
+                new ActionToken(TokenColors.Green),
+                new ActionToken(TokenColors.Green)
+            };
+
+            UtilityFunctions.ShuffleList(tokens);
+
+            newState.playerTokenBag = new GameStack<ActionToken>(tokens);
+
+            newState.playerHand.PushItem(newState.playerTokenBag.PopItem());
+            newState.playerHand.PushItem(newState.playerTokenBag.PopItem());
+            newState.playerHand.PushItem(newState.playerTokenBag.PopItem());
+
+            gameStateStack.Push(newState);
             UtilityFunctions.PrintStack(faces);
+            gameUI.BuildHand(newState.playerHand);
         }
     }
 }

@@ -9,13 +9,17 @@ namespace EDBG.Rules
     {
         public MapGrid mapGrid;
         public GameStack<Die> rolledDice;
+        public GameStack<ActionToken> playerTokenBag;
+        public GameStack<ActionToken> playerHand;
 
         public LogicGameState(MapGrid mapGrid)
         {
             this.mapGrid = mapGrid;
+            playerTokenBag = new GameStack<ActionToken>();
+            playerHand = new GameStack<ActionToken>();
         }
 
-        public LogicGameState(LogicGameState other)
+        private LogicGameState(LogicGameState other)
         {
             if (other != null)
             {
@@ -25,6 +29,10 @@ namespace EDBG.Rules
                 }
                 if (other.rolledDice != null)
                     rolledDice = (GameStack<Die>)other.rolledDice.Clone();
+                if (playerTokenBag != null)
+                    playerTokenBag = (GameStack<ActionToken>)other.playerTokenBag.Clone();
+                if (playerHand != null)
+                    playerHand = (GameStack<ActionToken>)other.playerHand.Clone();
             }
         }
 

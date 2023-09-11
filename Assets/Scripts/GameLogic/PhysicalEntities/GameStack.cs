@@ -27,6 +27,12 @@ public class GameStack<T> : IGameComponent where T : IGameComponent
         }
     }
 
+    //TODO: Check if shallow or deep copy
+    public GameStack(List<T> list)
+    {
+        itemsList = new List<T>(list);
+    }
+
     public void PushItem(T item)
     {
         itemsList.Add(item);
