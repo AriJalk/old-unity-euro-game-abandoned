@@ -5,9 +5,9 @@ using EDBG.Rules;
 
 public class Cube
 {
-	private Colors _color;
+	private PieceColors _color;
 
-	public Colors Color
+	public PieceColors Color
 	{
 		get { return _color; }
 		set { _color = value; }

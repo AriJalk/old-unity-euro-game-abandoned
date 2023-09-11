@@ -26,11 +26,15 @@ namespace EDBG.MapSystem
 
         public IGameComponent ComponentOnTile { get; set; }
 
-        public MapTile(GamePosition gamePosition)
+        /// <summary>
+        /// Regular constructor
+        /// </summary>
+        /// <param name="gamePosition"></param>
+        public MapTile(GamePosition gamePosition, int dieFace)
         {
             TileType = TileTypes.Default;
             GamePosition = gamePosition;
-            DieFace = UnityEngine.Random.Range(1,7);
+            DieFace = dieFace;
         }
 
         public MapTile(MapTile tile)

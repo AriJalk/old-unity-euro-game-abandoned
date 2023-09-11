@@ -1,12 +1,12 @@
 using EDBG.Rules;
 public class Disc : IGameComponent
 {
-    public Colors DiscColor
+    public PieceColors DiscColor
     {
         get; private set;
     }
 
-    public Disc(Colors discColor)
+    public Disc(PieceColors discColor)
     {
         DiscColor = discColor;
     }

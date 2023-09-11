@@ -24,9 +24,9 @@ public class Die : IGameComponent
 		}
 	}
 
-	private Colors _color;
+	private PieceColors _color;
 
-	public Colors Color
+	public PieceColors Color
 	{
 		get { return _color; }
 		set { _color = value; }
@@ -36,7 +36,7 @@ public class Die : IGameComponent
 	public Die()
 	{
 		_face = 1;
-		_color = Colors.White;
+		_color = PieceColors.White;
 	}
 
 	//Copy Constructor
@@ -46,7 +46,7 @@ public class Die : IGameComponent
 		_color = die.Color;
 	}
 
-	public Die(int face, Colors color)
+	public Die(int face, PieceColors color)
 	{
 		_face = face;
 		_color = color;

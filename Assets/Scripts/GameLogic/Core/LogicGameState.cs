@@ -17,10 +17,15 @@ namespace EDBG.Rules
 
         public LogicGameState(LogicGameState other)
         {
-            if(other.mapGrid!=null)
-                mapGrid = (MapGrid)other.mapGrid.Clone();
-            if(other.rolledDice!=null)
-            rolledDice = (GameStack<Die>)other.rolledDice.Clone();
+            if (other != null)
+            {
+                if (other.mapGrid != null)
+                {
+                    mapGrid = (MapGrid)other.mapGrid.Clone();
+                }
+                if (other.rolledDice != null)
+                    rolledDice = (GameStack<Die>)other.rolledDice.Clone();
+            }
         }
 
         public object Clone()

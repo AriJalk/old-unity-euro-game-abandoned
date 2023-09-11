@@ -12,9 +12,9 @@ namespace EDBG.Rules
 
     public enum LocationTypes
     {
-        Blue=Colors.Blue,
-        Green=Colors.Green,
-        Red=Colors.Red
+        Blue=PieceColors.Blue,
+        Green=PieceColors.Green,
+        Red=PieceColors.Red
     }
 
     public enum EntityNames
@@ -40,7 +40,7 @@ namespace EDBG.Rules
         Neutral= EntityNames.Neutral
     }
 
-    public enum Colors
+    public enum PieceColors
     {
         Neutral,
         Red,
@@ -49,5 +49,12 @@ namespace EDBG.Rules
         Yellow,
         Black,
         White
+    }
+
+    public enum TokenColors
+    {
+        Red,
+        Green,
+        Blue
     }
 }

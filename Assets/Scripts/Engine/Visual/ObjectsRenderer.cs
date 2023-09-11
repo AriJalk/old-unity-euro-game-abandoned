@@ -23,7 +23,7 @@ public class ObjectsRenderer : MonoBehaviour
 
     public void Initialize()
     {
-        
+
     }
 
     public void RenderObjectsOnMap(SquareTileObject[,] tiles)
@@ -74,17 +74,23 @@ public class ObjectsRenderer : MonoBehaviour
                 // Apply Material based on disc color
                 switch (newDisc.discData.DiscColor)
                 {
-                    case EDBG.Rules.Colors.Blue:
+                    case EDBG.Rules.PieceColors.Blue:
                         newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/BlueWoodMaterial"));
                         break;
-                    case EDBG.Rules.Colors.Red:
+                    case EDBG.Rules.PieceColors.Red:
                         newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/RedWoodMaterial"));
                         break;
-                    case EDBG.Rules.Colors.Green:
+                    case EDBG.Rules.PieceColors.Green:
                         newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/GreenWoodMaterial"));
                         break;
-                    case EDBG.Rules.Colors.White:
-                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/OrangeWoodMaterial"));
+                    case EDBG.Rules.PieceColors.White:
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/WhiteWoodMaterial"));
+                        break;
+                    case EDBG.Rules.PieceColors.Yellow:
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/YellowWoodMaterial"));
+                        break;
+                    case EDBG.Rules.PieceColors.Black:
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/BlackWoodMaterial"));
                         break;
 
                 }
@@ -96,7 +102,8 @@ public class ObjectsRenderer : MonoBehaviour
                     newDisc.transform.localScale = new Vector3(DiscScale, DiscScale / fillerDiscFactor, DiscScale);
                     float fillerYPos = position.y + discHeight;
                     newDisc.transform.localPosition = new Vector3(0, fillerYPos, 0);
-                    newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/WhiteMaterial"));
+                    newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial
+                        ("Materials/" + (discStack.GetItemByIndex(i).DiscColor == EDBG.Rules.PieceColors.White ? "Black" : "White") + "Material"));
                 }
             }
         }
