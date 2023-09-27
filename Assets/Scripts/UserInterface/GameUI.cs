@@ -59,7 +59,7 @@ public class GameUI : MonoBehaviour
                     break;
             }
             tokenImage.GetComponent<RawImage>().color = color;
-            tokenImage.GetComponent<RawImage>().texture = (Texture)Resources.Load("Images/GreenToken");
+            tokenImage.GetComponent<RawImage>().texture = (Texture)Resources.Load("Images/Token");
             tokenImage.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tokenSize.x);
             tokenImage.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, tokenSize.y);
 

@@ -79,14 +79,6 @@ public class GameEngineManager : MonoBehaviour
         DiscRenderer.Initialize();
         PlatformManager.Initialize();
         ScreenManager.Initialize();
-
-        //Listen to screen change event
-        ScreenManager.ScreenChanged += ScreenChanged;
-    }
-
-    private void ScreenChanged(object sender, ScreenChangedEventArgs e)
-    {
-
     }
 
     public void LoadScene(string sceneName)

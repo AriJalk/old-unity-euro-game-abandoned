@@ -75,22 +75,22 @@ public class ObjectsRenderer : MonoBehaviour
                 switch (newDisc.discData.DiscColor)
                 {
                     case EDBG.Rules.PieceColors.Blue:
-                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/BlueWoodMaterial"));
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/BlueWoodMaterial"));
                         break;
                     case EDBG.Rules.PieceColors.Red:
-                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/RedWoodMaterial"));
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/RedWoodMaterial"));
                         break;
                     case EDBG.Rules.PieceColors.Green:
-                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/GreenWoodMaterial"));
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/GreenWoodMaterial"));
                         break;
                     case EDBG.Rules.PieceColors.White:
-                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/WhiteWoodMaterial"));
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/WhiteWoodMaterial"));
                         break;
                     case EDBG.Rules.PieceColors.Yellow:
-                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/YellowWoodMaterial"));
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/YellowWoodMaterial"));
                         break;
                     case EDBG.Rules.PieceColors.Black:
-                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/BlackWoodMaterial"));
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/BlackWoodMaterial"));
                         break;
 
                 }

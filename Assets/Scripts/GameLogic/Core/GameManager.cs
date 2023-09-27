@@ -5,6 +5,7 @@ using EDBG.MapSystem;
 using ResourcePool;
 using Unity.VisualScripting;
 using System.Linq;
+using System;
 
 namespace EDBG.Rules
 {
@@ -31,7 +32,12 @@ namespace EDBG.Rules
             engineManager = GameEngineManager.Instance;
             engineManager.MapRenderer.RenderMap(gameStateStack.Peek().mapGrid, gameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
+            engineManager.ScreenManager.ScreenChanged += ScreenChanged;
+        }
 
+        private void ScreenChanged(object sender, ScreenChangedEventArgs e)
+        {
+            CameraController.UpdateAspectRatio(e.NewWidth, e.NewHeight);
         }
 
         void Update()
