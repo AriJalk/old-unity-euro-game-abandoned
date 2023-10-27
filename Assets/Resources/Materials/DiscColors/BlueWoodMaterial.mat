@@ -84,6 +84,7 @@ Material:
     m_Colors:
     - _Albedo: {r: 0.051886797, g: 0.40834904, b: 1, a: 1}
     - _Color: {r: 0.15218937, g: 0.18760741, b: 0.18867922, a: 1}
+    - _Emission: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 0}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 1}

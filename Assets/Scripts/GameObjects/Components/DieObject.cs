@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class DieObject : MonoBehaviour
 {
+
+    Die die;
+
     // Start is called before the first frame update
     void Start()
     {
