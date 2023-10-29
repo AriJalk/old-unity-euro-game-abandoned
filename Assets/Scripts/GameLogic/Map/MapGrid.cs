@@ -5,7 +5,7 @@ namespace EDBG.MapSystem
 {
     public class MapGrid : GridContainer
     {
-        public MapGrid(int rows, int columns) : base(rows, columns)
+        public MapGrid(int columns, int rows) : base(columns, rows)
         {
 
         }

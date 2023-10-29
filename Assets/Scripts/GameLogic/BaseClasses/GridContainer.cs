@@ -34,18 +34,18 @@ namespace EDBG.MapSystem
             }
         }
 
-        public virtual ICell GetCell(int row, int column)
+        public virtual ICell GetCell(int x, int y)
         {
-            if (IsValidCoordinate(row, column))
+            if (IsValidCoordinate(y, x))
             {
-                return _grid[row, column];
+                return _grid[y, x];
             }
             return null;
         }
 
-        public virtual GridContainer GetCellAsContainer(int row, int column)
+        public virtual GridContainer GetCellAsContainer(int x, int y)
         {
-            ICell cell = _grid[row, column];
+            ICell cell = _grid[y, x];
             if (cell is GridContainer container)
             {
                 return container;

@@ -1,18 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class ActionsManager
 {
-    private Dictionary<string, IAction> actions;
+    private Dictionary<string, GameActionBase> actions;
 
     public ActionsManager()
     {
-        actions = new Dictionary<string, IAction>();
+        actions = new Dictionary<string, GameActionBase>();
     }
 
-    public void RegisterAction(string actionName, IAction action)
+    public void RegisterAction(string actionName, GameActionBase action)
     {
         if (action == null)
         {
@@ -27,9 +26,9 @@ public class ActionsManager
         actions.Add(actionName, action);
     }
 
-    public IAction GetAction(string actionName)
+    public GameActionBase GetAction(string actionName)
     {
-        if (actions.TryGetValue(actionName, out IAction action))
+        if (actions.TryGetValue(actionName, out GameActionBase action))
         {
             return  action;
         }

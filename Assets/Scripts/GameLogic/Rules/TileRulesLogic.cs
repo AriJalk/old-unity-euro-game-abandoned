@@ -46,7 +46,7 @@ namespace EDBG.Rules
         {
             searchQueue = new Queue<ICell>();
             searchQueue.Enqueue(tile);
-            distanceArray[tile.GamePosition.X, tile.GamePosition.Y] = 0;
+            distanceArray[tile.GamePosition.Y, tile.GamePosition.X] = 0;
             BFS(tile);
         }
 
@@ -62,37 +62,37 @@ namespace EDBG.Rules
                 ICell leftNeighbor;
                 ICell rightNeighbor;
                 tile = searchQueue.Dequeue();
-                visitedTiles[tile.GamePosition.X, tile.GamePosition.Y] = true;
-                if (distanceArray[tile.GamePosition.X, tile.GamePosition.Y] <= maxDistance)
+                visitedTiles[tile.GamePosition.Y, tile.GamePosition.X] = true;
+                if (distanceArray[tile.GamePosition.Y, tile.GamePosition.X] <= maxDistance)
                 {
-                    possibleMoves[tile.GamePosition.X, tile.GamePosition.Y] = true;
+                    possibleMoves[tile.GamePosition.Y, tile.GamePosition.X] = true;
                 }
-                if (distanceArray[tile.GamePosition.X, tile.GamePosition.Y] < maxDistance)
+                if (distanceArray[tile.GamePosition.Y, tile.GamePosition.X] < maxDistance)
                 {
                     upNeighbor = squareMap.GetNeighbor(tile, Direction.Up);
                     if (upNeighbor != null)
                     {
-                        distanceArray[upNeighbor.GamePosition.X, upNeighbor.GamePosition.Y] = distanceArray[tile.GamePosition.X, tile.GamePosition.Y] + 1;
+                        distanceArray[upNeighbor.GamePosition.Y, upNeighbor.GamePosition.X] = distanceArray[tile.GamePosition.Y, tile.GamePosition.X] + 1;
                         searchQueue.Enqueue(upNeighbor);
                     }
 
                     downNeighbor = squareMap.GetNeighbor(tile, Direction.Down);
                     if (downNeighbor != null)
                     {
-                        distanceArray[downNeighbor.GamePosition.X, downNeighbor.GamePosition.Y] = distanceArray[tile.GamePosition.X, tile.GamePosition.Y] + 1;
+                        distanceArray[downNeighbor.GamePosition.Y, downNeighbor.GamePosition.X] = distanceArray[tile.GamePosition.Y, tile.GamePosition.X] + 1;
                         searchQueue.Enqueue(downNeighbor);
                     }
 
                     leftNeighbor = squareMap.GetNeighbor(tile, Direction.Left);
                     if (leftNeighbor != null)
                     {
-                        distanceArray[leftNeighbor.GamePosition.X, leftNeighbor.GamePosition.Y] = distanceArray[tile.GamePosition.X, tile.GamePosition.Y] + 1;
+                        distanceArray[leftNeighbor.GamePosition.Y, leftNeighbor.GamePosition.X] = distanceArray[tile.GamePosition.Y, tile.GamePosition.X] + 1;
                         searchQueue.Enqueue(leftNeighbor);
                     }
                     rightNeighbor = squareMap.GetNeighbor(tile, Direction.Right);
                     if (rightNeighbor != null)
                     {
-                        distanceArray[rightNeighbor.GamePosition.X, rightNeighbor.GamePosition.Y] = distanceArray[tile.GamePosition.X, tile.GamePosition.Y] + 1;
+                        distanceArray[rightNeighbor.GamePosition.Y, rightNeighbor.GamePosition.X] = distanceArray[tile.GamePosition.Y, tile.GamePosition.X] + 1;
                         searchQueue.Enqueue(rightNeighbor);
                     }
                 }

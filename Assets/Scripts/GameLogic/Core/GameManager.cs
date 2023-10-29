@@ -16,11 +16,11 @@ namespace EDBG.Rules
         private Stack<LogicGameState> gameStateStack;
 
 
-        public Transform gameWorld;
+        public Transform GameWorld;
 
         public CameraController CameraController;
 
-        public GameUI gameUI;
+        public GameUI GameUI;
 
         void Start()
         {
@@ -30,11 +30,17 @@ namespace EDBG.Rules
 
             //TODO: better object finding
             engineManager = GameEngineManager.Instance;
-            engineManager.MapRenderer.RenderMap(gameStateStack.Peek().mapGrid, gameWorld.Find("SquareMapHolder"));
+            //Draw map at head of stack
+            engineManager.MapRenderer.RenderMap(gameStateStack.Peek().MapGrid, GameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
         }
 
+        /// <summary>
+        /// Called when the screen size changed due to orientation change
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ScreenChanged(object sender, ScreenChangedEventArgs e)
         {
             CameraController.UpdateAspectRatio(e.NewWidth, e.NewHeight);
@@ -44,6 +50,7 @@ namespace EDBG.Rules
         {
             engineManager.InputHandler.Listen();
         }
+
 
         void MoveCamera(Vector2 axis)
         {
@@ -69,38 +76,53 @@ namespace EDBG.Rules
 
             int[] array = new[] { 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6 };
 
-            UtilityFunctions.PrintArray(array);
+            //UtilityFunctions.PrintArray(array);
 
             UtilityFunctions.ShuffleArray(array);
 
-            UtilityFunctions.PrintArray(array);
+            //UtilityFunctions.PrintArray(array);
 
             Stack<int> faces = new Stack<int>(array);
-            UtilityFunctions.PrintStack(faces);
+            //UtilityFunctions.PrintStack(faces);
 
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 4; j++)
                 {
                     MapTile tile = new MapTile(new GamePosition(i, j), faces.Pop());
+                    tile.ComponentOnTile = new GameStack<Disc>();
                     if (i == 0 && j == 0)
                     {
-                        tile.ComponentOnTile = new GameStack<Disc>();
                         ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PieceColors.Black));
                         ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PieceColors.Black));
                     }
                     else if (i == 3 && j == 3)
                     {
-                        tile.ComponentOnTile = new GameStack<Disc>();
                         ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PieceColors.White));
                         ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PieceColors.White));
                     }
                     mapGrid.SetCell(tile);
                 }
             }
-            LogicGameState newState = new LogicGameState(mapGrid);
 
-            List<ActionToken> tokens = new List<ActionToken>
+            MoveDiscAction moveDiscAction = new MoveDiscAction();
+
+
+            List<PlayerBase> players = new List<PlayerBase>();
+            players.Add(new HumanPlayer("Human P", 10));
+            players.Add(new AutomataPlayer("Bot", 10));
+            LogicGameState newState = new LogicGameState(mapGrid, players);
+            moveDiscAction.SetAction((MapTile)mapGrid.GetCell(0, 0), (MapTile)mapGrid.GetCell(1, 1), 3);
+            moveDiscAction.UpdateCanExecute(newState);
+            moveDiscAction.ExecuteAction(newState);
+            moveDiscAction.UpdateCanExecute(newState);
+            moveDiscAction.ExecuteAction(newState);
+            moveDiscAction.UpdateCanExecute(newState);
+            moveDiscAction.ExecuteAction(newState);
+
+            /* Bag-builder test build
+             * 
+             * List<ActionToken> tokens = new List<ActionToken>
             {
                 new ActionToken(TokenColors.Red),
                 new ActionToken(TokenColors.Blue),
@@ -121,10 +143,12 @@ namespace EDBG.Rules
             newState.playerHand.PushItem(newState.playerTokenBag.PopItem());
             newState.playerHand.PushItem(newState.playerTokenBag.PopItem());
             newState.playerHand.PushItem(newState.playerTokenBag.PopItem());
+            gameUI.BuildHand(newState.playerHand);
+            */
 
             gameStateStack.Push(newState);
-            UtilityFunctions.PrintStack(faces);
-            gameUI.BuildHand(newState.playerHand);
+
+
         }
     }
 }

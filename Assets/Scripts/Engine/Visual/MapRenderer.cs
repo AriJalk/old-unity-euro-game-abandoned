@@ -58,7 +58,7 @@ public class MapRenderer : MonoBehaviour
                 tile.transform.localPosition = position;
                 tile.gameObject.isStatic = true;
                 tile.gameObject.SetActive(true);
-                tile.name = "Tile [" + row + "," + col + "]";
+                tile.name = "Tile [" + col + "," + row + "]";
                 tile.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/TileMaterial"));
                 tiles[row, col] = tile;
                 DrawDieFace(tile);
