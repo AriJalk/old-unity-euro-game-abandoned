@@ -6,16 +6,16 @@ using EDBG.Rules;
 
 public class Die : IGameComponent
 {
-	private int _face;
+	private int _result;
 
-	public int Face
+	public int Result
 	{
-		get { return _face; }
+		get { return _result; }
 		set
 		{
 			if (value >= 1 && value <= 6)
 			{
-				_face = value;
+				_result = value;
 			}
 			else
 			{
@@ -35,32 +35,32 @@ public class Die : IGameComponent
 
 	public Die()
 	{
-		_face = 1;
+		_result = 1;
 		_color = PieceColors.White;
 	}
 
 	//Copy Constructor
 	private Die(Die die)
 	{
-		_face = die.Face;
+		_result = die.Result;
 		_color = die.Color;
 	}
 
 	public Die(int face, PieceColors color)
 	{
-		_face = face;
+		_result = face;
 		_color = color;
 	}
 
 	public int Roll()
 	{
-		_face = Random.Range(1, 6);
-		return _face;
+		_result = Random.Range(1, 7);
+		return _result;
 	}
 
 	public void ChangeValue(int value)
 	{
-        _face = ((_face - 1 + value) % 6 + 6) % 6 + 1;
+        _result = ((_result - 1 + value) % 6 + 6) % 6 + 1;
     }
 
     public override object Clone()
