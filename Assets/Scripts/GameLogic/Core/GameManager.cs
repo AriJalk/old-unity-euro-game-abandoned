@@ -11,9 +11,11 @@ namespace EDBG.Rules
 {
     public class GameManager : MonoBehaviour
     {
-        private GameEngineManager engineManager;
+        private List<PlayerBase> PlayerList { get; set; }
 
-        private Stack<LogicGameState> gameStateStack;
+        private GameEngineManager engineManager {  get; set; }
+
+        private Stack<LogicGameState> gameStateStack { get; set; }
 
 
         public Transform GameWorld;
@@ -105,20 +107,23 @@ namespace EDBG.Rules
                 }
             }
 
-            MoveDiscAction moveDiscAction = new MoveDiscAction();
+            
 
 
-            List<PlayerBase> players = new List<PlayerBase>();
-            players.Add(new HumanPlayer("Human P", 10));
-            players.Add(new AutomataPlayer("Bot", 10));
-            LogicGameState newState = new LogicGameState(mapGrid, players);
-            moveDiscAction.SetAction((MapTile)mapGrid.GetCell(0, 0), (MapTile)mapGrid.GetCell(1, 1), 3);
+            PlayerList = new List<PlayerBase>();
+            PlayerList.Add(new HumanPlayer("Human P", 10));
+            PlayerList.Add(new AutomataPlayer("Bot", 10));
+            LogicGameState newState = new LogicGameState(mapGrid);
+
+
+
+            MoveDiscAction moveDiscAction = new MoveDiscAction((MapTile)mapGrid.GetCell(0, 0), (MapTile)mapGrid.GetCell(0, 0), 3);
             moveDiscAction.UpdateCanExecute(newState);
-            moveDiscAction.ExecuteAction(newState);
+            moveDiscAction.ExecuteAction();
             moveDiscAction.UpdateCanExecute(newState);
-            moveDiscAction.ExecuteAction(newState);
+            moveDiscAction.ExecuteAction();
             moveDiscAction.UpdateCanExecute(newState);
-            moveDiscAction.ExecuteAction(newState);
+            moveDiscAction.ExecuteAction();
 
             /* Bag-builder test build
              * 

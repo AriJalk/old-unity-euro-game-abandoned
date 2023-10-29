@@ -23,6 +23,7 @@ public class MapRenderer : MonoBehaviour
 
     public void Initialize()
     {
+        //TODO: replace with proper asset loading
         GameObject squarePrefab = Resources.Load<GameObject>("Prefabs/3D/SquareTilePrefab");
         if (squarePrefab == null)
         {

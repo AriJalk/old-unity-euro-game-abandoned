@@ -8,7 +8,7 @@ namespace EDBG.Rules
 {
     public class LogicGameState : ICloneable
     {
-        public List<PlayerBase> PlayerList { get; set; }
+
         public MapGrid MapGrid { get; set; }
         public GameStack<Die> RolledDice { get; set; }
         public PlayerBase CurrentPlayer { get; set; }
@@ -18,10 +18,8 @@ namespace EDBG.Rules
          * public GameStack<ActionToken> playerHand;
          */
 
-        public LogicGameState(MapGrid mapGrid, List<PlayerBase> players)
+        public LogicGameState(MapGrid mapGrid)
         {
-            PlayerList = players;
-
             this.MapGrid = mapGrid;
             /*
              * playerTokenBag = new GameStack<ActionToken>();
@@ -39,6 +37,8 @@ namespace EDBG.Rules
                 }
                 if (other.RolledDice != null)
                     RolledDice = (GameStack<Die>)other.RolledDice.Clone();
+                if (other.CurrentPlayer != null)
+                    CurrentPlayer = (PlayerBase)other.CurrentPlayer.Clone();
                 /*
                  * if (playerTokenBag != null)
                  * playerTokenBag = (GameStack<ActionToken>)other.playerTokenBag.Clone();

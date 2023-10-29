@@ -10,7 +10,7 @@ public class MoveDiscAction : GameActionBase
     private MapTile targetTile;
     private int distance;
 
-    public override void ExecuteAction(LogicGameState gameState)
+    public override void ExecuteAction()
     {
         if (CanExecute == true)
         {
@@ -18,7 +18,8 @@ public class MoveDiscAction : GameActionBase
         }
     }
 
-    public void SetAction(MapTile sourceTile, MapTile targetTile, int distance)
+
+    public MoveDiscAction(MapTile sourceTile, MapTile targetTile, int distance)
     {
         this.sourceTile = sourceTile;
         this.targetTile = targetTile;

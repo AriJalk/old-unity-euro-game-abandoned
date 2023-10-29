@@ -11,7 +11,9 @@ public abstract class GameActionBase
     public string Description { get; set; }
     public bool CanExecute {  get; set; }
 
+    private LogicGameState _gameState;
+
     public abstract void UpdateCanExecute(LogicGameState gameState);
 
-    public abstract void ExecuteAction(LogicGameState gameState);
+    public abstract void ExecuteAction();
 }

@@ -44,7 +44,7 @@ public abstract class PlayerBase : ICloneable
         _discStock = other.DiscStock;
     }
 
-    public object Clone()
+    public virtual object Clone()
     {
         PlayerBase clone = (PlayerBase)this.MemberwiseClone();
         clone._name = this._name;
