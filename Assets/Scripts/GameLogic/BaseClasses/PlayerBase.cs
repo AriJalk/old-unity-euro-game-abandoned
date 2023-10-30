@@ -12,9 +12,9 @@ public abstract class PlayerBase : ICloneable
         set { _name = value; }
     }
 
-    private Corporation _corporation;
+    private CorporationBase _corporation;
 
-    public Corporation Corporation
+    public CorporationBase Corporation
     {
         get { return _corporation; }
         set { _corporation = value; }
@@ -32,16 +32,35 @@ public abstract class PlayerBase : ICloneable
         }
     }
 
-    public PlayerBase(string name, int discStock)
+    private int _buildPoints;
+
+    public int BuildPoints
+    {
+        get { return _buildPoints; }
+        set { _buildPoints = value; }
+    }
+
+    private int _disruptPoints;
+
+    public int DisruptPoints
+    {
+        get { return _disruptPoints; }
+        set { _disruptPoints = value; }
+    }
+
+
+    public PlayerBase(string name, int discStock, CorporationBase corporation)
     {
         _name = name;
         _discStock = discStock;
+        _corporation = corporation;
     }
 
     private PlayerBase(PlayerBase other)
     {
-        _name = other.Name;
-        _discStock = other.DiscStock;
+        _name = other._name;
+        _discStock = other._discStock;
+        _corporation = other._corporation;
     }
 
     public virtual object Clone()
@@ -49,6 +68,7 @@ public abstract class PlayerBase : ICloneable
         PlayerBase clone = (PlayerBase)this.MemberwiseClone();
         clone._name = this._name;
         clone._discStock = this._discStock;
+        clone._corporation = this._corporation;
         return clone;
     }
 }

@@ -19,9 +19,9 @@ public class GameStack<T> : IGameComponent where T : IGameComponent
 
     protected GameStack(GameStack<T> otherStack)
     {
-        int count= otherStack.Count;
+        int count = otherStack.Count;
         itemsList = new List<T>(count);
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             itemsList.Add(otherStack.GetItemByIndex(i));
         }
@@ -81,6 +81,11 @@ public class GameStack<T> : IGameComponent where T : IGameComponent
 
     public override object Clone()
     {
+        GameStack<T> clone = new GameStack<T>();
+        foreach (T item in itemsList)
+        {
+            clone.itemsList.Add(item.Clone() as T);
+        }
         return new GameStack<T>(this);
     }
 }

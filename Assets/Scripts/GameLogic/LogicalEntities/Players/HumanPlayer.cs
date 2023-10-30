@@ -1,6 +1,6 @@
 ﻿public class HumanPlayer : PlayerBase
 {
-    public HumanPlayer(string name, int discStock) : base(name, discStock)
+    public HumanPlayer(string name, int discStock, CorporationBase corporation) : base(name, discStock, corporation)
     {
 
     }

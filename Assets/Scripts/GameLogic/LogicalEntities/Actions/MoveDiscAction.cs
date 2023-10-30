@@ -1,4 +1,5 @@
-using EDBG.MapSystem;
+/*
+ * using EDBG.MapSystem;
 using EDBG.Rules;
 using System;
 using System.Collections;
@@ -45,3 +46,4 @@ public class MoveDiscAction : GameActionBase
         CanExecute = false;
     }
 }
+*/

@@ -1,19 +1,14 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EDBG.MapSystem;
-using ResourcePool;
-using Unity.VisualScripting;
-using System.Linq;
-using System;
+
 
 namespace EDBG.Rules
 {
     public class GameManager : MonoBehaviour
     {
-        private List<PlayerBase> PlayerList { get; set; }
 
-        private GameEngineManager engineManager {  get; set; }
+        private GameEngineManager engineManager { get; set; }
 
         private Stack<LogicGameState> gameStateStack { get; set; }
 
@@ -107,23 +102,23 @@ namespace EDBG.Rules
                 }
             }
 
-            
 
 
-            PlayerList = new List<PlayerBase>();
-            PlayerList.Add(new HumanPlayer("Human P", 10));
-            PlayerList.Add(new AutomataPlayer("Bot", 10));
+
+
             LogicGameState newState = new LogicGameState(mapGrid);
 
 
 
-            MoveDiscAction moveDiscAction = new MoveDiscAction((MapTile)mapGrid.GetCell(0, 0), (MapTile)mapGrid.GetCell(0, 0), 3);
+            /*
+             * MoveDiscAction moveDiscAction = new MoveDiscAction((MapTile)mapGrid.GetCell(0, 0), (MapTile)mapGrid.GetCell(0, 0), 3);
             moveDiscAction.UpdateCanExecute(newState);
             moveDiscAction.ExecuteAction();
             moveDiscAction.UpdateCanExecute(newState);
             moveDiscAction.ExecuteAction();
             moveDiscAction.UpdateCanExecute(newState);
             moveDiscAction.ExecuteAction();
+            */
 
             /* Bag-builder test build
              * 
@@ -151,9 +146,11 @@ namespace EDBG.Rules
             gameUI.BuildHand(newState.playerHand);
             */
 
+            newState.PlayerList = new List<PlayerBase>() {
+                new HumanPlayer("Players", 10, new BeginnerCorporation()),
+                new AutomataPlayer("Automata", 5, new BeginnerCorporation())
+            };
             gameStateStack.Push(newState);
-
-
         }
     }
 }
