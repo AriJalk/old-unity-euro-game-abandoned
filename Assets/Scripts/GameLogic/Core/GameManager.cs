@@ -11,6 +11,13 @@ namespace EDBG.Rules
         private GameEngineManager engineManager { get; set; }
 
         private Stack<LogicGameState> gameStateStack { get; set; }
+        private LogicGameState currentGameState
+        {
+            get
+            {
+                return gameStateStack.Peek();
+            }
+        }
 
 
         public Transform GameWorld;
@@ -24,13 +31,12 @@ namespace EDBG.Rules
             CameraController.Initialize();
             CreateTestGame();
             MoveDiscAction moveDisc = new MoveDiscAction();
-            moveDisc.SetAction((MapTile)gameStateStack.Peek().MapGrid.GetCell(0, 0), (MapTile)gameStateStack.Peek().MapGrid.GetCell(1, 1), 3, gameStateStack.Peek());
+            moveDisc.SetAction((MapTile)currentGameState.MapGrid.GetCell(0, 0), (MapTile)currentGameState.MapGrid.GetCell(1, 1), 3, currentGameState);
             moveDisc.ExecuteAction();
 
-            //TODO: better object finding
             engineManager = GameEngineManager.Instance;
             //Draw map at head of stack
-            engineManager.MapRenderer.RenderMap(gameStateStack.Peek().MapGrid, GameWorld.Find("SquareMapHolder"));
+            engineManager.MapRenderer.RenderMap(currentGameState.MapGrid, GameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
         }
@@ -150,7 +156,7 @@ namespace EDBG.Rules
 
             newState.PlayerList = new List<PlayerBase>() {
                 new HumanPlayer("Player", 10, new BeginnerCorporation()),
-                new BotPlayer("Bot", 5, new BeginnerCorporation())
+                new BotPlayer("Bot", 10, new BeginnerCorporation())
             };
             gameStateStack.Push(newState);
 

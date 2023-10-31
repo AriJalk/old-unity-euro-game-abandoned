@@ -54,6 +54,8 @@ public abstract class PlayerBase : ICloneable
         _name = name;
         _discStock = discStock;
         _corporation = corporation;
+        _expansionPoints = 0;
+        _marketPoints = 0;
     }
 
     private PlayerBase(PlayerBase other)
@@ -61,6 +63,8 @@ public abstract class PlayerBase : ICloneable
         _name = other._name;
         _discStock = other._discStock;
         _corporation = other._corporation;
+        _expansionPoints = other._expansionPoints;
+        _marketPoints = other._marketPoints;
     }
 
     public virtual object Clone()
@@ -69,6 +73,8 @@ public abstract class PlayerBase : ICloneable
         clone._name = this._name;
         clone._discStock = this._discStock;
         clone._corporation = this._corporation;
+        clone._expansionPoints = this._expansionPoints;
+        clone._marketPoints = this._marketPoints;
         return clone;
     }
 }

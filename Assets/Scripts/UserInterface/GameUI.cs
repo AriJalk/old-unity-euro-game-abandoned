@@ -16,6 +16,7 @@ public class GameUI : MonoBehaviour
     public void Initialize(PlayerBase player)
     {
         BuildActions(player);
+        BuildInfo(player);
     }
 
     public void BuildHand(GameStack<ActionToken> tokenArray)
@@ -72,16 +73,32 @@ public class GameUI : MonoBehaviour
 
     public void BuildActions(PlayerBase player)
     {
-        Transform playerPanel = transform.Find("ActionPanel").Find("PlayerActions");
-        if (playerPanel != null)
+        Transform actionPanel = transform.Find("ActionPanel").Find("PlayerActions");
+        if (actionPanel != null)
         {
             for (int i = 0; i < 6; i++)
             {
-                Transform action = playerPanel.Find($"Action{i + 1}");
+                Transform action = actionPanel.Find($"Action{i + 1}");
                 Transform button = action.Find("Button");
                 TextMeshProUGUI text = button.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
                 text.text = player.Corporation.Actions[i].Name;
             }
+        }
+    }
+
+    public void BuildInfo(PlayerBase player)
+    {
+        Transform playerPanel = transform.Find("PlayerPanel");
+        if (playerPanel != null)
+        {
+            TextMeshProUGUI discStockText = playerPanel.Find("DiscStock").Find("Text").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI expansionPointsText = playerPanel.Find("ExpansionPoints").Find("Text").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI marketPointsText = playerPanel.Find("MarketPoints").Find("Text").GetComponent<TextMeshProUGUI>();
+
+            discStockText.SetText($"Discs: {player.DiscStock.ToString()}");
+            expansionPointsText.SetText($"EP: {player.ExpansionPoints.ToString()}");
+            marketPointsText.SetText($"MP: {player.MarketPoints.ToString()}");
+
         }
     }
 }

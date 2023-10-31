@@ -1,7 +1,8 @@
 ﻿
 using System;
-using System.Collections.Generic;
-
+/// <summary>
+/// Corporation defines the actions, starting material, and corp specific functionality available to the player in a game
+/// </summary>
 public abstract class CorporationBase : ICloneable
 {
 	private string _name;
