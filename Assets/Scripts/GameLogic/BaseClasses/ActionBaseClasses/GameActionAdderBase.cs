@@ -1,12 +1,13 @@
-﻿/// <summary>
+﻿using UnityEditor.Experimental.GraphView;
+/// <summary>
 /// Class for actions which add a bonus
 /// </summary>
 public abstract class GameActionAdderBase : GameActionBase
 {
-    public PlayerBase Player { get; protected set; }
-    public int Bonus { get; protected set; }
+    public readonly PlayerBase Player;
+    public readonly int Bonus;
 
-    public GameActionAdderBase(PlayerBase player, int bonus)
+    protected GameActionAdderBase(string name, string description, PlayerBase player, int bonus) : base(name, description)
     {
         Player = player;
         Bonus = bonus;

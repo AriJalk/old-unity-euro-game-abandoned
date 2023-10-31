@@ -32,20 +32,20 @@ public abstract class PlayerBase : ICloneable
         }
     }
 
-    private int _buildPoints;
+    private int _expansionPoints;
 
-    public int BuildPoints
+    public int ExpansionPoints
     {
-        get { return _buildPoints; }
-        set { _buildPoints = value; }
+        get { return _expansionPoints; }
+        set { _expansionPoints = value; }
     }
 
-    private int _disruptPoints;
+    private int _marketPoints;
 
-    public int DisruptPoints
+    public int MarketPoints
     {
-        get { return _disruptPoints; }
-        set { _disruptPoints = value; }
+        get { return _marketPoints; }
+        set { _marketPoints = value; }
     }
 
 

@@ -4,11 +4,15 @@ public abstract class GameActionBase
 {
     event EventHandler<ActionCompletedEventArgs> ActionCompleted;
 
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public bool CanExecute {  get; set; }
+    public string Name { get; protected set; }
+    public string Description { get; protected set; }
+    public bool CanExecute {  get; protected set; }
 
-    public abstract void UpdateCanExecute();
+    protected GameActionBase(string name, string description)
+    {
+        Name = name;
+        Description = description;
+    }
 
     public abstract void ExecuteAction();
 }

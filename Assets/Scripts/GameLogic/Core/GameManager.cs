@@ -23,7 +23,8 @@ namespace EDBG.Rules
         {
             CameraController.Initialize();
             CreateTestGame();
-
+            MoveDiscAction moveDisc = new MoveDiscAction((MapTile)gameStateStack.Peek().MapGrid.GetCell(0, 0), (MapTile)gameStateStack.Peek().MapGrid.GetCell(1, 1), 3, gameStateStack.Peek());
+            moveDisc.ExecuteAction();
 
             //TODO: better object finding
             engineManager = GameEngineManager.Instance;
