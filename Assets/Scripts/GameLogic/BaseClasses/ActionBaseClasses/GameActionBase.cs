@@ -1,9 +1,5 @@
-using System;
-
 public abstract class GameActionBase
 {
-    event EventHandler<ActionCompletedEventArgs> ActionCompleted;
-
     public string Name { get; protected set; }
     public string Description { get; protected set; }
     public bool CanExecute {  get; protected set; }

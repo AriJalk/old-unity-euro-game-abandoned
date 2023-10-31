@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 /// Core engine manager, implemented as singleton to persist across scenes.
 /// Contains all unity technical managers
 /// </summary>
+/// TODO: remove all new GameObject
 public class GameEngineManager : MonoBehaviour
 {
     private static GameEngineManager instance;
@@ -27,7 +28,7 @@ public class GameEngineManager : MonoBehaviour
                 if (instance == null)
                 {
                     // If no instance exists, create a new GameObject with EngineManager and attach it to the "Engine" GameObject
-                    GameObject managerObject = new GameObject("GameEngineManager");
+                    GameObject managerObject = Instantiate(new GameObject("GameEngineManager"));
                     instance = managerObject.AddComponent<GameEngineManager>();
                 }
 

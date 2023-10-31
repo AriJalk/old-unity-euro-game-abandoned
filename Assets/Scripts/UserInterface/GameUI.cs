@@ -1,6 +1,7 @@
 using EDBG.Rules;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,12 +10,12 @@ public class GameUI : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
-    public void Initialize()
+    public void Initialize(PlayerBase player)
     {
-
+        BuildActions(player);
     }
 
     public void BuildHand(GameStack<ActionToken> tokenArray)
@@ -66,6 +67,21 @@ public class GameUI : MonoBehaviour
             Destroy(emptyObject);
 
 
+        }
+    }
+
+    public void BuildActions(PlayerBase player)
+    {
+        Transform playerPanel = transform.Find("ActionPanel").Find("PlayerActions");
+        if (playerPanel != null)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                Transform action = playerPanel.Find($"Action{i + 1}");
+                Transform button = action.Find("Button");
+                TextMeshProUGUI text = button.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
+                text.text = player.Corporation.Actions[i].Name;
+            }
         }
     }
 }

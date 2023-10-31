@@ -23,7 +23,8 @@ namespace EDBG.Rules
         {
             CameraController.Initialize();
             CreateTestGame();
-            MoveDiscAction moveDisc = new MoveDiscAction((MapTile)gameStateStack.Peek().MapGrid.GetCell(0, 0), (MapTile)gameStateStack.Peek().MapGrid.GetCell(1, 1), 3, gameStateStack.Peek());
+            MoveDiscAction moveDisc = new MoveDiscAction();
+            moveDisc.SetAction((MapTile)gameStateStack.Peek().MapGrid.GetCell(0, 0), (MapTile)gameStateStack.Peek().MapGrid.GetCell(1, 1), 3, gameStateStack.Peek());
             moveDisc.ExecuteAction();
 
             //TODO: better object finding
@@ -148,10 +149,12 @@ namespace EDBG.Rules
             */
 
             newState.PlayerList = new List<PlayerBase>() {
-                new HumanPlayer("Players", 10, new BeginnerCorporation()),
-                new AutomataPlayer("Automata", 5, new BeginnerCorporation())
+                new HumanPlayer("Player", 10, new BeginnerCorporation()),
+                new BotPlayer("Bot", 5, new BeginnerCorporation())
             };
             gameStateStack.Push(newState);
+
+            GameUI.Initialize(newState.PlayerList[0]);
         }
     }
 }

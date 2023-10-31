@@ -3,21 +3,15 @@ using EDBG.Rules;
 
 public class MoveDiscAction : GameActionBase
 {
-    const string ActionName = "Relocate Disc";
+    const string ActionName = "Relocate";
     const string ActionDescription = "Move Disc from a player's controlled stack to a valid position";
 
-    private readonly MapTile sourceTile;
-    private readonly MapTile targetTile;
-    private readonly int distance;
-    private readonly LogicGameState gameState;
+    private MapTile sourceTile;
+    private MapTile targetTile;
 
-    public MoveDiscAction(MapTile sourceTile, MapTile targetTile, int distance, LogicGameState gameState) : base(ActionName, ActionDescription)
+    public MoveDiscAction() : base(ActionName, ActionDescription)
     {
-        this.sourceTile = sourceTile;
-        this.targetTile = targetTile;
-        this.distance = distance;
-        this.gameState = gameState;
-        UpdateCanExecute();
+
     }
 
     public override void ExecuteAction()
@@ -25,11 +19,14 @@ public class MoveDiscAction : GameActionBase
         if (CanExecute == true)
         {
             ((GameStack<Disc>)targetTile.ComponentOnTile).PushItem(((GameStack<Disc>)sourceTile.ComponentOnTile).PopItem());
+            CanExecute = false;
         }
     }
 
-    private void UpdateCanExecute()
+    public void SetAction(MapTile sourceTile, MapTile targetTile, int distance, LogicGameState gameState)
     {
+        this.sourceTile = sourceTile;
+        this.targetTile = targetTile;
         if (((GameStack<Disc>)sourceTile.ComponentOnTile).Count > 0)
         {
             bool[,] possibleMoves = TileRulesLogic.GetPossibleMoves(gameState.MapGrid, sourceTile, distance);

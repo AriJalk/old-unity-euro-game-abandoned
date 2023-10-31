@@ -1,6 +1,6 @@
 using System;
 /// <summary>
-/// Base class for player, human or automata
+/// Base class for player, human or Bot
 /// </summary>
 public abstract class PlayerBase : ICloneable
 {

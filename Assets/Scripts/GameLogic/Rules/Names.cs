@@ -21,7 +21,7 @@ namespace EDBG.Rules
     {
         Map,
         Player,
-        Automata,
+        Bot,
         Neutral,
         Disc,
         Tile,
@@ -36,7 +36,7 @@ namespace EDBG.Rules
     public enum Ownership
     {
         Player = EntityNames.Player,
-        Automata= EntityNames.Automata,
+        Bot= EntityNames.Bot,
         Neutral= EntityNames.Neutral
     }
 

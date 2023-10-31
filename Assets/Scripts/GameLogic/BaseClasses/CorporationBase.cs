@@ -20,6 +20,7 @@ public abstract class CorporationBase : ICloneable
 		set { _description = value; }
 	}
 
+
 	private GameActionBase[] _actions;
 
 	public GameActionBase[] Actions
@@ -28,12 +29,13 @@ public abstract class CorporationBase : ICloneable
 		set { _actions = value; }
 	}
 
-    public object Clone()
+
+
+	public object Clone()
     {
         CorporationBase clone = (CorporationBase)this.MemberwiseClone();
 		clone._name = this._name;
 		clone._description = this._description;
-		clone._actions = this._actions;
 		return clone;
     }
 }

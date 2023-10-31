@@ -19,7 +19,7 @@ public class ScreenManager : MonoBehaviour
                 if (instance == null)
                 {
                     // If no instance exists, create a new GameObject with PoolManager and attach it
-                    GameObject managerObject = new GameObject("ScreenManager");
+                    GameObject managerObject = Instantiate(new GameObject("ScreenManager"));
                     instance = managerObject.AddComponent<ScreenManager>();
                 }
 
