@@ -15,7 +15,7 @@ using UnityEngine.SceneManagement;
 public class GameEngineManager : MonoBehaviour
 {
     private static GameEngineManager instance;
-
+    //TODO: fix persistance between scene?
     public static GameEngineManager Instance
     {
 
