@@ -1,4 +1,4 @@
-namespace EDBG.Rules
+namespace EDBG.GameLogic.Rules
 {
     public enum TileTypes
     {

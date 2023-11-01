@@ -1,8 +1,8 @@
-using EDBG.Rules;
-using System;
-using UnityEngine;
+using EDBG.GameLogic.Rules;
+using EDBG.Utilities.DataTypes;
+using EDBG.GameLogic.Components;
 
-namespace EDBG.MapSystem
+namespace EDBG.GameLogic.MapSystem
 {
     public class MapTile : ICell
     {

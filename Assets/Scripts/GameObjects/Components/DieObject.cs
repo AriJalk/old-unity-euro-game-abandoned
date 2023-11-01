@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+using EDBG.GameLogic.Components;
 
 public class DieObject : MonoBehaviour
 {

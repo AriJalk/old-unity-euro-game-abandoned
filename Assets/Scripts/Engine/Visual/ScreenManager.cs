@@ -1,68 +1,68 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class ScreenManager : MonoBehaviour
+namespace EDBG.Engine.Visual
 {
-    private static ScreenManager instance;
-    public static ScreenManager Instance
+    public class ScreenManager : MonoBehaviour
     {
-        get
+        private static ScreenManager instance;
+        public static ScreenManager Instance
         {
-            if (instance == null)
+            get
             {
-                // Try to find an existing instance in the scene
-                instance = FindObjectOfType<ScreenManager>();
-
                 if (instance == null)
                 {
-                    // If no instance exists, create a new GameObject with PoolManager and attach it
-                    GameObject managerObject = Instantiate(new GameObject("ScreenManager"));
-                    instance = managerObject.AddComponent<ScreenManager>();
+                    // Try to find an existing instance in the scene
+                    instance = FindObjectOfType<ScreenManager>();
+
+                    if (instance == null)
+                    {
+                        // If no instance exists, create a new GameObject with PoolManager and attach it
+                        GameObject managerObject = Instantiate(new GameObject("ScreenManager"));
+                        instance = managerObject.AddComponent<ScreenManager>();
+                    }
+
+                    // Ensure the instance persists across scenes
+                    DontDestroyOnLoad(instance.gameObject);
                 }
 
-                // Ensure the instance persists across scenes
-                DontDestroyOnLoad(instance.gameObject);
+                return instance;
             }
-
-            return instance;
         }
-    }
 
-    public EventHandler<ScreenChangedEventArgs> ScreenChanged;
+        public EventHandler<ScreenChangedEventArgs> ScreenChanged;
 
 
-    private int screenWidth;
-    private int screenHeight;
-    private float aspectRatio;
-    private ScreenOrientation screenOrientation;
+        private int screenWidth;
+        private int screenHeight;
+        private float aspectRatio;
+        private ScreenOrientation screenOrientation;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+        // Start is called before the first frame update
+        void Start()
+        {
 
-    }
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (screenWidth != Screen.width || screenHeight != Screen.height)
+        // Update is called once per frame
+        void Update()
+        {
+            if (screenWidth != Screen.width || screenHeight != Screen.height)
+            {
+                screenWidth = Screen.width;
+                screenHeight = Screen.height;
+                aspectRatio = Screen.width / Screen.height;
+                screenOrientation = Screen.orientation;
+                ScreenChanged?.Invoke(this, new ScreenChangedEventArgs(screenWidth, screenHeight, screenOrientation));
+            }
+        }
+
+        public void Initialize()
         {
             screenWidth = Screen.width;
             screenHeight = Screen.height;
-            aspectRatio = Screen.width / Screen.height;
+            aspectRatio = (float)screenWidth / screenHeight;
             screenOrientation = Screen.orientation;
-            ScreenChanged?.Invoke(this, new ScreenChangedEventArgs(screenWidth, screenHeight, screenOrientation));
         }
-    }
-
-    public void Initialize()
-    {
-        screenWidth = Screen.width;
-        screenHeight = Screen.height;
-        aspectRatio = (float)screenWidth / screenHeight;
-        screenOrientation = Screen.orientation;
     }
 }

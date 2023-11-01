@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using UnityEngine;
 
-namespace ResourcePool
+namespace EDBG.Engine.ResourceManagement
 {
     public class ObjectPool<T> where T : Component
     {

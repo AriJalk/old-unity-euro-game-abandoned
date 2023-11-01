@@ -1,46 +1,48 @@
-using ResourcePool;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MaterialManager : MonoBehaviour
+namespace EDBG.Engine.ResourceManagement
 {
-    private Dictionary<string, Material> materialPool;
-
-    // Start is called before the first frame update
-    void Start()
+    public class MaterialManager : MonoBehaviour
     {
+        private Dictionary<string, Material> materialPool;
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-    public void Initialize()
-    {
-        materialPool = new Dictionary<string, Material>();
-    }
-
-    public Material GetMaterial(string materialPath)
-    {
-        if (materialPool.ContainsKey(materialPath))
+        // Start is called before the first frame update
+        void Start()
         {
-            return materialPool[materialPath];
+
         }
-        else
+
+        // Update is called once per frame
+        void Update()
         {
-            Material material = Resources.Load<Material>(materialPath);
-            if (material == null)
+
+        }
+        public void Initialize()
+        {
+            materialPool = new Dictionary<string, Material>();
+        }
+
+        public Material GetMaterial(string materialPath)
+        {
+            if (materialPool.ContainsKey(materialPath))
             {
-                Debug.Log("Material not found at path: " + materialPath);
+                return materialPool[materialPath];
             }
             else
             {
-                materialPool[materialPath] = material;
+                Material material = Resources.Load<Material>(materialPath);
+                if (material == null)
+                {
+                    Debug.Log("Material not found at path: " + materialPath);
+                }
+                else
+                {
+                    materialPool[materialPath] = material;
+                }
+                return material;
             }
-            return material;
         }
     }
+
 }

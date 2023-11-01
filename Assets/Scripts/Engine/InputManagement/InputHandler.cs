@@ -1,0 +1,58 @@
+using UnityEngine;
+
+using EDBG.Engine.Core;
+
+namespace EDBG.Engine.InputManagement
+{
+    public class InputHandler : MonoBehaviour
+    {
+        private InputEvents inputEvents;
+
+        // Start is called before the first frame update
+        void Start()
+        {
+
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+        public void Initialize()
+        {
+            inputEvents = GameEngineManager.Instance.InputEvents;
+        }
+
+        public void Listen()
+        {
+            //Get mouse movement
+            float horizontalInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
+            if (horizontalInput != 0 || verticalInput != 0)
+            {
+                //Use raw axis to make opposites neutral
+                if (Input.GetAxisRaw("Horizontal") == 0)
+                    horizontalInput = 0;
+                if (Input.GetAxisRaw("Vertical") == 0)
+                    verticalInput = 0;
+                inputEvents.AxisChanged(new Vector2(horizontalInput, verticalInput));
+            }
+            bool[] mouseButtons = new bool[2];
+            mouseButtons[0] = Input.GetMouseButton(0);
+            mouseButtons[1] = Input.GetMouseButton(1);
+            if (mouseButtons[0] || mouseButtons[1])
+            {
+                inputEvents.MouseClicked(mouseButtons, Input.mousePosition);
+            }
+            Vector2 scroll = Input.mouseScrollDelta;
+
+            if (scroll != Vector2.zero)
+            {
+                inputEvents.MouseScrolled(scroll.y);
+            }
+        }
+    }
+
+}

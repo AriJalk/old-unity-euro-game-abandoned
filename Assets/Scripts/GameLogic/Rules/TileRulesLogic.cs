@@ -1,11 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using EDBG.MapSystem;
-using Unity.VisualScripting;
-using System.Linq;
+using EDBG.Utilities.DataTypes;
 
-namespace EDBG.Rules
+
+namespace EDBG.GameLogic.Rules
 {
     //TODO: Rename class, singleton
     public class TileRulesLogic

@@ -1,9 +1,10 @@
-using EDBG.Rules;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+using EDBG.GameLogic.Components;
+using EDBG.GameLogic.Rules;
+
+using TMPro;
 
 public class GameUI : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class GameUI : MonoBehaviour
 
     }
 
-    public void Initialize(PlayerBase player)
+    public void Initialize(Player player)
     {
         BuildActions(player);
         BuildInfo(player);
@@ -47,13 +48,13 @@ public class GameUI : MonoBehaviour
             Color color = Color.white;
             switch (tokenArray.GetItemByIndex(i).color)
             {
-                case EDBG.Rules.TokenColors.Red:
+                case EDBG.GameLogic.Rules.TokenColors.Red:
                     color = Color.red;
                     break;
-                case EDBG.Rules.TokenColors.Green:
+                case EDBG.GameLogic.Rules.TokenColors.Green:
                     color = Color.green;
                     break;
-                case EDBG.Rules.TokenColors.Blue:
+                case EDBG.GameLogic.Rules.TokenColors.Blue:
                     color = Color.blue;
                     break;
                 default:
@@ -71,7 +72,7 @@ public class GameUI : MonoBehaviour
         }
     }
 
-    public void BuildActions(PlayerBase player)
+    public void BuildActions(Player player)
     {
         Transform actionPanel = transform.Find("ActionPanel").Find("PlayerActions");
         if (actionPanel != null)
@@ -86,7 +87,7 @@ public class GameUI : MonoBehaviour
         }
     }
 
-    public void BuildInfo(PlayerBase player)
+    public void BuildInfo(Player player)
     {
         Transform playerPanel = transform.Find("PlayerPanel");
         if (playerPanel != null)

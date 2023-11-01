@@ -1,9 +1,20 @@
 using System.Collections.Generic;
+
 using UnityEngine;
-using EDBG.MapSystem;
+
+using EDBG.Engine.Core;
+using EDBG.Engine.Visual;
+
+using EDBG.Utilities.DataTypes;
+
+using EDBG.GameLogic.Rules;
+using EDBG.GameLogic.MapSystem;
+using EDBG.GameLogic.Components;
 
 
-namespace EDBG.Rules
+
+
+namespace EDBG.GameLogic.Core
 {
     public class GameManager : MonoBehaviour
     {
@@ -83,7 +94,7 @@ namespace EDBG.Rules
 
             //UtilityFunctions.PrintArray(array);
 
-            UtilityFunctions.ShuffleArray(array);
+            EDBG.Utilities.UtilityFunctions.ShuffleArray(array);
 
             //UtilityFunctions.PrintArray(array);
 
@@ -154,7 +165,7 @@ namespace EDBG.Rules
             gameUI.BuildHand(newState.playerHand);
             */
 
-            newState.PlayerList = new List<PlayerBase>() {
+            newState.PlayerList = new List<Player>() {
                 new HumanPlayer("Player", 10, new BeginnerCorporation()),
                 new BotPlayer("Bot", 10, new BeginnerCorporation())
             };

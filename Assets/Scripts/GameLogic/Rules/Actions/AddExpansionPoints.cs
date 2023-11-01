@@ -1,11 +1,14 @@
-﻿public class AddExpansionPoints : GameActionAdderBase
+﻿namespace EDBG.GameLogic.Rules
 {
-    const string ActionDescription = "Add EP to be used in the current turn";
-
-    public AddExpansionPoints(int bonus) : base($"+{bonus} EP", ActionDescription, bonus) { }
-
-    public override void ExecuteAction()
+    public class AddExpansionPoints : GameActionAdder
     {
-        Player.ExpansionPoints += Bonus;
+        const string ActionDescription = "Add EP to be used in the current turn";
+
+        public AddExpansionPoints(int bonus) : base($"+{bonus} EP", ActionDescription, bonus) { }
+
+        public override void ExecuteAction()
+        {
+            Player.ExpansionPoints += Bonus;
+        }
     }
 }

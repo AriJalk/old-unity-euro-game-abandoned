@@ -1,18 +1,19 @@
-using EDBG.MapSystem;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 
-namespace EDBG.Rules
+using EDBG.GameLogic.MapSystem;
+using EDBG.GameLogic.Components;
+using EDBG.GameLogic.Rules;
+
+namespace EDBG.GameLogic.Core
 {
     public class LogicGameState : ICloneable
     {
 
         public MapGrid MapGrid { get; set; }
         public GameStack<Die> RolledDice { get; set; }
-        public PlayerBase CurrentPlayer { get; set; }
-        public List<PlayerBase> PlayerList { get; set; }
+        public Player CurrentPlayer { get; set; }
+        public List<Player> PlayerList { get; set; }
 
         /*
          * public GameStack<ActionToken> playerTokenBag;
@@ -39,11 +40,11 @@ namespace EDBG.Rules
                 if (other.RolledDice != null)
                     RolledDice = (GameStack<Die>)other.RolledDice.Clone();  
                 if (other.CurrentPlayer != null)
-                    CurrentPlayer = (PlayerBase)other.CurrentPlayer.Clone();
+                    CurrentPlayer = (Player)other.CurrentPlayer.Clone();
                 if (other.PlayerList != null)
                 {
-                    PlayerList = new List<PlayerBase>();
-                    foreach(PlayerBase player in other.PlayerList)
+                    PlayerList = new List<Player>();
+                    foreach(Player player in other.PlayerList)
                     {
                         PlayerList.Add(player);
                     }

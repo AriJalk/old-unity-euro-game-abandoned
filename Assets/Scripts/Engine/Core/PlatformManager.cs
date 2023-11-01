@@ -1,53 +1,54 @@
-using ResourcePool;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatformManager : MonoBehaviour
+namespace EDBG.Engine.Core
 {
-    // Start is called before the first frame update
-    void Start()
+    public class PlatformManager : MonoBehaviour
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void Initialize()
-    {
-        // Call platform-specific methods or perform platform-specific actions here
-        if (Application.platform == RuntimePlatform.Android)
+        // Start is called before the first frame update
+        void Start()
         {
-            HandleAndroidPlatform();
+
         }
-        else if (Application.isEditor)
+
+        // Update is called once per frame
+        void Update()
         {
-            HandleEditorPlatform();
+
         }
-        else
+
+        public void Initialize()
         {
-            HandleOtherPlatform();
+            // Call platform-specific methods or perform platform-specific actions here
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                HandleAndroidPlatform();
+            }
+            else if (Application.isEditor)
+            {
+                HandleEditorPlatform();
+            }
+            else
+            {
+                HandleOtherPlatform();
+            }
         }
-    }
-    private void HandleAndroidPlatform()
-    {
-        // Actions specific to Android platform
-        Debug.Log("Running on Android");
+        private void HandleAndroidPlatform()
+        {
+            // Actions specific to Android platform
+            Debug.Log("Running on Android");
+        }
+
+        private void HandleEditorPlatform()
+        {
+            // Actions specific to Unity Editor
+            Debug.Log("Running in the Unity Editor");
+        }
+
+        private void HandleOtherPlatform()
+        {
+            // Actions specific to other platforms
+            Debug.Log("Running on a different platform");
+        }
     }
 
-    private void HandleEditorPlatform()
-    {
-        // Actions specific to Unity Editor
-        Debug.Log("Running in the Unity Editor");
-    }
-
-    private void HandleOtherPlatform()
-    {
-        // Actions specific to other platforms
-        Debug.Log("Running on a different platform");
-    }
 }

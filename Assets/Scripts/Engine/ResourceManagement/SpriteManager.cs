@@ -1,44 +1,47 @@
 using UnityEngine;
 using System.Collections.Generic;
-using ResourcePool;
 
-//TODO: Add rawimage functionality
-public class SpriteManager : MonoBehaviour
+namespace EDBG.Engine.ResourceManagement
 {
-    // A dictionary to store loaded sprites by their names
-    private Dictionary<string, Sprite> loadedSprites = new Dictionary<string, Sprite>();
-
-    // Load a sprite by name
-    public Sprite LoadSprite(string spriteName)
+    //TODO: Add rawimage functionality
+    public class SpriteManager : MonoBehaviour
     {
-        if (loadedSprites.ContainsKey(spriteName))
-        {
-            return loadedSprites[spriteName];
-        }
-        else
-        {
-            // Load the sprite from Resources (you can adjust the path accordingly)
-            Sprite sprite = Resources.Load<Sprite>("Images/" + spriteName);
+        // A dictionary to store loaded sprites by their names
+        private Dictionary<string, Sprite> loadedSprites = new Dictionary<string, Sprite>();
 
-            if (sprite != null)
+        // Load a sprite by name
+        public Sprite LoadSprite(string spriteName)
+        {
+            if (loadedSprites.ContainsKey(spriteName))
             {
-                loadedSprites.Add(spriteName, sprite);
-                return sprite;
+                return loadedSprites[spriteName];
             }
             else
             {
-                Debug.LogError("Sprite not found: " + spriteName);
-                return null;
+                // Load the sprite from Resources (you can adjust the path accordingly)
+                Sprite sprite = Resources.Load<Sprite>("Images/" + spriteName);
+
+                if (sprite != null)
+                {
+                    loadedSprites.Add(spriteName, sprite);
+                    return sprite;
+                }
+                else
+                {
+                    Debug.LogError("Sprite not found: " + spriteName);
+                    return null;
+                }
+            }
+        }
+
+        // Unload a sprite to free up memory (optional)
+        public void UnloadSprite(string spriteName)
+        {
+            if (loadedSprites.ContainsKey(spriteName))
+            {
+                loadedSprites.Remove(spriteName);
             }
         }
     }
 
-    // Unload a sprite to free up memory (optional)
-    public void UnloadSprite(string spriteName)
-    {
-        if (loadedSprites.ContainsKey(spriteName))
-        {
-            loadedSprites.Remove(spriteName);
-        }
-    }
 }

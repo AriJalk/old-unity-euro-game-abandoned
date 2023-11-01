@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ResourcePool
+namespace EDBG.Engine.ResourceManagement
 {
     /// <summary>
     /// Pool Manager for reusable objects

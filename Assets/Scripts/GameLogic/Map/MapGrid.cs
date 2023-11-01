@@ -1,7 +1,6 @@
-using System;
-using UnityEngine;
+using EDBG.Utilities.DataTypes;
 
-namespace EDBG.MapSystem
+namespace EDBG.GameLogic.MapSystem
 {
     public class MapGrid : GridContainer
     {

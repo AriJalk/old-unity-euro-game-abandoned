@@ -1,11 +1,14 @@
-﻿public class AddMarketPoints : GameActionAdderBase
+﻿namespace EDBG.GameLogic.Rules
 {
-    const string ActionDescription = "Add MP to be used in the current turn";
-
-    public AddMarketPoints(int bonus) : base($"+{bonus} MP", ActionDescription, bonus) { }
-
-    public override void ExecuteAction()
+    public class AddMarketPoints : GameActionAdder
     {
-        Player.MarketPoints += Bonus;
+        const string ActionDescription = "Add MP to be used in the current turn";
+
+        public AddMarketPoints(int bonus) : base($"+{bonus} MP", ActionDescription, bonus) { }
+
+        public override void ExecuteAction()
+        {
+            Player.MarketPoints += Bonus;
+        }
     }
 }

@@ -1,109 +1,111 @@
-using EDBG.MapSystem;
-using ResourcePool;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectsRenderer : MonoBehaviour
+using EDBG.Engine.Core;
+using EDBG.GameLogic.Components;
+
+namespace EDBG.Engine.Visual
 {
-    //TODO: range
-    public float DiscScale = 1;
-
-    // Start is called before the first frame update
-    void Start()
+    public class ObjectsRenderer : MonoBehaviour
     {
+        //TODO: range
+        public float DiscScale = 1;
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    public void Initialize()
-    {
-
-    }
-
-    public void RenderObjectsOnMap(SquareTileObject[,] tiles)
-    {
-        foreach (SquareTileObject tile in tiles)
+        // Start is called before the first frame update
+        void Start()
         {
-            RenderObjectsOnTileObject(tile);
+
         }
-    }
 
-    public void RenderObjectsOnTileObject(SquareTileObject tile)
-    {
-        RemovePreviousDiscs(tile);
-        CreateNewDiscs(tile);
-    }
-
-
-    private void RemovePreviousDiscs(SquareTileObject tile)
-    {
-        DiscObject[] discs = tile.GetComponentsInChildren<DiscObject>();
-        foreach (DiscObject disc in discs)
+        // Update is called once per frame
+        void Update()
         {
-            GameEngineManager.Instance.PoolManager.ReturnPoolObject(disc);
+
         }
-    }
 
-    private void CreateNewDiscs(SquareTileObject tile)
-    {
-
-        float tileHeight = SquareTileObject.TILE_HEIGHT;
-        float discHeight = DiscObject.DISC_HEIGHT * DiscScale;
-        float initialHeightOffset = 0.0f; // Adjust this value to control the initial height offset of the first disc
-        float fillerDiscFactor = 6;
-        float fillerDiscHeight = discHeight / fillerDiscFactor;
-        //float gridCellSize = SquareTileObject.TILE_LENGTH / 3;
-        if (tile.TileData.ComponentOnTile is GameStack<Disc> discStack && discStack.Count > 0)
+        public void Initialize()
         {
-            for (int i = 0; i < discStack.Count; i++)
+
+        }
+
+        public void RenderObjectsOnMap(SquareTileObject[,] tiles)
+        {
+            foreach (SquareTileObject tile in tiles)
             {
-                DiscObject newDisc = GameEngineManager.Instance.PoolManager.RetrievePoolObject<DiscObject>();
-                newDisc.enabled = true;
-                newDisc.discData = discStack.GetItemByIndex(i);
-                newDisc.transform.SetParent(tile.transform);
-                newDisc.transform.localScale = Vector3.one * DiscScale;
-                Vector3 position = new Vector3(0, i * discHeight + initialHeightOffset + tileHeight + ((i != 0) ? fillerDiscHeight * i : 0), 0);
-                newDisc.transform.localPosition = position;
+                RenderObjectsOnTileObject(tile);
+            }
+        }
 
-                // Apply Material based on disc color
-                switch (newDisc.discData.DiscColor)
-                {
-                    case EDBG.Rules.PieceColors.Blue:
-                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/BlueWoodMaterial"));
-                        break;
-                    case EDBG.Rules.PieceColors.Red:
-                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/RedWoodMaterial"));
-                        break;
-                    case EDBG.Rules.PieceColors.Green:
-                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/GreenWoodMaterial"));
-                        break;
-                    case EDBG.Rules.PieceColors.White:
-                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/WhiteWoodMaterial"));
-                        break;
-                    case EDBG.Rules.PieceColors.Yellow:
-                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/YellowWoodMaterial"));
-                        break;
-                    case EDBG.Rules.PieceColors.Black:
-                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/BlackWoodMaterial"));
-                        break;
+        public void RenderObjectsOnTileObject(SquareTileObject tile)
+        {
+            RemovePreviousDiscs(tile);
+            CreateNewDiscs(tile);
+        }
 
-                }
-                //Create filler disc
-                if (i < discStack.Count - 1)
+
+        private void RemovePreviousDiscs(SquareTileObject tile)
+        {
+            DiscObject[] discs = tile.GetComponentsInChildren<DiscObject>();
+            foreach (DiscObject disc in discs)
+            {
+                GameEngineManager.Instance.PoolManager.ReturnPoolObject(disc);
+            }
+        }
+
+        private void CreateNewDiscs(SquareTileObject tile)
+        {
+
+            float tileHeight = SquareTileObject.TILE_HEIGHT;
+            float discHeight = DiscObject.DISC_HEIGHT * DiscScale;
+            float initialHeightOffset = 0.0f; // Adjust this value to control the initial height offset of the first disc
+            float fillerDiscFactor = 6;
+            float fillerDiscHeight = discHeight / fillerDiscFactor;
+            //float gridCellSize = SquareTileObject.TILE_LENGTH / 3;
+            if (tile.TileData.ComponentOnTile is GameStack<Disc> discStack && discStack.Count > 0)
+            {
+                for (int i = 0; i < discStack.Count; i++)
                 {
-                    newDisc = GameEngineManager.Instance.PoolManager.RetrievePoolObject<DiscObject>();
+                    DiscObject newDisc = GameEngineManager.Instance.PoolManager.RetrievePoolObject<DiscObject>();
+                    newDisc.enabled = true;
+                    newDisc.discData = discStack.GetItemByIndex(i);
                     newDisc.transform.SetParent(tile.transform);
-                    newDisc.transform.localScale = new Vector3(DiscScale, DiscScale / fillerDiscFactor, DiscScale);
-                    float fillerYPos = position.y + discHeight;
-                    newDisc.transform.localPosition = new Vector3(0, fillerYPos, 0);
-                    newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial
-                        ("Materials/" + (discStack.GetItemByIndex(i).DiscColor == EDBG.Rules.PieceColors.White ? "Black" : "White") + "Material"));
+                    newDisc.transform.localScale = Vector3.one * DiscScale;
+                    Vector3 position = new Vector3(0, i * discHeight + initialHeightOffset + tileHeight + ((i != 0) ? fillerDiscHeight * i : 0), 0);
+                    newDisc.transform.localPosition = position;
+
+                    // Apply Material based on disc color
+                    switch (newDisc.discData.DiscColor)
+                    {
+                        case EDBG.GameLogic.Rules.PieceColors.Blue:
+                            newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/BlueWoodMaterial"));
+                            break;
+                        case EDBG.GameLogic.Rules.PieceColors.Red:
+                            newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/RedWoodMaterial"));
+                            break;
+                        case EDBG.GameLogic.Rules.PieceColors.Green:
+                            newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/GreenWoodMaterial"));
+                            break;
+                        case EDBG.GameLogic.Rules.PieceColors.White:
+                            newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/WhiteWoodMaterial"));
+                            break;
+                        case EDBG.GameLogic.Rules.PieceColors.Yellow:
+                            newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/YellowWoodMaterial"));
+                            break;
+                        case EDBG.GameLogic.Rules.PieceColors.Black:
+                            newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/DiscColors/BlackWoodMaterial"));
+                            break;
+
+                    }
+                    //Create filler disc
+                    if (i < discStack.Count - 1)
+                    {
+                        newDisc = GameEngineManager.Instance.PoolManager.RetrievePoolObject<DiscObject>();
+                        newDisc.transform.SetParent(tile.transform);
+                        newDisc.transform.localScale = new Vector3(DiscScale, DiscScale / fillerDiscFactor, DiscScale);
+                        float fillerYPos = position.y + discHeight;
+                        newDisc.transform.localPosition = new Vector3(0, fillerYPos, 0);
+                        newDisc.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial
+                            ("Materials/" + (discStack.GetItemByIndex(i).DiscColor == EDBG.GameLogic.Rules.PieceColors.White ? "Black" : "White") + "Material"));
+                    }
                 }
             }
         }

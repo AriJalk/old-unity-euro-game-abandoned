@@ -1,4 +1,7 @@
-﻿public class TurnManager
+﻿namespace EDBG.GameLogic.Core
 {
-    
+    public class TurnManager
+    {
+
+    }
 }
