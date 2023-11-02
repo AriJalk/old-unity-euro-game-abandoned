@@ -11,17 +11,18 @@ using EDBG.GameLogic.Rules;
 using EDBG.GameLogic.MapSystem;
 using EDBG.GameLogic.Components;
 
-
-
-
 namespace EDBG.GameLogic.Core
 {
     public class GameManager : MonoBehaviour
     {
 
-        private GameEngineManager engineManager { get; set; }
+        private GameEngineManager engineManager;
+        private Stack<LogicGameState> gameStateStack;
+        
+        public Transform GameWorld;
+        public CameraController CameraController;
+        public GameUI GameUI;
 
-        private Stack<LogicGameState> gameStateStack { get; set; }
         private LogicGameState currentGameState
         {
             get
@@ -30,22 +31,15 @@ namespace EDBG.GameLogic.Core
             }
         }
 
-
-        public Transform GameWorld;
-
-        public CameraController CameraController;
-
-        public GameUI GameUI;
-
         void Start()
         {
+
+            engineManager = GameEngineManager.Instance;
             CameraController.Initialize();
             CreateTestGame();
             MoveDiscAction moveDisc = new MoveDiscAction();
             moveDisc.SetAction((MapTile)currentGameState.MapGrid.GetCell(0, 0), (MapTile)currentGameState.MapGrid.GetCell(1, 1), 3, currentGameState);
             moveDisc.ExecuteAction();
-
-            engineManager = GameEngineManager.Instance;
             //Draw map at head of stack
             engineManager.MapRenderer.RenderMap(currentGameState.MapGrid, GameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
@@ -109,13 +103,13 @@ namespace EDBG.GameLogic.Core
                     tile.ComponentOnTile = new GameStack<Disc>();
                     if (i == 0 && j == 0)
                     {
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PieceColors.Black));
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PieceColors.Black));
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.Black));
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.Black));
                     }
                     else if (i == 3 && j == 3)
                     {
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PieceColors.White));
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PieceColors.White));
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.White));
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.White));
                     }
                     mapGrid.SetCell(tile);
                 }

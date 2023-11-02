@@ -3,8 +3,12 @@ using UnityEngine;
 
 namespace EDBG.Engine.ResourceManagement
 {
+    /// <summary>
+    /// Loads materials
+    /// </summary>
     public class MaterialManager : MonoBehaviour
     {
+
         private Dictionary<string, Material> materialPool;
 
         // Start is called before the first frame update
@@ -31,7 +35,7 @@ namespace EDBG.Engine.ResourceManagement
             }
             else
             {
-                Material material = Resources.Load<Material>(materialPath);
+                Material material = Resources.Load<Material>($"Materials/{materialPath}");
                 if (material == null)
                 {
                     Debug.Log("Material not found at path: " + materialPath);

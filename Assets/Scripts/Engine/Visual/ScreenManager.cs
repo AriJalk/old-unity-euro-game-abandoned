@@ -17,7 +17,7 @@ namespace EDBG.Engine.Visual
 
                     if (instance == null)
                     {
-                        // If no instance exists, create a new GameObject with PoolManager and attach it
+                        // If no instance exists, create a new GameObject with PrefabManager and attach it
                         GameObject managerObject = Instantiate(new GameObject("ScreenManager"));
                         instance = managerObject.AddComponent<ScreenManager>();
                     }

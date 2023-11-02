@@ -7,14 +7,14 @@ namespace EDBG.GameLogic.Rules
         Forest,
         City,
         Snowy,
-        Default
+        Default,
     }
 
     public enum LocationTypes
     {
         Blue=PieceColors.Blue,
         Green=PieceColors.Green,
-        Red=PieceColors.Red
+        Red=PieceColors.Red,
     }
 
     public enum EntityNames
@@ -30,14 +30,14 @@ namespace EDBG.GameLogic.Rules
         ActionToken,
         ActionCard,
         DiscStack,
-        Cube
+        Cube,
     }
 
     public enum Ownership
     {
         Player = EntityNames.Player,
         Bot= EntityNames.Bot,
-        Neutral= EntityNames.Neutral
+        Neutral= EntityNames.Neutral,
     }
 
     public enum PieceColors
@@ -48,7 +48,26 @@ namespace EDBG.GameLogic.Rules
         Blue,
         Yellow,
         Black,
-        White
+        White,
+    }
+
+    public enum DiscColors
+    {
+        White,
+        Black,
+        Blue,
+        Red,
+        Green,
+        Yellow,
+    }
+    
+    public enum TileColors
+    {
+        White,
+        Black,
+        Red,
+        Green,
+        Blue,
     }
 
     public enum TokenColors

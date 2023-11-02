@@ -2,7 +2,8 @@ using UnityEngine;
 
 using EDBG.Engine.Core;
 using EDBG.GameLogic.MapSystem;
-
+using System;
+using Unity.VisualScripting;
 
 namespace EDBG.Engine.Visual
 {
@@ -34,7 +35,7 @@ namespace EDBG.Engine.Visual
                 Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/SquareTilePrefab.");
                 return;
             }
-            GameEngineManager.Instance.PoolManager.RegisterPrefab<SquareTileObject>(squarePrefab);
+            GameEngineManager.Instance.PrefabManager.RegisterPrefab(nameof(SquareTileObject), squarePrefab);
 
             GameObject discPrefab = Resources.Load<GameObject>("Prefabs/3D/DiscPrefab");
             if (discPrefab == null)
@@ -42,7 +43,7 @@ namespace EDBG.Engine.Visual
                 Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/DiscPrefab.");
                 return;
             }
-            GameEngineManager.Instance.PoolManager.RegisterPrefab<DiscObject>(discPrefab);
+            GameEngineManager.Instance.PrefabManager.RegisterPrefab(nameof(DiscObject), discPrefab);
         }
 
         public void RenderMap(MapGrid map, Transform mapHolderObject)
@@ -53,7 +54,7 @@ namespace EDBG.Engine.Visual
             {
                 for (int col = 0; col < map.Columns; col++)
                 {
-                    SquareTileObject tile = GameEngineManager.Instance.PoolManager.RetrievePoolObject<SquareTileObject>();
+                    SquareTileObject tile = GameEngineManager.Instance.PrefabManager.RetrievePoolObject(nameof(SquareTileObject)).GetComponent<SquareTileObject>();
                     tile.TileData = (MapTile)map.GetCell(row, col);
                     tile.transform.SetParent(mapHolderObject);
                     tile.transform.localScale = Vector3.one;
@@ -64,10 +65,10 @@ namespace EDBG.Engine.Visual
                     tile.gameObject.isStatic = true;
                     tile.gameObject.SetActive(true);
                     tile.name = "Tile [" + col + "," + row + "]";
-                    tile.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("Materials/TileMaterial"));
+                    tile.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("TileMaterial"));
                     tiles[row, col] = tile;
                     DrawDieFace(tile);
-                    GameEngineManager.Instance.DiscRenderer.RenderObjectsOnTileObject(tile);
+                    GameEngineManager.Instance.ObjectsRenderer.RenderObjectsOnTileObject(tile);
                 }
             }
         }
@@ -81,7 +82,7 @@ namespace EDBG.Engine.Visual
         {
             if (tile != null)
             {
-                SquareTileObject squareTileObject = GameEngineManager.Instance.PoolManager.RetrievePoolObject<SquareTileObject>();
+                SquareTileObject squareTileObject = GameEngineManager.Instance.PrefabManager.RetrievePoolObject(nameof(SquareTileObject)).GetComponent<SquareTileObject>();
                 squareTileObject.TileData = tile;
 
             }
@@ -94,7 +95,7 @@ namespace EDBG.Engine.Visual
             SquareTileObject[] tiles = grid.GetComponentsInChildren<SquareTileObject>();
             foreach (SquareTileObject tile in tiles)
             {
-                GameEngineManager.Instance.PoolManager.ReturnPoolObject(tile);
+                GameEngineManager.Instance.PrefabManager.ReturnPoolObject(nameof(SquareTileObject), tile.gameObject);
             }
         }
 
