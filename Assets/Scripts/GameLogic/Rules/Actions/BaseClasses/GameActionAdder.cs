@@ -2,7 +2,8 @@
 {
     public abstract class GameActionAdder : GameAction
     {
-        public Player Player { get; private set; }
+        protected Player player;
+
         public readonly int Bonus;
 
         protected GameActionAdder(string name, string description, int bonus) : base(name, description)
@@ -10,9 +11,9 @@
             Bonus = bonus;
         }
 
-        public void SetAction(Player player)
+        public virtual void SetAction(Player player)
         {
-            Player = player;
+            this.player = player;
         }
     }
 }

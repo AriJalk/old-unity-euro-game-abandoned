@@ -8,7 +8,7 @@
 
         public override void ExecuteAction()
         {
-            Player.MarketPoints += Bonus;
+            player.MarketPoints += Bonus;
         }
     }
 }

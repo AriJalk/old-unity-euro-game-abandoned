@@ -23,5 +23,10 @@ namespace EDBG.Engine.Visual
         {
             return materialManager.GetMaterial($"{color}Material");
         }
+
+        public Material GetMaterial(string name)
+        {
+            return materialManager.GetMaterial($"{name}Material");
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace EDBG.GameLogic.Rules
         {
             Name = name;
             Description = description;
+            CanExecute = false;
         }
 
         public abstract void ExecuteAction();

@@ -8,8 +8,9 @@ namespace EDBG.GameLogic.Rules
     /// </summary>
     public abstract class Corporation : ICloneable
     {
+        private Ownership ownership;
+        
         private string _name;
-
         public string Name
         {
             get { return _name; }
@@ -17,7 +18,6 @@ namespace EDBG.GameLogic.Rules
         }
 
         private string _description;
-
         public string Description
         {
             get { return _description; }
@@ -26,14 +26,16 @@ namespace EDBG.GameLogic.Rules
 
 
         private GameAction[] _actions;
-
         public GameAction[] Actions
         {
             get { return _actions; }
             set { _actions = value; }
         }
 
-
+        public Corporation(Ownership ownership)
+        {
+            this.ownership = ownership;
+        }
 
         public object Clone()
         {

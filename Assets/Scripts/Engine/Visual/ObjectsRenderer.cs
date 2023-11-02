@@ -84,7 +84,9 @@ namespace EDBG.Engine.Visual
                         newDisc.transform.localScale = new Vector3(DiscScale, DiscScale / fillerDiscFactor, DiscScale);
                         float fillerYPos = position.y + discHeight;
                         newDisc.transform.localPosition = new Vector3(0, fillerYPos, 0);
-                        newDisc.ApplyMaterial(colorManager.GetDiscMaterial(discStack.GetItemByIndex(i).DiscColor));
+                        newDisc.ApplyMaterial(colorManager.GetMaterial(
+                            discStack.GetItemByIndex(i).DiscColor ==
+                            GameLogic.Rules.DiscColors.White ? "BlackFiller" : "WhiteFiller"));
                     }
                 }
             }

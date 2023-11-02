@@ -8,7 +8,7 @@
 
         public override void ExecuteAction()
         {
-            Player.ExpansionPoints += Bonus;
+            player.ExpansionPoints += Bonus;
         }
     }
 }

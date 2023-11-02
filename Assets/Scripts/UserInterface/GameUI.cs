@@ -6,6 +6,9 @@ using EDBG.GameLogic.Rules;
 
 using TMPro;
 
+namespace EDBG.UserInterface
+{
+}
 public class GameUI : MonoBehaviour
 {
 
@@ -14,10 +17,10 @@ public class GameUI : MonoBehaviour
 
     }
 
-    public void Initialize(Player player)
+    public void Initialize(Player humanPlayer, Player botPlayer)
     {
-        BuildActions(player);
-        BuildInfo(player);
+        BuildActions(humanPlayer, botPlayer);
+        BuildInfo(humanPlayer);
     }
 
     public void BuildHand(GameStack<ActionToken> tokenArray)
@@ -72,7 +75,7 @@ public class GameUI : MonoBehaviour
         }
     }
 
-    public void BuildActions(Player player)
+    public void BuildActions(Player humanPlayer, Player botPlayer)
     {
         Transform actionPanel = transform.Find("ActionPanel").Find("PlayerActions");
         if (actionPanel != null)
@@ -82,7 +85,17 @@ public class GameUI : MonoBehaviour
                 Transform action = actionPanel.Find($"Action{i + 1}");
                 Transform button = action.Find("Button");
                 TextMeshProUGUI text = button.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
-                text.text = player.Corporation.Actions[i].Name;
+                text.text = humanPlayer.Corporation.Actions[i].Name;
+            }
+        }
+        actionPanel = transform.Find("ActionPanel").Find("BotActions");
+        if (actionPanel != null)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                Transform action = actionPanel.Find($"Action{i + 1}");
+                TextMeshProUGUI text = action.Find("Text").GetComponent<TextMeshProUGUI>();
+                text.text = botPlayer.Corporation.Actions[i].Name;
             }
         }
     }
@@ -103,3 +116,4 @@ public class GameUI : MonoBehaviour
         }
     }
 }
+

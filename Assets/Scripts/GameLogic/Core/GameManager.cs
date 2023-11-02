@@ -18,7 +18,7 @@ namespace EDBG.GameLogic.Core
 
         private GameEngineManager engineManager;
         private Stack<LogicGameState> gameStateStack;
-        
+
         public Transform GameWorld;
         public CameraController CameraController;
         public GameUI GameUI;
@@ -37,9 +37,11 @@ namespace EDBG.GameLogic.Core
             engineManager = GameEngineManager.Instance;
             CameraController.Initialize();
             CreateTestGame();
-            MoveDiscAction moveDisc = new MoveDiscAction();
-            moveDisc.SetAction((MapTile)currentGameState.MapGrid.GetCell(0, 0), (MapTile)currentGameState.MapGrid.GetCell(1, 1), 3, currentGameState);
-            moveDisc.ExecuteAction();
+
+            //MoveDiscAction moveDisc = new MoveDiscAction();
+            //moveDisc.SetAction((MapTile)currentGameState.MapGrid.GetCell(0, 0), (MapTile)currentGameState.MapGrid.GetCell(1, 1), 3, currentGameState);
+            //moveDisc.ExecuteAction();
+
             //Draw map at head of stack
             engineManager.MapRenderer.RenderMap(currentGameState.MapGrid, GameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
@@ -160,12 +162,13 @@ namespace EDBG.GameLogic.Core
             */
 
             newState.PlayerList = new List<Player>() {
-                new HumanPlayer("Player", 10, new BeginnerCorporation()),
-                new BotPlayer("Bot", 10, new BeginnerCorporation())
+                new Player("Player", 10, new BeginnerCorporation(Ownership.Player)),
+                new Player("Bot", 10, new BeginnerCorporation(Ownership.Bot)),
             };
             gameStateStack.Push(newState);
 
-            GameUI.Initialize(newState.PlayerList[0]);
+            //TODO: index
+            GameUI.Initialize(newState.PlayerList[0], newState.PlayerList[1]);
         }
     }
 }

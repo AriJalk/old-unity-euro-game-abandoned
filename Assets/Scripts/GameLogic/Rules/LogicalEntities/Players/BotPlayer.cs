@@ -4,7 +4,7 @@
     {
         public BotPlayer(string name, int discStock, Corporation corporation) : base(name, discStock, corporation)
         {
-
+            Ownership = Ownership.Bot;
         }
     }
 }

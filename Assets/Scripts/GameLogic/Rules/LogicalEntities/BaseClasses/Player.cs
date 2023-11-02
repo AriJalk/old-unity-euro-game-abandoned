@@ -5,8 +5,17 @@ namespace EDBG.GameLogic.Rules
     /// <summary>
     /// Base class for player, human or Bot
     /// </summary>
-    public abstract class Player : ICloneable
+    public class Player : ICloneable
     {
+        private Ownership _ownership;
+
+        public Ownership Ownership
+        {
+            get { return _ownership; }
+            set { _ownership = value; }
+        }
+
+
         private string _name;
 
         public string Name
