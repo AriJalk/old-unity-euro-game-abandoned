@@ -4,7 +4,18 @@
     {
         protected Player player;
 
-        public readonly int Bonus;
+        private int _bonus;
+        public int Bonus
+        {
+            get
+            {
+                return _bonus;
+            }
+            private set
+            {
+                _bonus = value;
+            }
+        }
 
         protected GameActionAdder(string name, string description, int bonus) : base(name, description)
         {

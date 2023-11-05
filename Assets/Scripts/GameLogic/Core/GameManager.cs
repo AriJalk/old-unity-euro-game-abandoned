@@ -10,24 +10,30 @@ using EDBG.Utilities.DataTypes;
 using EDBG.GameLogic.Rules;
 using EDBG.GameLogic.MapSystem;
 using EDBG.GameLogic.Components;
+using EDBG.GameLogic.GameStates;
 
 namespace EDBG.GameLogic.Core
 {
+    /// <summary>
+    /// Central class for handling the logic side of the game
+    /// </summary>
     public class GameManager : MonoBehaviour
     {
 
         private GameEngineManager engineManager;
-        private Stack<LogicGameState> gameStateStack;
+        private Stack<GameLogicState> gameLogicStateStack;
+        private IGameState currentGameState;
 
         public Transform GameWorld;
         public CameraController CameraController;
+        public Camera DiceCamera;
         public GameUI GameUI;
 
-        private LogicGameState currentGameState
+        private GameLogicState currentGameLogicState
         {
             get
             {
-                return gameStateStack.Peek();
+                return gameLogicStateStack.Peek();
             }
         }
 
@@ -39,13 +45,14 @@ namespace EDBG.GameLogic.Core
             CreateTestGame();
 
             //MoveDiscAction moveDisc = new MoveDiscAction();
-            //moveDisc.SetAction((MapTile)currentGameState.MapGrid.GetCell(0, 0), (MapTile)currentGameState.MapGrid.GetCell(1, 1), 3, currentGameState);
+            //moveDisc.SetAction((MapTile)currentGameLogicState.MapGrid.GetCell(0, 0), (MapTile)currentGameLogicState.MapGrid.GetCell(1, 1), 3, currentGameLogicState);
             //moveDisc.ExecuteAction();
 
             //Draw map at head of stack
-            engineManager.MapRenderer.RenderMap(currentGameState.MapGrid, GameWorld.Find("SquareMapHolder"));
+            engineManager.MapRenderer.RenderMap(currentGameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
+            currentGameState = new ChooseDie();
         }
 
         /// <summary>
@@ -71,7 +78,23 @@ namespace EDBG.GameLogic.Core
 
         void SelectObject(bool[] mouseButtons, Vector2 position)
         {
-
+            Ray ray = DiceCamera.ScreenPointToRay(position);
+            LayerMask layerMask;
+            switch (currentGameState.Name)
+            {
+                case "ChooseDie":
+                    layerMask = LayerMask.GetMask("Die");
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+                    {
+                        if (hit.transform.GetComponent<DieObject>() is DieObject die)
+                        {
+                            currentGameState.Update(die);
+                            die.transform.localScale = die.transform.localScale * 2f;
+                        }
+                    }
+                    break;
+            }
         }
 
         void ZoomCamera(float deltaY)
@@ -82,7 +105,7 @@ namespace EDBG.GameLogic.Core
         //TODO: builder class
         void CreateTestGame()
         {
-            gameStateStack = new Stack<LogicGameState>();
+            gameLogicStateStack = new Stack<GameLogicState>();
 
             MapGrid mapGrid = new MapGrid(4, 4);
 
@@ -121,7 +144,7 @@ namespace EDBG.GameLogic.Core
 
 
 
-            LogicGameState newState = new LogicGameState(mapGrid);
+            GameLogicState newState = new GameLogicState(mapGrid);
 
 
 
@@ -165,7 +188,7 @@ namespace EDBG.GameLogic.Core
                 new Player("Player", 10, new BeginnerCorporation(Ownership.Player)),
                 new Player("Bot", 10, new BeginnerCorporation(Ownership.Bot)),
             };
-            gameStateStack.Push(newState);
+            gameLogicStateStack.Push(newState);
 
             //TODO: index
             GameUI.Initialize(newState.PlayerList[0], newState.PlayerList[1]);

@@ -7,7 +7,7 @@ using EDBG.GameLogic.Rules;
 
 namespace EDBG.GameLogic.Core
 {
-    public class LogicGameState : ICloneable
+    public class GameLogicState : ICloneable
     {
 
         public MapGrid MapGrid { get; set; }
@@ -20,7 +20,7 @@ namespace EDBG.GameLogic.Core
          * public GameStack<ActionToken> playerHand;
          */
 
-        public LogicGameState(MapGrid mapGrid)
+        public GameLogicState(MapGrid mapGrid)
         {
             this.MapGrid = mapGrid;
             /*
@@ -29,7 +29,7 @@ namespace EDBG.GameLogic.Core
              */
         }
 
-        private LogicGameState(LogicGameState other)
+        private GameLogicState(GameLogicState other)
         {
             if (other != null)
             {
@@ -60,7 +60,7 @@ namespace EDBG.GameLogic.Core
 
         public object Clone()
         {
-            return new LogicGameState(this);
+            return new GameLogicState(this);
         }
     }
 }

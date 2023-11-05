@@ -49,7 +49,7 @@ namespace EDBG.Engine.Visual
             DiscObject[] discs = tile.GetComponentsInChildren<DiscObject>();
             foreach (DiscObject disc in discs)
             {
-                GameEngineManager.Instance.PrefabManager.ReturnPoolObject(nameof(DiscObject), disc.gameObject);
+                GameEngineManager.Instance.PrefabManager.ReturnPoolObject<DiscObject>(disc);
             }
         }
 
@@ -66,7 +66,7 @@ namespace EDBG.Engine.Visual
             {
                 for (int i = 0; i < discStack.Count; i++)
                 {
-                    DiscObject newDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject(nameof(DiscObject)).GetComponent<DiscObject>();
+                    DiscObject newDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<DiscObject>();
                     newDisc.enabled = true;
                     newDisc.discData = discStack.GetItemByIndex(i);
                     newDisc.transform.SetParent(tile.transform);
@@ -79,7 +79,7 @@ namespace EDBG.Engine.Visual
                     //Create filler disc
                     if (i < discStack.Count - 1)
                     {
-                        newDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject(nameof(DiscObject)).GetComponent<DiscObject>();
+                        newDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<DiscObject>();
                         newDisc.transform.SetParent(tile.transform);
                         newDisc.transform.localScale = new Vector3(DiscScale, DiscScale / fillerDiscFactor, DiscScale);
                         float fillerYPos = position.y + discHeight;

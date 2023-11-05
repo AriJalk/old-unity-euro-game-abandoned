@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -5,98 +6,123 @@ using UnityEngine.Pool;
 namespace EDBG.Engine.ResourceManagement
 {
     /// <summary>
-    /// Class for prefab pooling
+    /// Pool Manager for reusable objects
     /// </summary>
     public class PrefabManager : MonoBehaviour
     {
-        private Dictionary<string, Queue<GameObject>> objectPools;
-        private Dictionary<string, GameObject> prefabDict;
+
+
+        private Dictionary<Type, object> pools;
+        private Dictionary<Type, GameObject> prefabDict;
         private Transform unactiveObjects;
         private readonly int initialPoolSize = 100;
 
-        public void Initialize()
+
+
+        void Start()
         {
-            objectPools = new Dictionary<string, Queue<GameObject>>();
-            prefabDict = new Dictionary<string, GameObject>();
-            unactiveObjects = transform.Find("UnactiveObjects");
+
+        }
+
+        void Update()
+        {
+            // Your update logic here
         }
 
         void Awake()
         {
-            
+
         }
 
-        public void RegisterPrefab(string poolKey, GameObject prefab)
+        public void Initialize()
         {
-            if (!prefabDict.ContainsKey(poolKey))
-            {
-                prefabDict.Add(poolKey, prefab);
+            pools = new Dictionary<Type, object>();
+            prefabDict = new Dictionary<Type, GameObject>();
+            unactiveObjects = transform.Find("UnactiveObjects");
+        }
 
-                if (!objectPools.ContainsKey(poolKey))
+        public void RegisterPrefab<T>(GameObject prefab) where T : Component
+        {
+
+            if (!prefabDict.ContainsKey(typeof(T)))
+            {
+                prefabDict.Add(typeof(T), prefab);
+
+                if (!pools.ContainsKey(typeof(T)))
                 {
-                    CreateObjectPool(poolKey, prefab);
+                    SetQueue<T>();
+                    PrefabPool<T> prefabPool = (PrefabPool<T>)pools[typeof(T)];
                     for (int i = 0; i < initialPoolSize; i++)
                     {
-                        GameObject obj = CreateInstance(poolKey);
-                        obj.SetActive(false);
-                        obj.transform.SetParent(unactiveObjects);
-                        objectPools[poolKey].Enqueue(obj);
+                        T obj = CreateInstance<T>();
+                        obj.gameObject.SetActive(false);
+                        obj.gameObject.transform.SetParent(unactiveObjects);
+                        prefabPool.AddQueueObject(obj);
                     }
                 }
             }
             else
             {
-                prefabDict[poolKey] = prefab;
+                prefabDict[typeof(T)] = prefab;
             }
         }
 
-        private void CreateObjectPool(string poolKey, GameObject prefab)
+        private bool SetQueue<T>() where T : Component
         {
-            objectPools.Add(poolKey, new Queue<GameObject>());
+            if (pools.ContainsKey(typeof(T)))
+                return false;
+
+            PrefabPool<T> newPool = new PrefabPool<T>();
+            pools.Add(typeof(T), newPool);
+
+            return true;
         }
 
-        private GameObject CreateInstance(string poolKey)
+        private T CreateInstance<T>() where T : Component
         {
             GameObject prefab;
-            if (prefabDict.TryGetValue(poolKey, out prefab))
+            if (prefabDict.TryGetValue(typeof(T), out prefab))
             {
-                return Instantiate(prefab);
+                return Instantiate(prefab).GetComponent<T>();
             }
             else
             {
-                Debug.Log("Prefab not registered for key: " + poolKey);
+                Debug.Log("Prefab not registered for type: " + typeof(T));
                 return null;
             }
         }
 
-        public GameObject RetrievePoolObject(string poolKey)
+        public T RetrievePoolObject<T>() where T : Component, new()
         {
-            if (!objectPools.ContainsKey(poolKey))
+            if (!pools.ContainsKey(typeof(T)))
+                SetQueue<T>();
+
+            PrefabPool<T> prefabPool = (PrefabPool<T>)pools[typeof(T)];
+            T retrieval = prefabPool.RetrieveQueueObject();
+
+            if (retrieval == null)
             {
-                CreateObjectPool(poolKey, prefabDict[poolKey]);
+                retrieval = CreateInstance<T>();
             }
 
-            Queue<GameObject> pool = objectPools[poolKey];
-            GameObject obj = pool.Count > 0 ? pool.Dequeue() : CreateInstance(poolKey);
-
-            if (obj != null)
-            {
-                obj.SetActive(true);
-            }
-            return obj;
+            if (retrieval == null)
+                Debug.Log("Can't retrieve object");
+            retrieval.gameObject.SetActive(true);
+            return retrieval;
         }
 
-        public void ReturnPoolObject(string poolKey, GameObject obj)
+        public void ReturnPoolObject<T>(T obj) where T : Component
         {
-            if (objectPools.ContainsKey(poolKey))
+            if (pools.ContainsKey(typeof(T)))
             {
-                obj.SetActive(false);
-                objectPools[poolKey].Enqueue(obj);
-                obj.transform.SetParent(unactiveObjects);
+                PrefabPool<T> prefabPool = (PrefabPool<T>)pools[typeof(T)];
+                prefabPool.AddQueueObject(obj);
+                obj.gameObject.transform.SetParent(unactiveObjects);
+                obj.gameObject.SetActive(false);
             }
             else
             {
-                Debug.Log("Pool not found for key: " + poolKey);
+                Debug.Log("Pool not found for type: " + typeof(T));
             }
         }
     }

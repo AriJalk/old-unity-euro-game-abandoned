@@ -1165,6 +1165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameWorld: {fileID: 1629819031}
   CameraController: {fileID: 1642184074}
+  DiceCamera: {fileID: 1481100533}
   GameUI: {fileID: 1429696182}
 --- !u!1 &342611817
 GameObject:

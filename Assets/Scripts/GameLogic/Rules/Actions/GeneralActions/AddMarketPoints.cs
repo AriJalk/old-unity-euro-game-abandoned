@@ -10,5 +10,11 @@
         {
             player.MarketPoints += Bonus;
         }
+
+        public override void SetAction(Player player)
+        {
+            base.SetAction(player);
+            CanExecute = true;
+        }
     }
 }

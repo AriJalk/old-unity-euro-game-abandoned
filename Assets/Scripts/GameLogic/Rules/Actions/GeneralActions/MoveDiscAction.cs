@@ -26,7 +26,7 @@ namespace EDBG.GameLogic.Rules
             }
         }
 
-        public void SetAction(MapTile sourceTile, MapTile targetTile, int distance, LogicGameState gameState)
+        public void SetAction(MapTile sourceTile, MapTile targetTile, int distance, GameLogicState gameState)
         {
             this.sourceTile = sourceTile;
             this.targetTile = targetTile;

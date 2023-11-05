@@ -40,8 +40,8 @@ namespace EDBG.Engine.InputManagement
                 inputEvents.AxisChanged(new Vector2(horizontalInput, verticalInput));
             }
             bool[] mouseButtons = new bool[2];
-            mouseButtons[0] = Input.GetMouseButton(0);
-            mouseButtons[1] = Input.GetMouseButton(1);
+            mouseButtons[0] = Input.GetMouseButtonDown(0);
+            mouseButtons[1] = Input.GetMouseButtonDown(1);
             if (mouseButtons[0] || mouseButtons[1])
             {
                 inputEvents.MouseClicked(mouseButtons, Input.mousePosition);
