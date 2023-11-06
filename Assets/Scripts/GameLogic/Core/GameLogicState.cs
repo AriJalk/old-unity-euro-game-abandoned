@@ -11,22 +11,13 @@ namespace EDBG.GameLogic.Core
     {
 
         public MapGrid MapGrid { get; set; }
-        public GameStack<Die> RolledDice { get; set; }
+        public DiceTray DiceTray { get; set; }
         public Player CurrentPlayer { get; set; }
         public List<Player> PlayerList { get; set; }
-
-        /*
-         * public GameStack<ActionToken> playerTokenBag;
-         * public GameStack<ActionToken> playerHand;
-         */
 
         public GameLogicState(MapGrid mapGrid)
         {
             this.MapGrid = mapGrid;
-            /*
-             * playerTokenBag = new GameStack<ActionToken>();
-             * playerHand = new GameStack<ActionToken>();
-             */
         }
 
         private GameLogicState(GameLogicState other)
@@ -37,8 +28,8 @@ namespace EDBG.GameLogic.Core
                 {
                     MapGrid = (MapGrid)other.MapGrid.Clone();
                 }
-                if (other.RolledDice != null)
-                    RolledDice = (GameStack<Die>)other.RolledDice.Clone();  
+                if (other.DiceTray != null)
+                    DiceTray = (DiceTray)other.DiceTray.Clone();  
                 if (other.CurrentPlayer != null)
                     CurrentPlayer = (Player)other.CurrentPlayer.Clone();
                 if (other.PlayerList != null)
@@ -49,12 +40,6 @@ namespace EDBG.GameLogic.Core
                         PlayerList.Add(player);
                     }
                 }
-                /*
-                 * if (playerTokenBag != null)
-                 * playerTokenBag = (GameStack<ActionToken>)other.playerTokenBag.Clone();
-                 * if (playerHand != null)
-                 * playerHand = (GameStack<ActionToken>)other.playerHand.Clone();
-                 */
             }
         }
 

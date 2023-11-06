@@ -28,6 +28,7 @@ namespace EDBG.GameLogic.Core
         public CameraController CameraController;
         public Camera DiceCamera;
         public GameUI GameUI;
+        public DiceTrayObject DiceTrayObject;
 
         private GameLogicState currentGameLogicState
         {
@@ -42,6 +43,7 @@ namespace EDBG.GameLogic.Core
 
             engineManager = GameEngineManager.Instance;
             CameraController.Initialize();
+            LoadPrefabs();
             CreateTestGame();
 
             //MoveDiscAction moveDisc = new MoveDiscAction();
@@ -49,10 +51,12 @@ namespace EDBG.GameLogic.Core
             //moveDisc.ExecuteAction();
 
             //Draw map at head of stack
+
             engineManager.MapRenderer.RenderMap(currentGameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
             currentGameState = new ChooseDie();
+            
         }
 
         /// <summary>
@@ -111,14 +115,9 @@ namespace EDBG.GameLogic.Core
 
             int[] array = new[] { 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6 };
 
-            //UtilityFunctions.PrintArray(array);
-
             EDBG.Utilities.UtilityFunctions.ShuffleArray(array);
 
-            //UtilityFunctions.PrintArray(array);
-
             Stack<int> faces = new Stack<int>(array);
-            //UtilityFunctions.PrintStack(faces);
 
             for (int i = 0; i < 4; i++)
             {
@@ -140,58 +139,48 @@ namespace EDBG.GameLogic.Core
                 }
             }
 
-
-
-
-
             GameLogicState newState = new GameLogicState(mapGrid);
-
-
-
-            /*
-             * MoveDiscAction moveDiscAction = new MoveDiscAction((MapTile)mapGrid.GetCell(0, 0), (MapTile)mapGrid.GetCell(0, 0), 3);
-            moveDiscAction.UpdateCanExecute(newState);
-            moveDiscAction.ExecuteAction();
-            moveDiscAction.UpdateCanExecute(newState);
-            moveDiscAction.ExecuteAction();
-            moveDiscAction.UpdateCanExecute(newState);
-            moveDiscAction.ExecuteAction();
-            */
-
-            /* Bag-builder test build
-             * 
-             * List<ActionToken> tokens = new List<ActionToken>
-            {
-                new ActionToken(TokenColors.Red),
-                new ActionToken(TokenColors.Blue),
-                new ActionToken(TokenColors.Green),
-                new ActionToken(TokenColors.Red),
-                new ActionToken(TokenColors.Blue),
-                new ActionToken(TokenColors.Green),
-                new ActionToken(TokenColors.Red),
-                new ActionToken(TokenColors.Blue),
-                new ActionToken(TokenColors.Green),
-                new ActionToken(TokenColors.Green)
-            };
-
-            UtilityFunctions.ShuffleList(tokens);
-
-            newState.playerTokenBag = new GameStack<ActionToken>(tokens);
-
-            newState.playerHand.PushItem(newState.playerTokenBag.PopItem());
-            newState.playerHand.PushItem(newState.playerTokenBag.PopItem());
-            newState.playerHand.PushItem(newState.playerTokenBag.PopItem());
-            gameUI.BuildHand(newState.playerHand);
-            */
 
             newState.PlayerList = new List<Player>() {
                 new Player("Player", 10, new BeginnerCorporation(Ownership.Player)),
                 new Player("Bot", 10, new BeginnerCorporation(Ownership.Bot)),
             };
+            newState.DiceTray = new DiceTray();
+            newState.DiceTray.SetDice(5);
+            newState.DiceTray.RollAllDice();
             gameLogicStateStack.Push(newState);
 
             //TODO: index
             GameUI.Initialize(newState.PlayerList[0], newState.PlayerList[1]);
+            DiceTrayObject.SetDice(newState.DiceTray, engineManager.PrefabManager);
+        }
+
+        private void LoadPrefabs()
+        {
+            //TODO: replace with proper asset loading
+            GameObject squarePrefab = Resources.Load<GameObject>("Prefabs/3D/SquareTilePrefab");
+            if (squarePrefab == null)
+            {
+                Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/SquareTilePrefab.");
+                return;
+            }
+            engineManager.PrefabManager.RegisterPrefab<SquareTileObject>(squarePrefab);
+
+            GameObject discPrefab = Resources.Load<GameObject>("Prefabs/3D/DiscPrefab");
+            if (discPrefab == null)
+            {
+                Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/DiscPrefab.");
+                return;
+            }
+            engineManager.PrefabManager.RegisterPrefab<DiscObject>(discPrefab);
+
+            GameObject diePrefab = Resources.Load<GameObject>("Prefabs/3D/DiePrefab");
+            if(diePrefab == null)
+            {
+                Debug.Log("Die Prefab is not found in Resources/Prefabs/3D/DiePrefab");
+                return;
+            }
+            engineManager.PrefabManager.RegisterPrefab<DieObject>(diePrefab);
         }
     }
 }

@@ -4,20 +4,19 @@ using EDBG.GameLogic.Components;
 
 public class DieObject : MonoBehaviour
 {
-
-    Die die;
-
-    public int DieResult
+    private Die _die;
+    public Die Die 
     {
         get
         {
-            if (die != null)
-                return die.Result;
-            return 0;
+            return _die;
+        }
+        set
+        {
+            _die = value;
+            SetObjectRotation();
         }
     }
-
-
     void Awake()
     {
 
@@ -25,9 +24,7 @@ public class DieObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        die = new Die();
-        die.Roll();
-        SetObjectRotation(die.Result);
+
     }
 
     // Update is called once per frame
@@ -36,9 +33,9 @@ public class DieObject : MonoBehaviour
 
     }
 
-    void SetObjectRotation(int topFace)
+    void SetObjectRotation()
     {
-        switch (topFace)
+        switch (Die.Result)
         {
             case 1:
                 transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
@@ -67,8 +64,8 @@ public class DieObject : MonoBehaviour
     {
         if (face > 0 && face <= 6)
         {
-            die.ChangeValue(face);
-            SetObjectRotation((die.Result));
+            Die.ChangeValue(face);
+            SetObjectRotation();
         }
     }
 }

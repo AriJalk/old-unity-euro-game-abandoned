@@ -28,22 +28,7 @@ namespace EDBG.Engine.Visual
 
         public void Initialize()
         {
-            //TODO: replace with proper asset loading
-            GameObject squarePrefab = Resources.Load<GameObject>("Prefabs/3D/SquareTilePrefab");
-            if (squarePrefab == null)
-            {
-                Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/SquareTilePrefab.");
-                return;
-            }
-            GameEngineManager.Instance.PrefabManager.RegisterPrefab<SquareTileObject>(squarePrefab);
-
-            GameObject discPrefab = Resources.Load<GameObject>("Prefabs/3D/DiscPrefab");
-            if (discPrefab == null)
-            {
-                Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/DiscPrefab.");
-                return;
-            }
-            GameEngineManager.Instance.PrefabManager.RegisterPrefab<DiscObject>(discPrefab);
+            
         }
 
         public void RenderMap(MapGrid map, Transform mapHolderObject)
