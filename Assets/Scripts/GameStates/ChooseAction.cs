@@ -1,18 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
+
+using EDBG.UserInterface;
 using UnityEngine;
 
-public class ChooseAction : MonoBehaviour
+namespace EDBG.GameLogic.GameStates
 {
-    // Start is called before the first frame update
-    void Start()
+    public class ChooseAction : IGameState
     {
-        
-    }
+        private GameUI gameUI;
+        public bool CanExit { get; private set; }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private string _name = "ChooseAction";
+        public string Name { get { return _name; } }
+
+        public void Cancel()
+        {
+            return;
+        }
+
+        public void Enter()
+        {
+            return;
+        }
+
+        public void Enter(object obj)
+        {
+            gameUI = obj as GameUI;
+        }
+
+        public object Exit()
+        {
+            return null;
+        }
+
+        public void Update()
+        {
+            return;
+        }
+
+        public void Update(object obj)
+        {
+            DieObject die = obj as DieObject;
+        }
     }
 }

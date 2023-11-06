@@ -5,7 +5,7 @@ namespace EDBG.GameLogic.Rules
     {
         const string ActionDescription = "Remove X Discs from a Player's Disc stock";
 
-        public ResearchAction(int bonus) : base("Research", ActionDescription, bonus) { }
+        public ResearchAction(int dieFace, int bonus) : base("Research", ActionDescription, dieFace, bonus) { }
 
         public override void ExecuteAction()
         {

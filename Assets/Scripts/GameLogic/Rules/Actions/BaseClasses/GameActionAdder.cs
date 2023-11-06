@@ -17,7 +17,7 @@
             }
         }
 
-        protected GameActionAdder(string name, string description, int bonus) : base(name, description)
+        protected GameActionAdder(string name, string description, int dieFace, int bonus) : base(name, description, dieFace)
         {
             Bonus = bonus;
         }

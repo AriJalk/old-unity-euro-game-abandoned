@@ -11,6 +11,7 @@ using EDBG.GameLogic.Rules;
 using EDBG.GameLogic.MapSystem;
 using EDBG.GameLogic.Components;
 using EDBG.GameLogic.GameStates;
+using EDBG.UserInterface;
 
 namespace EDBG.GameLogic.Core
 {
@@ -56,6 +57,7 @@ namespace EDBG.GameLogic.Core
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
             currentGameState = new ChooseDie();
+            currentGameState.Enter(GameUI);
             
         }
 
@@ -94,7 +96,9 @@ namespace EDBG.GameLogic.Core
                         if (hit.transform.GetComponent<DieObject>() is DieObject die)
                         {
                             currentGameState.Update(die);
-                            die.transform.localScale = die.transform.localScale * 2f;
+                            ChooseAction chooseAction = new ChooseAction();
+                            chooseAction.Enter(GameUI);
+                            chooseAction.Update(die);
                         }
                     }
                     break;

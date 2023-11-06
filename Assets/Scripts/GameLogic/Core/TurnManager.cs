@@ -1,4 +1,6 @@
-﻿namespace EDBG.GameLogic.Core
+﻿using EDBG.UserInterface;
+
+namespace EDBG.GameLogic.Core
 {
     /// <summary>
     /// Handles logic game-flow

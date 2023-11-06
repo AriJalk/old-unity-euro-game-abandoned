@@ -4,7 +4,7 @@
     {
         const string ActionDescription = "Add EP to be used in the current turn";
 
-        public AddExpansionPoints(int bonus) : base($"+{bonus} EP", ActionDescription, bonus) { }
+        public AddExpansionPoints(int dieFace, int bonus) : base($"+{bonus} EP", ActionDescription, dieFace, bonus) { }
 
         public override void ExecuteAction()
         {
