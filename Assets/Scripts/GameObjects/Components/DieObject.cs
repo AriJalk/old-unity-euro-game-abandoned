@@ -17,6 +17,8 @@ public class DieObject : MonoBehaviour
             SetObjectRotation();
         }
     }
+
+    public Transform Highlight;
     void Awake()
     {
 

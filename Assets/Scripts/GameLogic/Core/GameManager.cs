@@ -96,9 +96,7 @@ namespace EDBG.GameLogic.Core
                         if (hit.transform.GetComponent<DieObject>() is DieObject die)
                         {
                             currentGameState.Update(die);
-                            ChooseAction chooseAction = new ChooseAction();
-                            chooseAction.Enter(GameUI);
-                            chooseAction.Update(die);
+                            
                         }
                     }
                     break;

@@ -6,6 +6,7 @@ using EDBG.GameLogic.Rules;
 
 using TMPro;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EDBG.UserInterface
 {
@@ -15,6 +16,10 @@ namespace EDBG.UserInterface
         {
             PlayerActions,
         }
+
+        public UIAction[] HumanActions { get; private set; }
+        public UIAction[] BotActions { get; private set; }
+
 
         void Start()
         {
@@ -79,27 +84,33 @@ namespace EDBG.UserInterface
             }
         }
 
+        //TODO: dynamic action prefab in ui
         public void BuildActions(Player humanPlayer, Player botPlayer)
         {
+            HumanActions = new UIAction[humanPlayer.Corporation.Actions.Length];
             Transform actionPanel = transform.Find("ActionPanel").Find("PlayerActions");
             if (actionPanel != null)
             {
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < humanPlayer.Corporation.Actions.Length; i++)
                 {
-                    Transform action = actionPanel.Find($"Action{i + 1}");
-                    Transform button = action.Find("Button");
-                    TextMeshProUGUI text = button.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
-                    text.text = humanPlayer.Corporation.Actions[i].Name;
+                    UIAction action = actionPanel.Find($"Action{i + 1}").GetComponent<UIAction>();
+                    HumanActions[i] = action;
+                    action.GameAction = humanPlayer.Corporation.Actions[i];
+                    action.TextBox.text = action.GameAction.Name;
                 }
             }
+            BotActions = new UIAction[botPlayer.Corporation.Actions.Length];
             actionPanel = transform.Find("ActionPanel").Find("BotActions");
             if (actionPanel != null)
             {
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < botPlayer.Corporation.Actions.Length; i++)
                 {
-                    Transform action = actionPanel.Find($"Action{i + 1}");
-                    TextMeshProUGUI text = action.GetComponentInChildren<TextMeshProUGUI>();
-                    text.text = botPlayer.Corporation.Actions[i].Name;
+                    UIAction action = actionPanel.Find($"Action{i + 1}").GetComponent<UIAction>();
+                    BotActions[i] = action;
+                    action.GameAction = botPlayer.Corporation.Actions[i];
+                    action.TextBox.text = action.GameAction.Name;
+                    //TODO: no button for bot
+                    action.Button.interactable = false;
                 }
             }
         }
@@ -113,9 +124,9 @@ namespace EDBG.UserInterface
                 TextMeshProUGUI expansionPointsText = playerPanel.Find("ExpansionPoints").Find("Text").GetComponent<TextMeshProUGUI>();
                 TextMeshProUGUI marketPointsText = playerPanel.Find("MarketPoints").Find("Text").GetComponent<TextMeshProUGUI>();
 
-                discStockText.SetText($"Discs: {player.DiscStock.ToString()}");
-                expansionPointsText.SetText($"EP: {player.ExpansionPoints.ToString()}");
-                marketPointsText.SetText($"MP: {player.MarketPoints.ToString()}");
+                discStockText.SetText($"Discs: {player.DiscStock}");
+                expansionPointsText.SetText($"EP: {player.ExpansionPoints}");
+                marketPointsText.SetText($"MP: {player.MarketPoints}");
 
             }
         }
@@ -135,6 +146,17 @@ namespace EDBG.UserInterface
 
                 default:
                     break;
+            }
+        }
+
+        public void SetActionLock(int action)
+        {
+            foreach(UIAction uiAction in HumanActions)
+            {
+                if(uiAction.GameAction.DieFace == action)
+                {
+
+                }
             }
         }
     }
