@@ -23,7 +23,6 @@ namespace EDBG.GameLogic.Core
 
         private GameEngineManager engineManager;
         private Stack<GameLogicState> gameLogicStateStack;
-        private IGameState currentGameState;
 
         public Transform GameWorld;
         public CameraController CameraController;
@@ -31,6 +30,7 @@ namespace EDBG.GameLogic.Core
         public GameUI GameUI;
         public DiceTrayObject DiceTrayObject;
 
+        private IGameState currentGameState;
         private GameLogicState currentGameLogicState
         {
             get
@@ -38,6 +38,10 @@ namespace EDBG.GameLogic.Core
                 return gameLogicStateStack.Peek();
             }
         }
+
+        public UIEvents uiEvents { get; private set; }
+
+
 
         void Start()
         {
@@ -56,20 +60,13 @@ namespace EDBG.GameLogic.Core
             engineManager.MapRenderer.RenderMap(currentGameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
-            currentGameState = new ChooseDie();
+            currentGameState = new ChooseAction();
             currentGameState.Enter(GameUI);
-            
+
+
+
         }
 
-        /// <summary>
-        /// Called when the screen size changed due to orientation change
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ScreenChanged(object sender, ScreenChangedEventArgs e)
-        {
-            CameraController.UpdateAspectRatio(e.NewWidth, e.NewHeight);
-        }
 
         void Update()
         {
@@ -82,13 +79,23 @@ namespace EDBG.GameLogic.Core
             CameraController.MoveCamera(axis.x, axis.y);
         }
 
+        /// <summary>
+        /// Called when the screen size changed due to orientation change
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ScreenChanged(object sender, ScreenChangedEventArgs e)
+        {
+            CameraController.UpdateAspectRatio(e.NewWidth, e.NewHeight);
+        }
+
         void SelectObject(bool[] mouseButtons, Vector2 position)
         {
             Ray ray = DiceCamera.ScreenPointToRay(position);
             LayerMask layerMask;
             switch (currentGameState.Name)
             {
-                case "ChooseDie":
+                case "ChooseAction":
                     layerMask = LayerMask.GetMask("Die");
                     RaycastHit hit;
                     if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
@@ -152,8 +159,11 @@ namespace EDBG.GameLogic.Core
             newState.DiceTray.RollAllDice();
             gameLogicStateStack.Push(newState);
 
+            uiEvents = new UIEvents();
+            uiEvents.SubscribeToAllEvents(ActionSelected);
+
             //TODO: index
-            GameUI.Initialize(newState.PlayerList[0], newState.PlayerList[1]);
+            GameUI.Initialize(newState.PlayerList[0], newState.PlayerList[1], uiEvents);
             DiceTrayObject.SetDice(newState.DiceTray, engineManager.PrefabManager);
         }
 
@@ -183,6 +193,19 @@ namespace EDBG.GameLogic.Core
                 return;
             }
             engineManager.PrefabManager.RegisterPrefab<DieObject>(diePrefab);
+        }
+
+        private void ActionSelected(UIAction action)
+        {
+            currentGameState.Update(action);
+            if (currentGameState.CanExit)
+            {
+                GameAction gAction = currentGameState.Exit() as GameAction;
+                if (gAction != null)
+                {
+                    GameUI.StatusText.text = gAction.Name;
+                }
+            }
         }
     }
 }

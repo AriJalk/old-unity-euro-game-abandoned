@@ -5,13 +5,14 @@ using TMPro;
 
 namespace EDBG.GameLogic.GameStates
 {
-    public class ChooseDie : IGameState
+    public class ChooseAction : IGameState
     {
         private GameUI gameUI;
         private DieObject chosenDie;
+        private GameAction chosenAction;
         public bool CanExit { get; private set; }
 
-        private string _name = "ChooseDie";
+        private string _name = "ChooseAction";
         public string Name { get { return _name; } }
 
         public void Cancel()
@@ -37,7 +38,7 @@ namespace EDBG.GameLogic.GameStates
 
         public object Exit()
         {
-            return chosenDie;
+            return chosenAction;
         }
 
         public void Update(object o)
@@ -48,7 +49,6 @@ namespace EDBG.GameLogic.GameStates
                     chosenDie.Highlight.gameObject.SetActive(false);
                 chosenDie = die;
                 chosenDie.Highlight.gameObject.SetActive(true);
-                CanExit = true;
                 foreach (UIAction action in gameUI.HumanActions)
                 {
                     if (action.GameAction.DieFace == die.Die.Result)
@@ -60,8 +60,12 @@ namespace EDBG.GameLogic.GameStates
                         action.Button.interactable = false;
                     }
                 }
-                TextMeshProUGUI text = gameUI.transform.Find("StatusBar").GetComponentInChildren<TextMeshProUGUI>();
-                text.text = "Choose action from panel or choose another die";
+                gameUI.StatusText.text = "Choose action from panel or choose another die";
+            }
+            else if(o is UIAction action)
+            {
+                chosenAction = action.GameAction;
+                CanExit = true;
             }
         }
 

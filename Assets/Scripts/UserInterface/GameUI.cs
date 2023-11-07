@@ -12,6 +12,7 @@ namespace EDBG.UserInterface
 {
     public class GameUI : MonoBehaviour
     {
+        private UIEvents uiEvents;
         public enum UIElements
         {
             PlayerActions,
@@ -20,16 +21,19 @@ namespace EDBG.UserInterface
         public UIAction[] HumanActions { get; private set; }
         public UIAction[] BotActions { get; private set; }
 
+        public TextMeshProUGUI StatusText;
+
 
         void Start()
         {
 
         }
 
-        public void Initialize(Player humanPlayer, Player botPlayer)
+        public void Initialize(Player humanPlayer, Player botPlayer, UIEvents uIEvents)
         {
             BuildActions(humanPlayer, botPlayer);
             BuildInfo(humanPlayer);
+            this.uiEvents = uIEvents;
         }
 
         public void BuildHand(GameStack<ActionToken> tokenArray)
@@ -97,6 +101,7 @@ namespace EDBG.UserInterface
                     HumanActions[i] = action;
                     action.GameAction = humanPlayer.Corporation.Actions[i];
                     action.TextBox.text = action.GameAction.Name;
+                    action.Button.onClick.AddListener(delegate { ActionClicked(action); });
                 }
             }
             BotActions = new UIAction[botPlayer.Corporation.Actions.Length];
@@ -158,6 +163,11 @@ namespace EDBG.UserInterface
 
                 }
             }
+        }
+
+        private void ActionClicked(UIAction action)
+        {
+            uiEvents.SelectAction(action);
         }
     }
 }
