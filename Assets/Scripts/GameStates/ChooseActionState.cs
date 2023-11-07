@@ -5,7 +5,7 @@ using TMPro;
 
 namespace EDBG.GameLogic.GameStates
 {
-    public class ChooseAction : IGameState
+    public class ChooseActionState : IGameState
     {
         private GameUI gameUI;
         private DieObject chosenDie;
@@ -70,6 +70,11 @@ namespace EDBG.GameLogic.GameStates
         }
 
         public void Update()
+        {
+            return;
+        }
+
+        public void Enter(GameUI gameUI, object obj)
         {
             return;
         }

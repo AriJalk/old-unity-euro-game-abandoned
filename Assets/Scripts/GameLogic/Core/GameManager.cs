@@ -31,6 +31,7 @@ namespace EDBG.GameLogic.Core
         public DiceTrayObject DiceTrayObject;
 
         private IGameState currentGameState;
+
         private GameLogicState currentGameLogicState
         {
             get
@@ -38,7 +39,6 @@ namespace EDBG.GameLogic.Core
                 return gameLogicStateStack.Peek();
             }
         }
-
         public UIEvents uiEvents { get; private set; }
 
 
@@ -60,7 +60,7 @@ namespace EDBG.GameLogic.Core
             engineManager.MapRenderer.RenderMap(currentGameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
-            currentGameState = new ChooseAction();
+            currentGameState = new ChooseActionState();
             currentGameState.Enter(GameUI);
 
 
@@ -203,7 +203,8 @@ namespace EDBG.GameLogic.Core
                 GameAction gAction = currentGameState.Exit() as GameAction;
                 if (gAction != null)
                 {
-                    GameUI.StatusText.text = gAction.Name;
+                    currentGameState = new ActionState();
+                    currentGameState.Enter(GameUI, gAction);
                 }
             }
         }
