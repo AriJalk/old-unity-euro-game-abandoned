@@ -3,19 +3,10 @@ using System;
 namespace EDBG.GameLogic.Rules
 {
     /// <summary>
-    /// Base class for player, human or Bot
+    /// Base class for player
     /// </summary>
     public class Player : ICloneable
     {
-        private Ownership _ownership;
-
-        public Ownership Ownership
-        {
-            get { return _ownership; }
-            set { _ownership = value; }
-        }
-
-
         private string _name;
 
         public string Name
@@ -61,14 +52,24 @@ namespace EDBG.GameLogic.Rules
         }
 
 
-        public Player(string name, int discStock, Corporation corporation)
+        public Player(string name, int discStock, Type corporationType)
         {
             _name = name;
             _discStock = discStock;
-            _corporation = corporation;
+
             _expansionPoints = 0;
             _marketPoints = 0;
+
+            if (typeof(Corporation).IsAssignableFrom(corporationType))
+            {
+                _corporation = (Corporation)Activator.CreateInstance(corporationType, this);
+            }
+            else
+            {
+                throw new ArgumentException("Invalid Corporation type.");
+            }
         }
+
 
         private Player(Player other)
         {

@@ -158,10 +158,12 @@ namespace EDBG.UserInterface
         {
             foreach(UIAction uiAction in HumanActions)
             {
-                if(uiAction.GameAction.DieFace == action)
+                if (uiAction.GameAction.DieFace == action)
                 {
-
+                    uiAction.Button.interactable = true;
                 }
+                else
+                    uiAction.Button.interactable = false;
             }
         }
 

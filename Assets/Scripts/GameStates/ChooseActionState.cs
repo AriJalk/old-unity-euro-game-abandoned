@@ -1,82 +1,57 @@
 ﻿using EDBG.GameLogic.Components;
 using EDBG.GameLogic.Rules;
 using EDBG.UserInterface;
-using TMPro;
+using UnityEngine;
 
 namespace EDBG.GameLogic.GameStates
 {
-    public class ChooseActionState : IGameState
+    public class ChooseActionState : UIGameState
     {
-        private GameUI gameUI;
-        private DieObject chosenDie;
-        private GameAction chosenAction;
-        public bool CanExit { get; private set; }
+        private DieObject selectedDie;
+        private GameAction selectedAction;
 
-        private string _name = "ChooseAction";
-        public string Name { get { return _name; } }
-
-        public void Cancel()
+        public ChooseActionState(GameUI gameUI) : base(gameUI)
         {
-            return;
+
         }
 
-        public void Enter()
+        public override void Enter()
         {
-            return;
+            gameUI.SetElementLock(GameUI.UIElements.PlayerActions, true);
+            gameUI.StatusText.text = "Select 1 available die";
         }
 
-        public void Enter(object obj)
+        /// <summary>
+        /// Receives either die or action
+        /// </summary>
+        /// <param name="parameters"></param>
+        public override void Update(object parameter)
         {
-            if(obj is GameUI ui)
+            if (parameter is DieObject die)
             {
-                gameUI = ui;
-                gameUI.SetElementLock(GameUI.UIElements.PlayerActions, true);
-                TextMeshProUGUI text = gameUI.transform.Find("StatusBar").GetComponentInChildren<TextMeshProUGUI>();
-                text.text = "Choose die from the dice tray";
+                if (selectedDie != null)
+                    selectedDie.Highlight.gameObject.SetActive(false);
+                selectedDie = die;
+                selectedDie.Highlight.gameObject.SetActive(true);
+                gameUI.SetActionLock(selectedDie.Die.Result);
+                gameUI.StatusText.text = "Select matching action or another die";
             }
-        }
-
-        public object Exit()
-        {
-            return chosenAction;
-        }
-
-        public void Update(object o)
-        {
-            if (o is DieObject die)
+            if (parameter is UIAction action)
             {
-                if (chosenDie != null)
-                    chosenDie.Highlight.gameObject.SetActive(false);
-                chosenDie = die;
-                chosenDie.Highlight.gameObject.SetActive(true);
-                foreach (UIAction action in gameUI.HumanActions)
-                {
-                    if (action.GameAction.DieFace == die.Die.Result)
-                    {
-                        action.Button.interactable = true;
-                    }
-                    else
-                    {
-                        action.Button.interactable = false;
-                    }
-                }
-                gameUI.StatusText.text = "Choose action from panel or choose another die";
-            }
-            else if(o is UIAction action)
-            {
-                chosenAction = action.GameAction;
+                selectedAction = action.GameAction;
                 CanExit = true;
             }
         }
 
-        public void Update()
+        public override void Update(params object[] parameters)
         {
             return;
         }
 
-        public void Enter(GameUI gameUI, object obj)
+
+        public override object Exit()
         {
-            return;
+            return selectedAction;
         }
     }
 }

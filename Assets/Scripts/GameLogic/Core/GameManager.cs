@@ -30,7 +30,7 @@ namespace EDBG.GameLogic.Core
         public GameUI GameUI;
         public DiceTrayObject DiceTrayObject;
 
-        private IGameState currentGameState;
+        private UIGameState currentGameState;
 
         private GameLogicState currentGameLogicState
         {
@@ -60,8 +60,8 @@ namespace EDBG.GameLogic.Core
             engineManager.MapRenderer.RenderMap(currentGameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
-            currentGameState = new ChooseActionState();
-            currentGameState.Enter(GameUI);
+            currentGameState = new ChooseActionState(GameUI);
+            currentGameState.Enter();
 
 
 
@@ -93,9 +93,9 @@ namespace EDBG.GameLogic.Core
         {
             Ray ray = DiceCamera.ScreenPointToRay(position);
             LayerMask layerMask;
-            switch (currentGameState.Name)
+            switch (currentGameState.GetType().Name)
             {
-                case "ChooseAction":
+                case "ChooseActionState":
                     layerMask = LayerMask.GetMask("Die");
                     RaycastHit hit;
                     if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
@@ -151,8 +151,8 @@ namespace EDBG.GameLogic.Core
             GameLogicState newState = new GameLogicState(mapGrid);
 
             newState.PlayerList = new List<Player>() {
-                new Player("Player", 10, new BeginnerCorporation(Ownership.Player)),
-                new Player("Bot", 10, new BeginnerCorporation(Ownership.Bot)),
+                new HumanPlayer("Player", 10, typeof(BeginnerCorporation)),
+                new BotPlayer("Bot", 10, typeof(BeginnerCorporation)),
             };
             newState.DiceTray = new DiceTray();
             newState.DiceTray.SetDice(5);
@@ -203,8 +203,7 @@ namespace EDBG.GameLogic.Core
                 GameAction gAction = currentGameState.Exit() as GameAction;
                 if (gAction != null)
                 {
-                    currentGameState = new ActionState();
-                    currentGameState.Enter(GameUI, gAction);
+
                 }
             }
         }

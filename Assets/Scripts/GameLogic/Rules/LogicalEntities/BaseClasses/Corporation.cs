@@ -1,5 +1,6 @@
 ﻿
 using System;
+using Unity.VisualScripting;
 
 namespace EDBG.GameLogic.Rules
 {
@@ -8,8 +9,8 @@ namespace EDBG.GameLogic.Rules
     /// </summary>
     public abstract class Corporation : ICloneable
     {
-        private Ownership ownership;
-        
+        protected Player player;
+
         private string _name;
         public string Name
         {
@@ -32,9 +33,9 @@ namespace EDBG.GameLogic.Rules
             set { _actions = value; }
         }
 
-        public Corporation(Ownership ownership)
+        public Corporation(Player player)
         {
-            this.ownership = ownership;
+            this.player = player;
         }
 
         public object Clone()

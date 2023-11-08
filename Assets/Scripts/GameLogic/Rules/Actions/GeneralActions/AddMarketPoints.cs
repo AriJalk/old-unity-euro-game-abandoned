@@ -4,7 +4,7 @@
     {
         const string ActionDescription = "Add MP to be used in the current turn";
 
-        public AddMarketPoints(int dieFace, int bonus) : base($"+{bonus} MP", ActionDescription, dieFace, bonus) { }
+        public AddMarketPoints(int dieFace, int bonus, Player player) : base($"+{bonus} MP", ActionDescription, dieFace, bonus, player) { }
 
         public override void ExecuteAction()
         {

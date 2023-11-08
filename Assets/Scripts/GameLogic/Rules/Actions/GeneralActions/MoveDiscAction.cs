@@ -12,7 +12,7 @@ namespace EDBG.GameLogic.Rules
         private MapTile sourceTile;
         private MapTile targetTile;
 
-        public MoveDiscAction(int dieFace) : base(ActionName, ActionDescription, dieFace)
+        public MoveDiscAction(int dieFace, Player player) : base(ActionName, ActionDescription, dieFace, player)
         {
 
         }

@@ -72,7 +72,7 @@ namespace EDBG.Engine.Core
             ObjectsRenderer.Initialize();
             PlatformManager.Initialize();
             ScreenManager.Initialize();
-
+            Random.InitState((int)System.DateTime.Now.Ticks);
         }
 
         public void LoadScene(string sceneName)

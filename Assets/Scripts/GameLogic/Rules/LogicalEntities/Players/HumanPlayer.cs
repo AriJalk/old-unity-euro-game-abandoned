@@ -1,10 +1,11 @@
-﻿namespace EDBG.GameLogic.Rules
+﻿using System;
+
+namespace EDBG.GameLogic.Rules
 {
     public class HumanPlayer : Player
     {
-        public HumanPlayer(string name, int discStock, Corporation corporation) : base(name, discStock, corporation)
+        public HumanPlayer(string name, int discStock, Type corporationType) : base(name, discStock, corporationType)
         {
-            Ownership = Ownership.Player;
         }
     }
 }

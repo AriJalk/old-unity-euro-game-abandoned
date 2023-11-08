@@ -4,6 +4,7 @@ using EDBG.GameLogic.Components;
 
 public class DieObject : MonoBehaviour
 {
+    //TODO: encapsule die
     private Die _die;
     public Die Die 
     {

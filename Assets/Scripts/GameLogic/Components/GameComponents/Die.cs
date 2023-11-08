@@ -9,8 +9,12 @@ namespace EDBG.GameLogic.Components
 
         public int Result
         {
-            get { return _result; }
-            set
+            get
+            { 
+                return _result;
+            }
+
+            private set
             {
                 if (value >= 1 && value <= 6)
                 {
@@ -59,7 +63,7 @@ namespace EDBG.GameLogic.Components
 
         public void ChangeValue(int value)
         {
-            _result = ((_result - 1 + value) % 6 + 6) % 6 + 1;
+            Result = value;
         }
 
         public override object Clone()
