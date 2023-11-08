@@ -2,7 +2,6 @@
 {
     public abstract class GameActionAdder : GameAction
     {
-        protected Player player;
 
         private int _bonus;
         public int Bonus
@@ -17,14 +16,11 @@
             }
         }
 
-        protected GameActionAdder(string name, string description, int dieFace, int bonus, Player player) : base(name, description, dieFace, player)
+        protected GameActionAdder(string name, string description, int dieFace, int bonus, Player targetPlayer) : base(name, description, dieFace, targetPlayer)
         {
             Bonus = bonus;
         }
 
-        public virtual void SetAction(Player player)
-        {
-            this.player = player;
-        }
+        public abstract void SetAction();
     }
 }

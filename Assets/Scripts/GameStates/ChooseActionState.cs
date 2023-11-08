@@ -51,6 +51,7 @@ namespace EDBG.GameLogic.GameStates
 
         public override object Exit()
         {
+            selectedAction.ExecuteAction();
             return selectedAction;
         }
     }

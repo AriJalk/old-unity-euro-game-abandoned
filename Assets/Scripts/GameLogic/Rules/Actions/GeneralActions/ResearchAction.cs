@@ -9,14 +9,13 @@ namespace EDBG.GameLogic.Rules
 
         public override void ExecuteAction()
         {
-            player.DiscStock -= Bonus;
+            TargetPlayer.DiscStock -= Bonus;
             CanExecute = false;
         }
 
-        public override void SetAction(Player player)
+        public override void SetAction()
         {
-            base.SetAction(player);
-            if (player.DiscStock > 0)
+            if (TargetPlayer.DiscStock > 0)
                 CanExecute = true;
         }
     }

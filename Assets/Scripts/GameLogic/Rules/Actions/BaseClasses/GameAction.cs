@@ -2,7 +2,7 @@ namespace EDBG.GameLogic.Rules
 {
     public abstract class GameAction
     {
-        protected Player targetPlayer;
+        public Player TargetPlayer { get; set; }
         public string Name { get; protected set; }
         public string Description { get; protected set; }
         public bool CanExecute { get; protected set; }
@@ -14,7 +14,7 @@ namespace EDBG.GameLogic.Rules
             Description = description;
             CanExecute = false;
             DieFace = dieFace;
-            this.targetPlayer = targetPlayer;
+            TargetPlayer = targetPlayer;
         }
 
         public abstract void ExecuteAction();

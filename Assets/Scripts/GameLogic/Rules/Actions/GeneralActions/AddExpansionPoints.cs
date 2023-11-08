@@ -8,12 +8,11 @@
 
         public override void ExecuteAction()
         {
-            player.ExpansionPoints += Bonus;
+            TargetPlayer.ExpansionPoints += Bonus;
         }
 
-        public override void SetAction(Player player)
+        public override void SetAction()
         {
-            base.SetAction(player);
             CanExecute = true;
         }
     }

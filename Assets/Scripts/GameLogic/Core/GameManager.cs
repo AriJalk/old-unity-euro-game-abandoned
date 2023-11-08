@@ -203,7 +203,7 @@ namespace EDBG.GameLogic.Core
                 GameAction gAction = currentGameState.Exit() as GameAction;
                 if (gAction != null)
                 {
-
+                    GameUI.BuildInfo(gAction.TargetPlayer);
                 }
             }
         }
