@@ -33,7 +33,7 @@ namespace EDBG.GameLogic.Core
 
         private UIGameState currentGameState;
 
-        private GameLogicState currentGameLogicState
+        private GameLogicState CurrentGameLogicState
         {
             get
             {
@@ -62,7 +62,7 @@ namespace EDBG.GameLogic.Core
 
             //Draw map at head of stack
 
-            engineManager.MapRenderer.RenderMap(currentGameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
+            engineManager.MapRenderer.RenderMap(CurrentGameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
             currentGameState = new ChooseActionState(GameUI);
@@ -162,7 +162,7 @@ namespace EDBG.GameLogic.Core
             newState.DiceTray = new DiceTray();
             newState.DiceTray.SetDice(5);
             newState.DiceTray.RollAllDice();
-            newState.CurrentPlayer = newState.PlayerList[0];
+            newState.CurrentPlayerIndex = 0;
             gameLogicStateStack.Push(newState);
 
             uiEvents = new UIEvents();
@@ -214,16 +214,17 @@ namespace EDBG.GameLogic.Core
             }
             else
             {
-                gameLogicStateStack.Push((GameLogicState)currentGameLogicState.Clone());
+                gameLogicStateStack.Push((GameLogicState)CurrentGameLogicState.Clone());
                 currentGameState.Update(action);
                 if (currentGameState.CanExit)
                 {
                     UIAction uiAction = currentGameState.Exit() as UIAction;
-                    CorpAction corpAction = currentGameLogicState.CurrentPlayer.Corporation.CorpActions[uiAction.DieFace - 1];
-                    corpAction.SetAction(currentGameLogicState.CurrentPlayer);
+                    CorpAction corpAction = CurrentGameLogicState.GetCurrentPlayer().Corporation.CorpActions[uiAction.DieFace - 1];
+                    corpAction.SetAction(CurrentGameLogicState.GetCurrentPlayer());
                     if (corpAction.CanExecute)
                         corpAction.ExecuteAction();
-                    GameUI.BuildInfo(currentGameLogicState.CurrentPlayer);
+                    GameUI.BuildInfo(CurrentGameLogicState.PlayerList[0]);
+                    //GameUI.BuildInfo(currentGameLogicState.PlayerList[1]);
 
                 }
             }
@@ -234,7 +235,7 @@ namespace EDBG.GameLogic.Core
             if (gameLogicStateStack.Count > 1)
             {
                 gameLogicStateStack.Pop();
-                GameUI.BuildInfo(currentGameLogicState.CurrentPlayer);
+                GameUI.BuildInfo(CurrentGameLogicState.GetCurrentPlayer());
             }
         }
     }

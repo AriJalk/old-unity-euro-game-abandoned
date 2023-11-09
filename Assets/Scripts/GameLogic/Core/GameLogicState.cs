@@ -9,15 +9,18 @@ namespace EDBG.GameLogic.Core
 {
     public class GameLogicState : ICloneable
     {
-
+        public int CurrentPlayerIndex {  get; set; }
         public MapGrid MapGrid { get; set; }
         public DiceTray DiceTray { get; set; }
-        public Player CurrentPlayer { get; set; }
+
+
+
         public List<Player> PlayerList { get; set; }
 
         public GameLogicState(MapGrid mapGrid)
         {
             MapGrid = mapGrid;
+            PlayerList = new List<Player>();
         }
 
         private GameLogicState(GameLogicState other)
@@ -30,14 +33,13 @@ namespace EDBG.GameLogic.Core
                 }
                 if (other.DiceTray != null)
                     DiceTray = (DiceTray)other.DiceTray.Clone();  
-                if (other.CurrentPlayer != null)
-                    CurrentPlayer = (Player)other.CurrentPlayer.Clone();
+                CurrentPlayerIndex = other.CurrentPlayerIndex;
                 if (other.PlayerList != null)
                 {
                     PlayerList = new List<Player>();
                     foreach(Player player in other.PlayerList)
                     {
-                        PlayerList.Add(player);
+                        PlayerList.Add((Player)player.Clone());
                     }
                 }
             }
@@ -46,6 +48,11 @@ namespace EDBG.GameLogic.Core
         public object Clone()
         {
             return new GameLogicState(this);
+        }
+
+        public Player GetCurrentPlayer()
+        {
+            return PlayerList[CurrentPlayerIndex];
         }
     }
 }
