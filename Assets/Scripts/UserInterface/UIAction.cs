@@ -7,8 +7,7 @@ using UnityEngine.UI;
 namespace EDBG.UserInterface {
     public class UIAction : MonoBehaviour
     {
-        public GameAction GameAction { get; set; }
-
+        public int DieFace;
         public TextMeshProUGUI TextBox;
         public Button Button;
 

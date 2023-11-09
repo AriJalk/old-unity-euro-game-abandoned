@@ -17,27 +17,12 @@ namespace EDBG.GameLogic.Rules
         Red=PieceColors.Red,
     }
 
-    public enum EntityNames
-    {
-        Map,
-        Player,
-        Bot,
-        Neutral,
-        Disc,
-        Tile,
-        SourceTile,
-        TargetTile,
-        ActionToken,
-        ActionCard,
-        DiscStack,
-        Cube,
-    }
 
     public enum Ownership
     {
-        Player = EntityNames.Player,
-        Bot= EntityNames.Bot,
-        Neutral= EntityNames.Neutral,
+        HumanPlayer,
+        BotPlayer,
+        Neutral,
     }
 
     public enum PieceColors
@@ -75,5 +60,13 @@ namespace EDBG.GameLogic.Rules
         Red,
         Green,
         Blue
+    }
+
+    public enum CorporationActions
+    {
+        AddExpansionPoints,
+        AddMarketPoints,
+        MoveDisc,
+        Research,
     }
 }

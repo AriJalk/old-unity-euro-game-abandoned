@@ -2,17 +2,17 @@
 {
     public class BeginnerCorporation : Corporation
     {
-        public BeginnerCorporation(Player player) : base(player)
+        public BeginnerCorporation(Ownership ownership) : base()
         {
             Name = "Beginner Corporation";
             Description = "Simpler actions touching only core mechanics, good for learning the core aspects of the game";
 
-            switch (player.GetType().Name)
+            switch (ownership)
             {
-                case "HumanPlayer":
+                case Ownership.HumanPlayer:
                     BuildHumanCorporation();
                     break;
-                case "BotPlayer":
+                case Ownership.BotPlayer:
                     BuildBotCorporation();
                     break;
                 default:
@@ -23,24 +23,24 @@
 
         private void BuildHumanCorporation()
         {
-            Actions = new GameAction[6];
-            Actions[0] = new AddExpansionPoints(1, 2, player);
-            Actions[1] = new AddExpansionPoints(2, 2, player);
-            Actions[2] = new AddMarketPoints(3, 2, player);
-            Actions[3] = new AddMarketPoints(4, 2, player);
-            Actions[4] = new AddMarketPoints(5, 2, player);
-            Actions[5] = new MoveDiscAction(6, player);
+            CorpActions = new CorpAction[6];
+            CorpActions[0] = new AddExpansionPointsAction(1, 2);
+            CorpActions[1] = new AddExpansionPointsAction(2, 2);
+            CorpActions[2] = new AddExpansionPointsAction(3, 2);
+            CorpActions[3] = new AddMarketPointsAction(4, 2);
+            CorpActions[4] = new AddMarketPointsAction(5, 2);
+            CorpActions[5] = new AddMarketPointsAction(6, 2);
         }
 
         private void BuildBotCorporation()
         {
-            Actions = new GameAction[6];
-            Actions[0] = new BotBuildAction(1, player);
-            Actions[1] = new BotBuildAction(2, player);
-            Actions[2] = new BotMarketAction(3, player);
-            Actions[3] = new BotMarketAction(4, player);
-            Actions[4] = new ResearchAction(5, 2, player);
-            Actions[5] = new ResearchAction(6, 2, player);
+            CorpActions = new CorpAction[6];
+            CorpActions[0] = new AddExpansionPointsAction(1, 2);
+            CorpActions[1] = new AddExpansionPointsAction(2, 2);
+            CorpActions[2] = new AddExpansionPointsAction(3, 2);
+            CorpActions[3] = new AddMarketPointsAction(4, 2);
+            CorpActions[4] = new AddMarketPointsAction(5, 2);
+            CorpActions[5] = new AddMarketPointsAction(6, 2);
         }
     }
 }

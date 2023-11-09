@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 
 namespace EDBG.GameLogic.Rules
@@ -9,8 +10,6 @@ namespace EDBG.GameLogic.Rules
     /// </summary>
     public abstract class Corporation : ICloneable
     {
-        protected Player player;
-
         private string _name;
         public string Name
         {
@@ -25,17 +24,19 @@ namespace EDBG.GameLogic.Rules
             set { _description = value; }
         }
 
+        private CorpAction[] _corpAction;
 
-        private GameAction[] _actions;
-        public GameAction[] Actions
+        public CorpAction[] CorpActions
         {
-            get { return _actions; }
-            set { _actions = value; }
+            get { return _corpAction; }
+            set { _corpAction = value; }
         }
 
-        public Corporation(Player player)
+
+
+        public Corporation()
         {
-            this.player = player;
+
         }
 
         public object Clone()

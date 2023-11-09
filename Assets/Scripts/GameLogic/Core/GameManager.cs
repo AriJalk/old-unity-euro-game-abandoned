@@ -23,6 +23,7 @@ namespace EDBG.GameLogic.Core
 
         private GameEngineManager engineManager;
         private Stack<GameLogicState> gameLogicStateStack;
+        private UIEvents uiEvents;
 
         public Transform GameWorld;
         public CameraController CameraController;
@@ -36,10 +37,14 @@ namespace EDBG.GameLogic.Core
         {
             get
             {
-                return gameLogicStateStack.Peek();
+                if(gameLogicStateStack.Count > 0)
+                {
+                    return gameLogicStateStack.Peek();
+                }
+                return null;
             }
         }
-        public UIEvents uiEvents { get; private set; }
+
 
 
 
@@ -103,7 +108,7 @@ namespace EDBG.GameLogic.Core
                         if (hit.transform.GetComponent<DieObject>() is DieObject die)
                         {
                             currentGameState.Update(die);
-                            
+
                         }
                     }
                     break;
@@ -151,12 +156,13 @@ namespace EDBG.GameLogic.Core
             GameLogicState newState = new GameLogicState(mapGrid);
 
             newState.PlayerList = new List<Player>() {
-                new HumanPlayer("Player", 10, typeof(BeginnerCorporation)),
-                new BotPlayer("Bot", 10, typeof(BeginnerCorporation)),
+                new HumanPlayer("Player", 10, new BeginnerCorporation(Ownership.HumanPlayer)),
+                new BotPlayer("Bot", 10, new BeginnerCorporation(Ownership.BotPlayer)),
             };
             newState.DiceTray = new DiceTray();
             newState.DiceTray.SetDice(5);
             newState.DiceTray.RollAllDice();
+            newState.CurrentPlayer = newState.PlayerList[0];
             gameLogicStateStack.Push(newState);
 
             uiEvents = new UIEvents();
@@ -187,7 +193,7 @@ namespace EDBG.GameLogic.Core
             engineManager.PrefabManager.RegisterPrefab<DiscObject>(discPrefab);
 
             GameObject diePrefab = Resources.Load<GameObject>("Prefabs/3D/DiePrefab");
-            if(diePrefab == null)
+            if (diePrefab == null)
             {
                 Debug.Log("Die Prefab is not found in Resources/Prefabs/3D/DiePrefab");
                 return;
@@ -197,14 +203,38 @@ namespace EDBG.GameLogic.Core
 
         private void ActionSelected(UIAction action)
         {
-            currentGameState.Update(action);
-            if (currentGameState.CanExit)
+            if (action.name == "ConfirmAction")
             {
-                GameAction gAction = currentGameState.Exit() as GameAction;
-                if (gAction != null)
+                Debug.Log("Confirm");
+            }
+            else if (action.name == "UndoAction")
+            {
+                Debug.Log("Undo");
+                UndoState();
+            }
+            else
+            {
+                gameLogicStateStack.Push((GameLogicState)currentGameLogicState.Clone());
+                currentGameState.Update(action);
+                if (currentGameState.CanExit)
                 {
-                    GameUI.BuildInfo(gAction.TargetPlayer);
+                    UIAction uiAction = currentGameState.Exit() as UIAction;
+                    CorpAction corpAction = currentGameLogicState.CurrentPlayer.Corporation.CorpActions[uiAction.DieFace - 1];
+                    corpAction.SetAction(currentGameLogicState.CurrentPlayer);
+                    if (corpAction.CanExecute)
+                        corpAction.ExecuteAction();
+                    GameUI.BuildInfo(currentGameLogicState.CurrentPlayer);
+
                 }
+            }
+        }
+
+        private void UndoState()
+        {
+            if (gameLogicStateStack.Count > 1)
+            {
+                gameLogicStateStack.Pop();
+                GameUI.BuildInfo(currentGameLogicState.CurrentPlayer);
             }
         }
     }

@@ -17,7 +17,7 @@ namespace EDBG.GameLogic.Core
 
         public GameLogicState(MapGrid mapGrid)
         {
-            this.MapGrid = mapGrid;
+            MapGrid = mapGrid;
         }
 
         private GameLogicState(GameLogicState other)

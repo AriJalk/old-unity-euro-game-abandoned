@@ -8,7 +8,8 @@ namespace EDBG.GameLogic.GameStates
     public class ChooseActionState : UIGameState
     {
         private DieObject selectedDie;
-        private GameAction selectedAction;
+        private UIAction selectedAction;
+
 
         public ChooseActionState(GameUI gameUI) : base(gameUI)
         {
@@ -17,7 +18,7 @@ namespace EDBG.GameLogic.GameStates
 
         public override void Enter()
         {
-            gameUI.SetElementLock(GameUI.UIElements.PlayerActions, true);
+            gameUI.SetElementLock(GameUI.UIElements.HumanPlayerActions, true);
             gameUI.StatusText.text = "Select 1 available die";
         }
 
@@ -33,13 +34,14 @@ namespace EDBG.GameLogic.GameStates
                     selectedDie.Highlight.gameObject.SetActive(false);
                 selectedDie = die;
                 selectedDie.Highlight.gameObject.SetActive(true);
-                gameUI.SetActionLock(selectedDie.Die.Result);
+                gameUI.SetDieActionLock(selectedDie.Die.Result);
                 gameUI.StatusText.text = "Select matching action or another die";
             }
             if (parameter is UIAction action)
             {
-                selectedAction = action.GameAction;
-                CanExit = true;
+                if(action.DieFace == selectedDie.Die.Result)
+                    selectedAction = action;
+                    CanExit = true;
             }
         }
 
@@ -51,7 +53,6 @@ namespace EDBG.GameLogic.GameStates
 
         public override object Exit()
         {
-            selectedAction.ExecuteAction();
             return selectedAction;
         }
     }

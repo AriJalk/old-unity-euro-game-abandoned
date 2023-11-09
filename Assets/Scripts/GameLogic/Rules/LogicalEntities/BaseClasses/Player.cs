@@ -52,22 +52,14 @@ namespace EDBG.GameLogic.Rules
         }
 
 
-        public Player(string name, int discStock, Type corporationType)
+        public Player(string name, int discStock, Corporation corporation)
         {
             _name = name;
             _discStock = discStock;
 
             _expansionPoints = 0;
             _marketPoints = 0;
-
-            if (typeof(Corporation).IsAssignableFrom(corporationType))
-            {
-                _corporation = (Corporation)Activator.CreateInstance(corporationType, this);
-            }
-            else
-            {
-                throw new ArgumentException("Invalid Corporation type.");
-            }
+            _corporation = corporation;
         }
 
 
