@@ -28,6 +28,10 @@ public class DiceTrayObject : MonoBehaviour
     //TODO: more than 5 dice
     public void SetDice(DiceTray diceTray, PrefabManager prefabManager)
     {
+        foreach(DieObject die in transform.GetComponentsInChildren<DieObject>())
+        {
+            prefabManager.ReturnPoolObject(die);
+        }
         this.diceTray = diceTray;
         for (int i = 0; i < diceTray.Dice.Count; i++)
         {

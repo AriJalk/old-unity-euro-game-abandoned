@@ -49,7 +49,7 @@ namespace EDBG.GameLogic.Components
             _color = die.Color;
         }
 
-        public Die(int face, PieceColors color)
+        public Die(int index, int face, PieceColors color)
         {
             _result = face;
             _color = color;

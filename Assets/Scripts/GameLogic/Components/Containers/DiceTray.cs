@@ -52,6 +52,21 @@ namespace EDBG.GameLogic.Components
             }
         }
 
+        public void RemoveDie(Die d)
+        {
+            foreach (Die die in Dice)
+            {
+                if (d.Result == die.Result)
+                {
+                    {
+                        Dice.Remove(die);
+                        return;
+                    }
+                }
+            }
+        }
+
+
         public object Clone()
         {
             return new DiceTray(this);

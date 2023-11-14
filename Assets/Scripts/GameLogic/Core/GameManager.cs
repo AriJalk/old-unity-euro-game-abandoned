@@ -10,8 +10,8 @@ using EDBG.Utilities.DataTypes;
 using EDBG.GameLogic.Rules;
 using EDBG.GameLogic.MapSystem;
 using EDBG.GameLogic.Components;
-using EDBG.GameLogic.GameStates;
 using EDBG.UserInterface;
+using Unity.VisualScripting;
 
 namespace EDBG.GameLogic.Core
 {
@@ -22,30 +22,14 @@ namespace EDBG.GameLogic.Core
     {
 
         private GameEngineManager engineManager;
-        private Stack<GameLogicState> gameLogicStateStack;
         private UIEvents uiEvents;
+        private StateManager stateManager;
 
         public Transform GameWorld;
         public CameraController CameraController;
         public Camera DiceCamera;
         public GameUI GameUI;
         public DiceTrayObject DiceTrayObject;
-
-        private UIGameState currentGameState;
-
-        private GameLogicState CurrentGameLogicState
-        {
-            get
-            {
-                if(gameLogicStateStack.Count > 0)
-                {
-                    return gameLogicStateStack.Peek();
-                }
-                return null;
-            }
-        }
-
-
 
 
         void Start()
@@ -62,11 +46,10 @@ namespace EDBG.GameLogic.Core
 
             //Draw map at head of stack
 
-            engineManager.MapRenderer.RenderMap(CurrentGameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
+            engineManager.MapRenderer.RenderMap(stateManager.CurrentState.GameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
-            currentGameState = new ChooseActionState(GameUI);
-            currentGameState.Enter();
+          
 
 
 
@@ -98,21 +81,17 @@ namespace EDBG.GameLogic.Core
         {
             Ray ray = DiceCamera.ScreenPointToRay(position);
             LayerMask layerMask;
-            switch (currentGameState.GetType().Name)
+            layerMask = LayerMask.GetMask("Die");
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
             {
-                case "ChooseActionState":
-                    layerMask = LayerMask.GetMask("Die");
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
-                    {
-                        if (hit.transform.GetComponent<DieObject>() is DieObject die)
-                        {
-                            currentGameState.Update(die);
+                DieObject obj = hit.transform.GetComponent<DieObject>();
+                stateManager.NextState();
+                stateManager.CurrentState.GameLogicState.DiceTray.RemoveDie(obj.Die);
+                DiceTrayObject.SetDice(stateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
 
-                        }
-                    }
-                    break;
             }
+           
         }
 
         void ZoomCamera(float deltaY)
@@ -123,8 +102,7 @@ namespace EDBG.GameLogic.Core
         //TODO: builder class
         void CreateTestGame()
         {
-            gameLogicStateStack = new Stack<GameLogicState>();
-
+            stateManager = new StateManager();
             MapGrid mapGrid = new MapGrid(4, 4);
 
             int[] array = new[] { 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6 };
@@ -163,7 +141,7 @@ namespace EDBG.GameLogic.Core
             newState.DiceTray.SetDice(5);
             newState.DiceTray.RollAllDice();
             newState.CurrentPlayerIndex = 0;
-            gameLogicStateStack.Push(newState);
+            stateManager.NextState(newState);
 
             uiEvents = new UIEvents();
             uiEvents.SubscribeToAllEvents(ActionSelected);
@@ -214,29 +192,14 @@ namespace EDBG.GameLogic.Core
             }
             else
             {
-                gameLogicStateStack.Push((GameLogicState)CurrentGameLogicState.Clone());
-                currentGameState.Update(action);
-                if (currentGameState.CanExit)
-                {
-                    UIAction uiAction = currentGameState.Exit() as UIAction;
-                    CorpAction corpAction = CurrentGameLogicState.GetCurrentPlayer().Corporation.CorpActions[uiAction.DieFace - 1];
-                    corpAction.SetAction(CurrentGameLogicState.GetCurrentPlayer());
-                    if (corpAction.CanExecute)
-                        corpAction.ExecuteAction();
-                    GameUI.BuildInfo(CurrentGameLogicState.PlayerList[0]);
-                    //GameUI.BuildInfo(currentGameLogicState.PlayerList[1]);
 
-                }
             }
         }
 
         private void UndoState()
         {
-            if (gameLogicStateStack.Count > 1)
-            {
-                gameLogicStateStack.Pop();
-                GameUI.BuildInfo(CurrentGameLogicState.GetCurrentPlayer());
-            }
+            stateManager.UndoState();
+            DiceTrayObject.SetDice(stateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
         }
     }
 }
