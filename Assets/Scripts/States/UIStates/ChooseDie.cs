@@ -14,7 +14,7 @@ namespace EDBG.States
 
         public ChooseDie()
         {
-
+            
         }
 
         public object Clone()

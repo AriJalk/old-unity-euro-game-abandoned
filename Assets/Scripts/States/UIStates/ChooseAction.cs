@@ -13,10 +13,9 @@ namespace EDBG.States
             ChosenDie = other.ChosenDie;
         }
 
-        public ChooseAction(DieObject chosenDie, GameUI ui)
+        public ChooseAction(DieObject chosenDie)
         {
             ChosenDie = chosenDie;
-            SetUI(ui);
         }
 
         public object Clone()

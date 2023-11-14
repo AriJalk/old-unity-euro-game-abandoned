@@ -98,6 +98,7 @@ namespace EDBG.GameLogic.Core
                 {
                     if(StateManager.CurrentState.UIState.Name=="ChooseAction")
                     {
+                        //TODO: highlight state
                         DieObject previousDie = ((ChooseAction)StateManager.CurrentState.UIState).ChosenDie;
                         previousDie.Highlight.gameObject.SetActive(false);
                     }
@@ -105,7 +106,8 @@ namespace EDBG.GameLogic.Core
                     obj.Highlight.gameObject.SetActive(true);
                     //StateManager.CurrentState.GameLogicState.DiceTray.RemoveDie(int.Parse(obj.name));
                     //DiceTrayObject.SetDice(StateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
-                    StateManager.NextState(new ChooseAction(obj, GameUI));
+                    StateManager.NextState(new ChooseAction(obj));
+                    StateManager.CurrentState.UIState.SetUI(GameUI);
                 }
             }
 
@@ -158,14 +160,16 @@ namespace EDBG.GameLogic.Core
             newState.DiceTray.SetDice(5);
             newState.DiceTray.RollAllDice();
             newState.CurrentPlayerIndex = 0;
-            GameState gameState = new GameState(newState, new ChooseDie());
-            StateManager.NextState(gameState);
+            DiceTrayObject.SetDice(newState.DiceTray, engineManager.PrefabManager);
+            GameState initialState = new GameState(newState, new ChooseDie());
+            StateManager.NextState(initialState);
             uiEvents = new UIEvents();
             uiEvents.SubscribeToAllEvents(ActionSelected);
 
             //TODO: index
             GameUI.Initialize(this, uiEvents);
-            DiceTrayObject.SetDice(newState.DiceTray, engineManager.PrefabManager);
+
+            StateManager.CurrentState.UIState.SetUI(GameUI);
         }
 
         private void LoadPrefabs()
