@@ -66,6 +66,11 @@ namespace EDBG.GameLogic.Components
             }
         }
 
+        public void RemoveDie(int index)
+        {
+            Dice.RemoveAt(index);
+        }
+
 
         public object Clone()
         {

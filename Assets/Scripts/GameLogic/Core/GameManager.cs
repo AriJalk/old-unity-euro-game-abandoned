@@ -12,6 +12,7 @@ using EDBG.GameLogic.MapSystem;
 using EDBG.GameLogic.Components;
 using EDBG.UserInterface;
 using Unity.VisualScripting;
+using EDBG.States;
 
 namespace EDBG.GameLogic.Core
 {
@@ -20,10 +21,11 @@ namespace EDBG.GameLogic.Core
     /// </summary>
     public class GameManager : MonoBehaviour
     {
+        public StateManager StateManager { get; private set; }
 
         private GameEngineManager engineManager;
         private UIEvents uiEvents;
-        private StateManager stateManager;
+
 
         public Transform GameWorld;
         public CameraController CameraController;
@@ -46,10 +48,11 @@ namespace EDBG.GameLogic.Core
 
             //Draw map at head of stack
 
-            engineManager.MapRenderer.RenderMap(stateManager.CurrentState.GameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
+            engineManager.MapRenderer.RenderMap(StateManager.CurrentState.GameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
-          
+
+
 
 
 
@@ -59,6 +62,11 @@ namespace EDBG.GameLogic.Core
         void Update()
         {
             engineManager.InputHandler.Listen();
+        }
+
+        private void OnDestroy()
+        {
+            uiEvents.UnsubscribeToAllEvents(ActionSelected);
         }
 
 
@@ -77,21 +85,30 @@ namespace EDBG.GameLogic.Core
             CameraController.UpdateAspectRatio(e.NewWidth, e.NewHeight);
         }
 
+        //TODO: move to UI
         void SelectObject(bool[] mouseButtons, Vector2 position)
         {
-            Ray ray = DiceCamera.ScreenPointToRay(position);
-            LayerMask layerMask;
-            layerMask = LayerMask.GetMask("Die");
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+            if (StateManager.CurrentState.UIState.Name == "ChooseDie" || StateManager.CurrentState.UIState.Name == "ChooseAction")
             {
-                DieObject obj = hit.transform.GetComponent<DieObject>();
-                stateManager.NextState();
-                stateManager.CurrentState.GameLogicState.DiceTray.RemoveDie(obj.Die);
-                DiceTrayObject.SetDice(stateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
-
+                Ray ray = DiceCamera.ScreenPointToRay(position);
+                LayerMask layerMask;
+                layerMask = LayerMask.GetMask("Die");
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+                {
+                    if(StateManager.CurrentState.UIState.Name=="ChooseAction")
+                    {
+                        DieObject previousDie = ((ChooseAction)StateManager.CurrentState.UIState).ChosenDie;
+                        previousDie.Highlight.gameObject.SetActive(false);
+                    }
+                    DieObject obj = hit.transform.GetComponent<DieObject>();
+                    obj.Highlight.gameObject.SetActive(true);
+                    //StateManager.CurrentState.GameLogicState.DiceTray.RemoveDie(int.Parse(obj.name));
+                    //DiceTrayObject.SetDice(StateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
+                    StateManager.NextState(new ChooseAction(obj, GameUI));
+                }
             }
-           
+
         }
 
         void ZoomCamera(float deltaY)
@@ -102,7 +119,7 @@ namespace EDBG.GameLogic.Core
         //TODO: builder class
         void CreateTestGame()
         {
-            stateManager = new StateManager();
+            StateManager = new StateManager();
             MapGrid mapGrid = new MapGrid(4, 4);
 
             int[] array = new[] { 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6 };
@@ -131,7 +148,7 @@ namespace EDBG.GameLogic.Core
                 }
             }
 
-            GameLogicState newState = new GameLogicState(mapGrid);
+            LogicState newState = new LogicState(mapGrid);
 
             newState.PlayerList = new List<Player>() {
                 new HumanPlayer("Player", 10, new BeginnerCorporation(Ownership.HumanPlayer)),
@@ -141,13 +158,13 @@ namespace EDBG.GameLogic.Core
             newState.DiceTray.SetDice(5);
             newState.DiceTray.RollAllDice();
             newState.CurrentPlayerIndex = 0;
-            stateManager.NextState(newState);
-
+            GameState gameState = new GameState(newState, new ChooseDie());
+            StateManager.NextState(gameState);
             uiEvents = new UIEvents();
             uiEvents.SubscribeToAllEvents(ActionSelected);
 
             //TODO: index
-            GameUI.Initialize(newState.PlayerList[0], newState.PlayerList[1], uiEvents);
+            GameUI.Initialize(this, uiEvents);
             DiceTrayObject.SetDice(newState.DiceTray, engineManager.PrefabManager);
         }
 
@@ -198,8 +215,8 @@ namespace EDBG.GameLogic.Core
 
         private void UndoState()
         {
-            stateManager.UndoState();
-            DiceTrayObject.SetDice(stateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
+            StateManager.UndoState(GameUI);
+            DiceTrayObject.SetDice(StateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
         }
     }
 }

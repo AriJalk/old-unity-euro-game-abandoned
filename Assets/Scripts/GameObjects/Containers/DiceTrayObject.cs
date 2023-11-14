@@ -43,6 +43,7 @@ public class DiceTrayObject : MonoBehaviour
             }
             dieObject.Die = diceTray.Dice[i];
             dieObject.transform.SetParent(transform);
+            dieObject.transform.name = i.ToString();
             //Arrange in rows
             float xMod = 0f;
             float zMod = 0f;

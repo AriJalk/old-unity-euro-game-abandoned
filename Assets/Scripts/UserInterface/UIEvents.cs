@@ -10,6 +10,10 @@ namespace EDBG.UserInterface
         {
             ActionSelected += action;
         }
+        public void UnsubscribeToAllEvents(Action<UIAction> action)
+        {
+            ActionSelected -= action;
+        }
 
         public void SelectAction(UIAction action)
         {

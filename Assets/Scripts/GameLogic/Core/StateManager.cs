@@ -32,16 +32,29 @@ namespace EDBG.GameLogic.Core
             }
         }
 
-        public void NextState(GameLogicState state)
+        /// <summary>
+        /// Used for initialization
+        /// </summary>
+        /// <param name="state"></param>
+        public void NextState(GameState state)
         {
-            _stateStack.Push(new GameState(state));
+            if(_stateStack != null)
+            {
+                _stateStack.Push(state);
+            }
         }
 
-        public void UndoState()
+        public void NextState(IUIState gameState)
+        {
+            _stateStack.Push(new GameState(CurrentState.GameLogicState.Clone() as LogicState, gameState));
+        }
+
+        public void UndoState(GameUI ui)
         {
             if( _stateStack.Count > 1 ) 
             {
                 _stateStack.Pop();
+                CurrentState.UIState.SetUI(ui);
             }
         }
     }

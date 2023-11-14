@@ -7,7 +7,7 @@ using EDBG.GameLogic.Rules;
 
 namespace EDBG.GameLogic.Core
 {
-    public class GameLogicState : ICloneable
+    public class LogicState : ICloneable
     {
         public int CurrentPlayerIndex {  get; set; }
         public MapGrid MapGrid { get; set; }
@@ -17,13 +17,13 @@ namespace EDBG.GameLogic.Core
 
         public List<Player> PlayerList { get; set; }
 
-        public GameLogicState(MapGrid mapGrid)
+        public LogicState(MapGrid mapGrid)
         {
             MapGrid = mapGrid;
             PlayerList = new List<Player>();
         }
 
-        private GameLogicState(GameLogicState other)
+        private LogicState(LogicState other)
         {
             if (other != null)
             {
@@ -47,7 +47,7 @@ namespace EDBG.GameLogic.Core
 
         public object Clone()
         {
-            return new GameLogicState(this);
+            return new LogicState(this);
         }
 
         public Player GetCurrentPlayer()
