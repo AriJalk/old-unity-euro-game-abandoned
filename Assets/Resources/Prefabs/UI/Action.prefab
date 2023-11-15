@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1470a7fcb23763c47afd4c1ca80f9934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DieFace: 0
   TextBox: {fileID: 1555642482725805266}
   Button: {fileID: 6846519377256214475}
 --- !u!1 &1821829048383331394
@@ -238,7 +239,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Action 1
+  m_text: Action
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

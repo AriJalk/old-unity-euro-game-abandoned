@@ -8,6 +8,7 @@ using TMPro;
 using System.Collections.Generic;
 using System.Linq;
 using EDBG.GameLogic.Core;
+using EDBG.Engine.ResourceManagement;
 
 namespace EDBG.UserInterface
 {
@@ -30,10 +31,11 @@ namespace EDBG.UserInterface
 
         private GameManager gameManager;
         private UIEvents uiEvents;
-        public UIAction[] HumanActions { get; private set; }
-        public UIAction[] BotActions { get; private set; }
+        public List<UIAction> HumanActions { get; private set; }
+        public List<UIAction> BotActions { get; private set; }
 
         public TextMeshProUGUI StatusText;
+        public UIAction UIActionPrefab;
 
 
         void Start()
@@ -43,7 +45,7 @@ namespace EDBG.UserInterface
 
         private void Update()
         {
-            
+
         }
 
         public void Initialize(GameManager manager, UIEvents uIEvents)
@@ -52,7 +54,7 @@ namespace EDBG.UserInterface
             actionPanel = transform.Find("ActionPanel");
             humanActionPanel = actionPanel.Find("HumanActions");
             botActionPanel = actionPanel.Find("BotActions");
-            gameCommands = transform.Find("GameCommands");
+            gameCommands = transform.Find("StatusBar").Find("GameCommands");
             confirmAction = gameCommands.Find("ConfirmAction").GetComponent<UIAction>();
             undoAction = gameCommands.Find("UndoAction").GetComponent<UIAction>();
             confirmAction.Button.onClick.AddListener(delegate { ActionClicked(confirmAction); });
@@ -65,31 +67,37 @@ namespace EDBG.UserInterface
         //TODO: dynamic action prefab in ui
         public void BuildActions()
         {
+            Transform actionPanel = transform.Find("ActionPanel").Find("HumanActions");
             HumanPlayer humanPlayer = gameManager.StateManager.CurrentState.GameLogicState.PlayerList[0] as HumanPlayer;
             BotPlayer botPlayer = gameManager.StateManager.CurrentState.GameLogicState.PlayerList[1] as BotPlayer;
-            HumanActions = new UIAction[humanPlayer.Corporation.CorpActions.Length];
-            if (humanActionPanel != null)
+            HumanActions = new List<UIAction>();
+            for (int i = 0; i < humanPlayer.Corporation.CorpActions.Length; i++)
             {
-                for (int i = 0; i < humanPlayer.Corporation.CorpActions.Length; i++)
+                for(int j = 0; j < humanPlayer.Corporation.CorpActions[i].DieFaces.Count; j++)
                 {
-                    UIAction action = humanActionPanel.Find($"Action{i + 1}").GetComponent<UIAction>();
-                    HumanActions[i] = action;
-                    action.DieFace = humanPlayer.Corporation.CorpActions[i].DieFace;
-                    action.TextBox.text = humanPlayer.Corporation.CorpActions[i].Name;
-                    action.Button.onClick.AddListener(delegate { ActionClicked(action); });
+                    Transform dieCell = actionPanel.Find($"Die{humanPlayer.Corporation.CorpActions[i].DieFaces[j]}").Find("Container");
+                    UIAction newAction = Instantiate(UIActionPrefab, dieCell);
+
+                    newAction.TextBox.text = humanPlayer.Corporation.CorpActions[i].Name;
+                    newAction.Button.onClick.AddListener(delegate { ActionClicked(newAction); });
+                    HumanActions.Add(newAction);
                 }
+                
             }
-            BotActions = new UIAction[botPlayer.Corporation.CorpActions.Length];
-            if (botActionPanel != null)
+            BotActions = new List<UIAction>();
+            actionPanel = transform.Find("ActionPanel").Find("BotActions");
+            for (int i = 0; i < botPlayer.Corporation.CorpActions.Length; i++)
             {
-                for (int i = 0; i < botPlayer.Corporation.CorpActions.Length; i++)
+                for (int j = 0; j < botPlayer.Corporation.CorpActions[i].DieFaces.Count; j++)
                 {
-                    UIAction action = botActionPanel.Find($"Action{i + 1}").GetComponent<UIAction>();
-                    BotActions[i] = action;
-                    action.DieFace = botPlayer.Corporation.CorpActions[i].DieFace;
-                    action.TextBox.text = botPlayer.Corporation.CorpActions[i].Name;
-                    action.Button.interactable = false;
+                    Transform dieCell = actionPanel.Find($"Die{botPlayer.Corporation.CorpActions[i].DieFaces[j]}").Find("Container");
+                    UIAction newAction = Instantiate(UIActionPrefab, dieCell);
+
+                    newAction.TextBox.text = botPlayer.Corporation.CorpActions[i].Name;
+                    newAction.Button.onClick.AddListener(delegate { ActionClicked(newAction); });
+                    BotActions.Add(newAction);
                 }
+
             }
 
         }

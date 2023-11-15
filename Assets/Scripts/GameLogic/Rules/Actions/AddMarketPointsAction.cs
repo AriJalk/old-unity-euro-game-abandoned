@@ -1,4 +1,6 @@
-﻿namespace EDBG.GameLogic.Rules
+﻿using System.Collections.Generic;
+
+namespace EDBG.GameLogic.Rules
 {
     public class AddMarketPointsAction : CorpAction
     {
@@ -17,10 +19,18 @@
             get { return _targetPlayer; }
             private set { _targetPlayer = value; }
         }
-
         public AddMarketPointsAction(int dieFace, int bonus)
         {
-            DieFace = dieFace;
+            DieFaces = new List<int>();
+            DieFaces.Add(dieFace);
+            Name = $"+{bonus}MP";
+            Description = $"Add {bonus} Market Points to player to use in current turn";
+            Bonus = bonus;
+        }
+
+        public AddMarketPointsAction(List<int> dieFaces, int bonus)
+        {
+            DieFaces = dieFaces;
             Name = $"+{bonus}MP";
             Description = $"Add {bonus} Market Points to player to use in current turn";
             Bonus = bonus;
