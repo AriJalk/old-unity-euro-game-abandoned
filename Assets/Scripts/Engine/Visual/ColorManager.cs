@@ -7,11 +7,23 @@ namespace EDBG.Engine.Visual
 {
     public class ColorManager
     {
+        private static ColorManager _instance;
+
+        public static ColorManager Instance
+        {
+            get 
+            {
+                return _instance; 
+            }
+        }
+
+
         MaterialManager materialManager;
 
         public ColorManager()
         {
             materialManager = GameEngineManager.Instance.MaterialManager;
+            _instance = this;
         }
 
         public Material GetDiscMaterial(DiscColors color)
@@ -21,7 +33,8 @@ namespace EDBG.Engine.Visual
 
         public Material GetTileMaterial(TileColors color)
         {
-            return materialManager.GetMaterial($"{color}Material");
+            //return materialManager.GetMaterial($"{color}Material");
+            return materialManager.GetMaterial($"DiscColors/{color}WoodMaterial");
         }
 
         public Material GetMaterial(string name)

@@ -8,17 +8,17 @@ namespace EDBG.GameLogic.MapSystem
     {
         public GamePosition GamePosition { get; set; }
 
-        private TileTypes _tileType;
+        private TileColors _tileColor;
 
-        public TileTypes TileType
+        public TileColors TileColor
         {
             get
             {
-                return _tileType;
+                return _tileColor;
             }
             set
             {
-                _tileType = value;
+                _tileColor = value;
             }
         }
 
@@ -30,25 +30,19 @@ namespace EDBG.GameLogic.MapSystem
         /// Regular constructor
         /// </summary>
         /// <param name="gamePosition"></param>
-        public MapTile(GamePosition gamePosition, int dieFace)
+        public MapTile(GamePosition gamePosition, int dieFace, TileColors color)
         {
-            TileType = TileTypes.Default;
+            TileColor = color;
             GamePosition = gamePosition;
             DieFace = dieFace;
         }
 
         public MapTile(MapTile tile)
         {
-            TileType = tile.TileType;
+            TileColor = tile.TileColor;
             GamePosition = tile.GamePosition;
             DieFace = tile.DieFace;
             ComponentOnTile = (IGameComponent)tile.ComponentOnTile.Clone();
-        }
-
-        public MapTile(TileTypes type, GamePosition gamePosition)
-        {
-            TileType = type;
-            GamePosition=gamePosition;
         }
 
         public object Clone()

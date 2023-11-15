@@ -4,15 +4,15 @@ using EDBG.Engine.Core;
 using EDBG.GameLogic.MapSystem;
 using System;
 using Unity.VisualScripting;
+using EDBG.GameLogic.Rules;
 
 namespace EDBG.Engine.Visual
 {
     public class MapRenderer : MonoBehaviour
     {
-
-
         //TODO: move to SquareMapHolder
         private SquareTileObject[,] tiles;
+
 
         // Start is called before the first frame update
         void Start()
@@ -50,7 +50,7 @@ namespace EDBG.Engine.Visual
                     tile.gameObject.isStatic = true;
                     tile.gameObject.SetActive(true);
                     tile.name = "Tile [" + col + "," + row + "]";
-                    tile.ApplyMaterial(GameEngineManager.Instance.MaterialManager.GetMaterial("TileMaterial"));
+                    tile.ApplyMaterial(ColorManager.Instance.GetTileMaterial(tile.TileData.TileColor));
                     tiles[row, col] = tile;
                     DrawDieFace(tile);
                     GameEngineManager.Instance.ObjectsRenderer.RenderObjectsOnTileObject(tile);

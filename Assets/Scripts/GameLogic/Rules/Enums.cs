@@ -2,10 +2,10 @@ namespace EDBG.GameLogic.Rules
 {
     public enum TileTypes
     {
-        Mountain,
-        Desert,
-        Forest,
-        City,
+        Mountain = TileColors.Red,
+        Desert = TileColors.Yellow,
+        Forest = TileColors.Green,
+        City = TileColors.White,
         Snowy,
         Default,
     }
@@ -53,6 +53,9 @@ namespace EDBG.GameLogic.Rules
         Red,
         Green,
         Blue,
+        Brown,
+        Yellow,
+
     }
 
     public enum TokenColors

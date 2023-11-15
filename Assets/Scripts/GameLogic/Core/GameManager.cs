@@ -70,53 +70,7 @@ namespace EDBG.GameLogic.Core
         }
 
 
-        void MoveCamera(Vector2 axis)
-        {
-            CameraController.MoveCamera(axis.x, axis.y);
-        }
-
-        /// <summary>
-        /// Called when the screen size changed due to orientation change
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ScreenChanged(object sender, ScreenChangedEventArgs e)
-        {
-            CameraController.UpdateAspectRatio(e.NewWidth, e.NewHeight);
-        }
-
-        //TODO: move to UI
-        void SelectObject(bool[] mouseButtons, Vector2 position)
-        {
-            if (StateManager.CurrentState.UIState.Name == "ChooseDie" || StateManager.CurrentState.UIState.Name == "ChooseAction")
-            {
-                Ray ray = DiceCamera.ScreenPointToRay(position);
-                LayerMask layerMask;
-                layerMask = LayerMask.GetMask("Die");
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
-                {
-                    if(StateManager.CurrentState.UIState.Name=="ChooseAction")
-                    {
-                        //TODO: highlight state
-                        DieObject previousDie = ((ChooseAction)StateManager.CurrentState.UIState).ChosenDie;
-                        previousDie.Highlight.gameObject.SetActive(false);
-                    }
-                    DieObject obj = hit.transform.GetComponent<DieObject>();
-                    obj.Highlight.gameObject.SetActive(true);
-                    //StateManager.CurrentState.GameLogicState.DiceTray.RemoveDie(int.Parse(obj.name));
-                    //DiceTrayObject.SetDice(StateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
-                    StateManager.NextState(new ChooseAction(obj));
-                    StateManager.CurrentState.UIState.SetUI(GameUI);
-                }
-            }
-
-        }
-
-        void ZoomCamera(float deltaY)
-        {
-            CameraController.ZoomCamera(deltaY / 5);
-        }
+       
 
         //TODO: builder class
         void CreateTestGame()
@@ -125,16 +79,25 @@ namespace EDBG.GameLogic.Core
             MapGrid mapGrid = new MapGrid(4, 4);
 
             int[] array = new[] { 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6 };
+            TileColors[] colorArray = new[]
+            {
+                TileColors.Red, TileColors.Red, TileColors.Red, TileColors.Red,
+                TileColors.Green, TileColors.Green, TileColors.Green, TileColors.Green,
+                TileColors.White, TileColors.White,TileColors.White, TileColors.White,
+                TileColors.Blue, TileColors.Blue,   TileColors.Blue, TileColors.Blue,
+            };
 
             EDBG.Utilities.UtilityFunctions.ShuffleArray(array);
+            EDBG.Utilities.UtilityFunctions.ShuffleArray(colorArray);
 
             Stack<int> faces = new Stack<int>(array);
+            Stack<TileColors> colors = new Stack<TileColors>(colorArray);
 
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 4; j++)
                 {
-                    MapTile tile = new MapTile(new GamePosition(i, j), faces.Pop());
+                    MapTile tile = new MapTile(new GamePosition(i, j), faces.Pop(), colors.Pop());
                     tile.ComponentOnTile = new GameStack<Disc>();
                     if (i == 0 && j == 0)
                     {
@@ -215,6 +178,53 @@ namespace EDBG.GameLogic.Core
             {
 
             }
+        }
+        void MoveCamera(Vector2 axis)
+        {
+            CameraController.MoveCamera(axis.x, axis.y);
+        }
+
+        /// <summary>
+        /// Called when the screen size changed due to orientation change
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ScreenChanged(object sender, ScreenChangedEventArgs e)
+        {
+            CameraController.UpdateAspectRatio(e.NewWidth, e.NewHeight);
+        }
+
+        //TODO: move to UI
+        void SelectObject(bool[] mouseButtons, Vector2 position)
+        {
+            if (StateManager.CurrentState.UIState.Name == "ChooseDie" || StateManager.CurrentState.UIState.Name == "ChooseAction")
+            {
+                Ray ray = DiceCamera.ScreenPointToRay(position);
+                LayerMask layerMask;
+                layerMask = LayerMask.GetMask("Die");
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+                {
+                    if (StateManager.CurrentState.UIState.Name == "ChooseAction")
+                    {
+                        //TODO: highlight state
+                        DieObject previousDie = ((ChooseAction)StateManager.CurrentState.UIState).ChosenDie;
+                        previousDie.Highlight.gameObject.SetActive(false);
+                    }
+                    DieObject obj = hit.transform.GetComponent<DieObject>();
+                    obj.Highlight.gameObject.SetActive(true);
+                    //StateManager.CurrentState.GameLogicState.DiceTray.RemoveDie(int.Parse(obj.name));
+                    //DiceTrayObject.SetDice(StateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
+                    StateManager.NextState(new ChooseAction(obj));
+                    StateManager.CurrentState.UIState.SetUI(GameUI);
+                }
+            }
+
+        }
+
+        void ZoomCamera(float deltaY)
+        {
+            CameraController.ZoomCamera(deltaY / 5);
         }
 
         private void UndoState()
