@@ -1,23 +1,5 @@
 namespace EDBG.GameLogic.Rules
 {
-    public enum TileTypes
-    {
-        Mountain = TileColors.Red,
-        Desert = TileColors.Yellow,
-        Forest = TileColors.Green,
-        City = TileColors.White,
-        Snowy,
-        Default,
-    }
-
-    public enum LocationTypes
-    {
-        Blue=PieceColors.Blue,
-        Green=PieceColors.Green,
-        Red=PieceColors.Red,
-    }
-
-
     public enum Ownership
     {
         HumanPlayer,
@@ -56,20 +38,5 @@ namespace EDBG.GameLogic.Rules
         Brown,
         Yellow,
 
-    }
-
-    public enum TokenColors
-    {
-        Red,
-        Green,
-        Blue
-    }
-
-    public enum CorporationActions
-    {
-        AddExpansionPoints,
-        AddMarketPoints,
-        MoveDisc,
-        Research,
     }
 }

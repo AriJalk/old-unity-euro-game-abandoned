@@ -9,18 +9,19 @@ namespace EDBG.States
     public class GameState : ICloneable
     {
         public LogicState GameLogicState { get; private set; }
-        public IUIState UIState { get; private set; }
+        public UIState UIState { get; private set; }
 
         private GameState(GameState other)
         {
             GameLogicState = other.GameLogicState.Clone() as LogicState;
-            UIState = other.UIState.Clone() as IUIState;
+            UIState = other.UIState;
+
         }
 
-        public GameState(LogicState logicState, IUIState uiState)
+        public GameState(LogicState logicState, UIState uIState)
         {
             GameLogicState = logicState;
-            UIState = uiState;
+            UIState = uIState;
         }
 
         public object Clone()

@@ -22,8 +22,6 @@ namespace EDBG.UserInterface
         }
         //UI panels
         private Transform actionPanel;
-        private Transform humanActionPanel;
-        private Transform botActionPanel;
         private Transform gameCommands;
         //UI buttons
         private UIAction confirmAction;
@@ -31,8 +29,7 @@ namespace EDBG.UserInterface
 
         private GameManager gameManager;
         private UIEvents uiEvents;
-        public List<UIAction> HumanActions { get; private set; }
-        public List<UIAction> BotActions { get; private set; }
+
 
         public TextMeshProUGUI StatusText;
         public UIAction UIActionPrefab;
@@ -48,57 +45,23 @@ namespace EDBG.UserInterface
 
         }
 
-        public void Initialize(GameManager manager, UIEvents uIEvents)
+        public void Initialize(GameManager manager)
         {
             gameManager = manager;
             actionPanel = transform.Find("ActionPanel");
-            humanActionPanel = actionPanel.Find("HumanActions");
-            botActionPanel = actionPanel.Find("BotActions");
-            gameCommands = transform.Find("StatusBar").Find("GameCommands");
-            confirmAction = gameCommands.Find("ConfirmAction").GetComponent<UIAction>();
+
             undoAction = gameCommands.Find("UndoAction").GetComponent<UIAction>();
+            confirmAction = gameCommands.Find("ConfirmActions").GetComponent<UIAction>();
+
             confirmAction.Button.onClick.AddListener(delegate { ActionClicked(confirmAction); });
             undoAction.Button.onClick.AddListener(delegate { ActionClicked(undoAction); });
-            BuildActions();
-            BuildInfo();
-            this.uiEvents = uIEvents;
+
+            uiEvents = new UIEvents();
         }
 
         //TODO: dynamic action prefab in ui
         public void BuildActions()
         {
-            Transform actionPanel = transform.Find("ActionPanel").Find("HumanActions");
-            HumanPlayer humanPlayer = gameManager.StateManager.CurrentState.GameLogicState.PlayerList[0] as HumanPlayer;
-            BotPlayer botPlayer = gameManager.StateManager.CurrentState.GameLogicState.PlayerList[1] as BotPlayer;
-            HumanActions = new List<UIAction>();
-            for (int i = 0; i < humanPlayer.Corporation.CorpActions.Length; i++)
-            {
-                for(int j = 0; j < humanPlayer.Corporation.CorpActions[i].DieFaces.Count; j++)
-                {
-                    Transform dieCell = actionPanel.Find($"Die{humanPlayer.Corporation.CorpActions[i].DieFaces[j]}").Find("Container");
-                    UIAction newAction = Instantiate(UIActionPrefab, dieCell);
-
-                    newAction.TextBox.text = humanPlayer.Corporation.CorpActions[i].Name;
-                    newAction.Button.onClick.AddListener(delegate { ActionClicked(newAction); });
-                    HumanActions.Add(newAction);
-                }
-                
-            }
-            BotActions = new List<UIAction>();
-            actionPanel = transform.Find("ActionPanel").Find("BotActions");
-            for (int i = 0; i < botPlayer.Corporation.CorpActions.Length; i++)
-            {
-                for (int j = 0; j < botPlayer.Corporation.CorpActions[i].DieFaces.Count; j++)
-                {
-                    Transform dieCell = actionPanel.Find($"Die{botPlayer.Corporation.CorpActions[i].DieFaces[j]}").Find("Container");
-                    UIAction newAction = Instantiate(UIActionPrefab, dieCell);
-
-                    newAction.TextBox.text = botPlayer.Corporation.CorpActions[i].Name;
-                    newAction.Button.onClick.AddListener(delegate { ActionClicked(newAction); });
-                    BotActions.Add(newAction);
-                }
-
-            }
 
         }
 
@@ -108,12 +71,8 @@ namespace EDBG.UserInterface
             if (playerPanel != null)
             {
                 TextMeshProUGUI discStockText = playerPanel.Find("DiscStock").Find("Text").GetComponent<TextMeshProUGUI>();
-                TextMeshProUGUI expansionPointsText = playerPanel.Find("ExpansionPoints").Find("Text").GetComponent<TextMeshProUGUI>();
-                TextMeshProUGUI marketPointsText = playerPanel.Find("MarketPoints").Find("Text").GetComponent<TextMeshProUGUI>();
 
                 discStockText.SetText($"Discs: {gameManager.StateManager.CurrentState.GameLogicState.PlayerList[0].DiscStock}");
-                expansionPointsText.SetText($"EP: {gameManager.StateManager.CurrentState.GameLogicState.PlayerList[0].ExpansionPoints}");
-                marketPointsText.SetText($"MP: {gameManager.StateManager.CurrentState.GameLogicState.PlayerList[0].MarketPoints}");
 
             }
         }
@@ -122,13 +81,6 @@ namespace EDBG.UserInterface
         {
             switch (element)
             {
-                case UIElements.HumanPlayerActions:
-                    foreach (Transform child in humanActionPanel)
-                    {
-                        Button button = child.GetComponentInChildren<Button>();
-                        button.interactable = !isLocked;
-                    }
-                    break;
                 case UIElements.UndoButton:
                     undoAction.Button.interactable = !isLocked;
                     break;
@@ -137,19 +89,6 @@ namespace EDBG.UserInterface
                     break;
                 default:
                     break;
-            }
-        }
-
-        public void SetDieActionLock(int dieFace)
-        {
-            foreach (UIAction action in HumanActions)
-            {
-                if (action.DieFace == dieFace)
-                {
-                    action.Button.interactable = true;
-                }
-                else
-                    action.Button.interactable = false;
             }
         }
 

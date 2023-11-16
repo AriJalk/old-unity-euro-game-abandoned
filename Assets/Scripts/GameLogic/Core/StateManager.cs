@@ -24,38 +24,9 @@ namespace EDBG.GameLogic.Core
             _stateStack = new Stack<GameState>();
         }
 
-        public void NextState()
+        public void PushState(GameState state)
         {
-            if(_stateStack != null)
-            {
-                _stateStack.Push(CurrentState.Clone() as GameState);
-            }
-        }
-
-        /// <summary>
-        /// Used for initialization
-        /// </summary>
-        /// <param name="state"></param>
-        public void NextState(GameState state)
-        {
-            if(_stateStack != null)
-            {
-                _stateStack.Push(state);
-            }
-        }
-
-        public void NextState(IUIState gameState)
-        {
-            _stateStack.Push(new GameState(CurrentState.GameLogicState.Clone() as LogicState, gameState));
-        }
-
-        public void UndoState(GameUI ui)
-        {
-            if( _stateStack.Count > 1 ) 
-            {
-                _stateStack.Pop();
-                CurrentState.UIState.SetUI(ui);
-            }
+            _stateStack.Push(state);
         }
     }
 }

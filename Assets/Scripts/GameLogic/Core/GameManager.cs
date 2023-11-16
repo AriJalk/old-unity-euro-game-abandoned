@@ -24,8 +24,6 @@ namespace EDBG.GameLogic.Core
         public StateManager StateManager { get; private set; }
 
         private GameEngineManager engineManager;
-        private UIEvents uiEvents;
-
 
         public Transform GameWorld;
         public CameraController CameraController;
@@ -36,23 +34,24 @@ namespace EDBG.GameLogic.Core
 
         void Start()
         {
-
+            StateManager = new StateManager();
             engineManager = GameEngineManager.Instance;
             CameraController.Initialize();
             LoadPrefabs();
-            CreateTestGame();
-
-            //MoveDiscAction moveDisc = new MoveDiscAction();
-            //moveDisc.SetAction((MapTile)currentGameLogicState.MapGrid.GetCell(0, 0), (MapTile)currentGameLogicState.MapGrid.GetCell(1, 1), 3, currentGameLogicState);
-            //moveDisc.ExecuteAction();
-
-            //Draw map at head of stack
-
-            engineManager.MapRenderer.RenderMap(StateManager.CurrentState.GameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
 
+            //Set new game
+            HumanPlayer human = new HumanPlayer("Human", 10, new BeginnerCorporation(Ownership.HumanPlayer));
+            BotPlayer bot = new BotPlayer("Bot", 10, new BeginnerCorporation(Ownership.BotPlayer));
+            StateManager.PushState(GameBuilder.BuildInitialState(4, 4, human, bot));
 
+            //Render map
+            engineManager.MapRenderer.RenderMap(StateManager.CurrentState.GameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
+
+            StateManager.CurrentState.GameLogicState.DiceTray.SetDice(5);
+            StateManager.CurrentState.GameLogicState.DiceTray.RollAllDice();
+            DiceTrayObject.SetDice(StateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
 
 
 
@@ -66,73 +65,7 @@ namespace EDBG.GameLogic.Core
 
         private void OnDestroy()
         {
-            uiEvents.UnsubscribeToAllEvents(ActionSelected);
-        }
-
-
-       
-
-        //TODO: builder class
-        void CreateTestGame()
-        {
-            StateManager = new StateManager();
-            MapGrid mapGrid = new MapGrid(4, 4);
-
-            int[] array = new[] { 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6 };
-            TileColors[] colorArray = new[]
-            {
-                TileColors.Red, TileColors.Red, TileColors.Red, TileColors.Red,
-                TileColors.Green, TileColors.Green, TileColors.Green, TileColors.Green,
-                TileColors.White, TileColors.White,TileColors.White, TileColors.White,
-                TileColors.Blue, TileColors.Blue,   TileColors.Blue, TileColors.Blue,
-            };
-
-            EDBG.Utilities.UtilityFunctions.ShuffleArray(array);
-            EDBG.Utilities.UtilityFunctions.ShuffleArray(colorArray);
-
-            Stack<int> faces = new Stack<int>(array);
-            Stack<TileColors> colors = new Stack<TileColors>(colorArray);
-
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    MapTile tile = new MapTile(new GamePosition(i, j), faces.Pop(), colors.Pop());
-                    tile.ComponentOnTile = new GameStack<Disc>();
-                    if (i == 0 && j == 0)
-                    {
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.Black));
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.Black));
-                    }
-                    else if (i == 3 && j == 3)
-                    {
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.White));
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.White));
-                    }
-                    mapGrid.SetCell(tile);
-                }
-            }
-
-            LogicState newState = new LogicState(mapGrid);
-
-            newState.PlayerList = new List<Player>() {
-                new HumanPlayer("Player", 10, new BeginnerCorporation(Ownership.HumanPlayer)),
-                new BotPlayer("Bot", 10, new BeginnerCorporation(Ownership.BotPlayer)),
-            };
-            newState.DiceTray = new DiceTray();
-            newState.DiceTray.SetDice(5);
-            newState.DiceTray.RollAllDice();
-            newState.CurrentPlayerIndex = 0;
-            DiceTrayObject.SetDice(newState.DiceTray, engineManager.PrefabManager);
-            GameState initialState = new GameState(newState, new ChooseDie());
-            StateManager.NextState(initialState);
-            uiEvents = new UIEvents();
-            uiEvents.SubscribeToAllEvents(ActionSelected);
-
-            //TODO: index
-            GameUI.Initialize(this, uiEvents);
-
-            StateManager.CurrentState.UIState.SetUI(GameUI);
+            engineManager.InputEvents.UnsubscribeFromAllEvents(MoveCamera, SelectObject, ZoomCamera);
         }
 
         private void LoadPrefabs()
@@ -197,28 +130,7 @@ namespace EDBG.GameLogic.Core
         //TODO: move to UI
         void SelectObject(bool[] mouseButtons, Vector2 position)
         {
-            if (StateManager.CurrentState.UIState.Name == "ChooseDie" || StateManager.CurrentState.UIState.Name == "ChooseAction")
-            {
-                Ray ray = DiceCamera.ScreenPointToRay(position);
-                LayerMask layerMask;
-                layerMask = LayerMask.GetMask("Die");
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
-                {
-                    if (StateManager.CurrentState.UIState.Name == "ChooseAction")
-                    {
-                        //TODO: highlight state
-                        DieObject previousDie = ((ChooseAction)StateManager.CurrentState.UIState).ChosenDie;
-                        previousDie.Highlight.gameObject.SetActive(false);
-                    }
-                    DieObject obj = hit.transform.GetComponent<DieObject>();
-                    obj.Highlight.gameObject.SetActive(true);
-                    //StateManager.CurrentState.GameLogicState.DiceTray.RemoveDie(int.Parse(obj.name));
-                    //DiceTrayObject.SetDice(StateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
-                    StateManager.NextState(new ChooseAction(obj));
-                    StateManager.CurrentState.UIState.SetUI(GameUI);
-                }
-            }
+           
 
         }
 
@@ -229,7 +141,6 @@ namespace EDBG.GameLogic.Core
 
         private void UndoState()
         {
-            StateManager.UndoState(GameUI);
             DiceTrayObject.SetDice(StateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
         }
     }

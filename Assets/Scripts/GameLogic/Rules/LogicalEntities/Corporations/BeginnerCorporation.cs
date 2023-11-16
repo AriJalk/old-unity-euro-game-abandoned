@@ -25,20 +25,12 @@ namespace EDBG.GameLogic.Rules
 
         private void BuildHumanCorporation()
         {
-            CorpActions = new CorpAction[6];
-            CorpActions[0] = new AddExpansionPointsAction(1, 2);
-            CorpActions[1] = new AddExpansionPointsAction(2, 2);
-            CorpActions[2] = new AddExpansionPointsAction(3, 2);
-            CorpActions[3] = new AddMarketPointsAction(4, 2);
-            CorpActions[4] = new AddMarketPointsAction(5, 2);
-            CorpActions[5] = new AddMarketPointsAction(6, 2);
+
         }
 
         private void BuildBotCorporation()
         {
-            CorpActions = new CorpAction[2];
-            CorpActions[0] = new AddExpansionPointsAction(new List<int> { 1, 2, 3 }, 2);
-            CorpActions[1] = new AddExpansionPointsAction(new List<int> { 4, 5, 6 }, 2);
+
         }
     }
 }

@@ -30,7 +30,7 @@ namespace EDBG.Engine.Visual
 
         public void Initialize()
         {
-            gameCamera = transform.Find("MainCamera").GetComponent<Camera>();
+            gameCamera = GetComponent<Camera>();
 
             UpdateAspectRatio(Screen.width, Screen.height);
 
@@ -52,7 +52,7 @@ namespace EDBG.Engine.Visual
             else
             {
                 orientation = ScreenOrientation.Portrait;
-                position = new Vector3(2.5f, 2, 0);
+                position = new Vector3(1.85f, 2, 0);
                 gameCamera.pixelRect = new Rect(0, 0, width, height);
             }
 
@@ -79,17 +79,18 @@ namespace EDBG.Engine.Visual
             float panSpeed = gameCamera.orthographicSize * PanAcceleration;
             float newX = horizontal * panSpeed * Time.deltaTime;
             float newZ = vertical * panSpeed * Time.deltaTime;
-            if (transform.position.x + newX > 10 || transform.position.x + newX < -4)
+            if (transform.localPosition.x + newX > 4 || transform.localPosition.x + newX < 0)
                 newX = 0;
-            if (transform.position.y + newZ > 10 || transform.position.y + newZ < -4)
+            if (transform.localPosition.y + newZ > 4 || transform.localPosition.y + newZ < 1)
                 newZ = 0;
             transform.Translate(new Vector3(newX, newZ, newX), Space.World);
+
 
         }
 
         public void ZoomCamera(float deltaY)
         {
-            if (gameCamera.orthographicSize - deltaY >= 0 && gameCamera.orthographicSize - deltaY <= 15)
+            if (gameCamera.orthographicSize - deltaY >= 0 && gameCamera.orthographicSize - deltaY <= 4)
             {
                 gameCamera.orthographicSize -= deltaY;
 

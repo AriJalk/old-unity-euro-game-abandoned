@@ -2,34 +2,34 @@ namespace EDBG.Utilities.DataTypes
 {
     public struct GamePosition
     {
-        private int _x;
-        private int _y;
+        private int _row;
+        private int _col;
 
-        public int X { get { return _x; } }
-        public int Y { get { return _y; } }
+        public int Row { get { return _row; } }
+        public int Col { get { return _col; } }
 
 
-        public GamePosition(int y, int x)
+        public GamePosition(int row, int col)
         {
-            _x = x;
-            _y = y;
+            _row = row;
+            _col = col;
         }
 
-        public void Move(int deltaX, int deltaY)
+        public void Move(int deltaRow, int deltaCol)
         {
-            _x += deltaX;
-            _y += deltaY;
+            _row += deltaRow;
+            _col += deltaCol;
         }
 
-        public void SetPosition(int y, int x)
+        public void SetPosition(int row, int col)
         {
-            _x = x;
-            _y = y;
+            _row = row;
+            _col = col;
         }
 
         public override string ToString()
         {
-            return $"({Y}, {X})";
+            return $"({_row}, {_col})";
         }
     }
 

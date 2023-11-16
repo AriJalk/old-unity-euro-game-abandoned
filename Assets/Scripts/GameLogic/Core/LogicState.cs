@@ -17,10 +17,11 @@ namespace EDBG.GameLogic.Core
 
         public List<Player> PlayerList { get; set; }
 
-        public LogicState(MapGrid mapGrid)
+        public LogicState(MapGrid mapGrid, params Player[] players)
         {
             MapGrid = mapGrid;
-            PlayerList = new List<Player>();
+            PlayerList = new List<Player>(players);
+            DiceTray = new DiceTray();
         }
 
         private LogicState(LogicState other)

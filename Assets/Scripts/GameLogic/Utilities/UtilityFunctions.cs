@@ -39,6 +39,21 @@ namespace EDBG.Utilities
             }
         }
 
+        public static List<T> GetShuffledList<T>(int amountOfEach, params T[] elements)
+        {
+            List<T> list = new List<T>();
+            for (int i = 0; i < elements.Length; i++)
+            {
+                for (int j = 0; j < amountOfEach; j++)
+                {
+                    list.Add(elements[i]);
+                }
+            }
+            ShuffleList(list);
+            return list;
+        }
+
+
         public static PieceColors GetRandomComponentColor()
         {
             PieceColors color = PieceColors.White;

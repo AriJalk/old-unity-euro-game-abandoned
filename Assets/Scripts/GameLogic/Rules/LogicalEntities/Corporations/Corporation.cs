@@ -24,15 +24,6 @@ namespace EDBG.GameLogic.Rules
             set { _description = value; }
         }
 
-        private CorpAction[] _corpAction;
-
-        public CorpAction[] CorpActions
-        {
-            get { return _corpAction; }
-            set { _corpAction = value; }
-        }
-
-
 
         public Corporation()
         {

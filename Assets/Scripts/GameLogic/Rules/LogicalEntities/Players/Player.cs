@@ -35,30 +35,11 @@ namespace EDBG.GameLogic.Rules
             }
         }
 
-        private int _expansionPoints;
-
-        public int ExpansionPoints
-        {
-            get { return _expansionPoints; }
-            set { _expansionPoints = value; }
-        }
-
-        private int _marketPoints;
-
-        public int MarketPoints
-        {
-            get { return _marketPoints; }
-            set { _marketPoints = value; }
-        }
-
 
         public Player(string name, int discStock, Corporation corporation)
         {
             _name = name;
             _discStock = discStock;
-
-            _expansionPoints = 0;
-            _marketPoints = 0;
             _corporation = corporation;
         }
 
@@ -68,8 +49,6 @@ namespace EDBG.GameLogic.Rules
             _name = other._name;
             _discStock = other._discStock;
             _corporation = other._corporation;
-            _expansionPoints = other._expansionPoints;
-            _marketPoints = other._marketPoints;
         }
 
         public virtual object Clone()
@@ -78,8 +57,6 @@ namespace EDBG.GameLogic.Rules
             clone._name = this._name;
             clone._discStock = this._discStock;
             clone._corporation = this._corporation;
-            clone._expansionPoints = this._expansionPoints;
-            clone._marketPoints = this._marketPoints;
             return clone;
         }
     }

@@ -33,18 +33,18 @@ namespace EDBG.Utilities.DataTypes
             }
         }
 
-        public virtual ICell GetCell(int x, int y)
+        public virtual ICell GetCell(int row, int col)
         {
-            if (IsValidCoordinate(y, x))
+            if (IsValidCoordinate(row, col))
             {
-                return _grid[y, x];
+                return _grid[row, col];
             }
             return null;
         }
 
-        public virtual GridContainer GetCellAsContainer(int x, int y)
+        public virtual GridContainer GetCellAsContainer(int row, int col)
         {
-            ICell cell = _grid[y, x];
+            ICell cell = _grid[row, col];
             if (cell is GridContainer container)
             {
                 return container;
@@ -56,9 +56,9 @@ namespace EDBG.Utilities.DataTypes
         //TODO: deep copy
         public virtual bool SetCell(ICell cell)
         {
-            if (IsValidCoordinate(cell.GamePosition.Y, cell.GamePosition.X))
+            if (IsValidCoordinate(cell.GamePosition.Row, cell.GamePosition.Col))
             {
-                _grid[cell.GamePosition.Y, cell.GamePosition.X] = cell;
+                _grid[cell.GamePosition.Row, cell.GamePosition.Col] = cell;
                 return true;
             }
             return false;
@@ -71,31 +71,31 @@ namespace EDBG.Utilities.DataTypes
 
         public ICell GetNeighbor(ICell cell, Direction direction)
         {
-            int offsetX = 0;
-            int offsetY = 0;
+            int offsetRow = 0;
+            int offsetCol = 0;
 
             switch (direction)
             {
                 case Direction.Up:
-                    offsetY = 1;
+                    offsetRow = 1;
                     break;
                 case Direction.Down:
-                    offsetY = -1;
+                    offsetRow = -1;
                     break;
                 case Direction.Left:
-                    offsetX = -1;
+                    offsetCol = -1;
                     break;
                 case Direction.Right:
-                    offsetX = 1;
+                    offsetCol = 1;
                     break;
             }
 
-            int neighborX = cell.GamePosition.X + offsetX;
-            int neighborY = cell.GamePosition.Y + offsetY;
+            int neighborRow = cell.GamePosition.Row + offsetRow;
+            int neighborCol = cell.GamePosition.Col + offsetCol;
 
-            if (IsValidCoordinate(neighborY, neighborX))
+            if (IsValidCoordinate(neighborRow, neighborCol))
             {
-                return _grid[neighborY, neighborX];
+                return _grid[neighborRow, neighborCol];
             }
 
             return null;
