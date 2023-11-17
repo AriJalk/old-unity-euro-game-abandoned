@@ -26,7 +26,7 @@ namespace EDBG.GameLogic.Core
         private GameEngineManager engineManager;
 
         public Transform GameWorld;
-        public CameraController CameraController;
+        public CameraController MapCamera;
         public Camera DiceCamera;
         public GameUI GameUI;
         public DiceTrayObject DiceTrayObject;
@@ -36,7 +36,7 @@ namespace EDBG.GameLogic.Core
         {
             StateManager = new StateManager();
             engineManager = GameEngineManager.Instance;
-            CameraController.Initialize();
+            MapCamera.Initialize();
             LoadPrefabs();
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
@@ -114,7 +114,7 @@ namespace EDBG.GameLogic.Core
         }
         void MoveCamera(Vector2 axis)
         {
-            CameraController.MoveCamera(axis.x, axis.y);
+            MapCamera.MoveCamera(axis.x, axis.y);
         }
 
         /// <summary>
@@ -124,19 +124,21 @@ namespace EDBG.GameLogic.Core
         /// <param name="e"></param>
         private void ScreenChanged(object sender, ScreenChangedEventArgs e)
         {
-            CameraController.UpdateAspectRatio(e.NewWidth, e.NewHeight);
+            MapCamera.UpdateAspectRatio(e.NewWidth, e.NewHeight);
         }
 
         //TODO: move to UI
         void SelectObject(bool[] mouseButtons, Vector2 position)
         {
-           
-
+            CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
+            cameraRaycaster.Raycast(position);
+            cameraRaycaster = DiceCamera.GetComponent<CameraRaycaster>();
+            cameraRaycaster.Raycast(position);
         }
 
         void ZoomCamera(float deltaY)
         {
-            CameraController.ZoomCamera(deltaY / 5);
+            MapCamera.ZoomCamera(deltaY / 5);
         }
 
         private void UndoState()
