@@ -72,16 +72,16 @@ namespace EDBG.Engine.Visual
             else Debug.LogError("Invalid camera size");
             transform.position = position;
         }
-
+        //TODO: proper clamp
         public void MoveCamera(float horizontal, float vertical)
         {
 
             float panSpeed = gameCamera.orthographicSize * PanAcceleration;
             float newX = horizontal * panSpeed * Time.deltaTime;
             float newZ = vertical * panSpeed * Time.deltaTime;
-            if (transform.localPosition.x + newX > 4 || transform.localPosition.x + newX < 0)
+            if (transform.localPosition.x + newX > 10 || transform.localPosition.x + newX < -10)
                 newX = 0;
-            if (transform.localPosition.y + newZ > 4 || transform.localPosition.y + newZ < 1)
+            if (transform.localPosition.y + newZ > 10 || transform.localPosition.y + newZ < -10)
                 newZ = 0;
             transform.Translate(new Vector3(newX, newZ, newX), Space.World);
 
