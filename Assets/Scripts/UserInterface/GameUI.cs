@@ -49,14 +49,15 @@ namespace EDBG.UserInterface
         {
             gameManager = manager;
             actionPanel = transform.Find("ActionPanel");
-
+            gameCommands = transform.Find("StatusBar").Find("GameCommands");
             undoAction = gameCommands.Find("UndoAction").GetComponent<UIAction>();
-            confirmAction = gameCommands.Find("ConfirmActions").GetComponent<UIAction>();
+            confirmAction = gameCommands.Find("ConfirmAction").GetComponent<UIAction>();
 
             confirmAction.Button.onClick.AddListener(delegate { ActionClicked(confirmAction); });
             undoAction.Button.onClick.AddListener(delegate { ActionClicked(undoAction); });
 
             uiEvents = new UIEvents();
+            BuildInfo();
         }
 
         //TODO: dynamic action prefab in ui
@@ -70,9 +71,18 @@ namespace EDBG.UserInterface
             Transform playerPanel = transform.Find("PlayerPanel");
             if (playerPanel != null)
             {
-                TextMeshProUGUI discStockText = playerPanel.Find("DiscStock").Find("Text").GetComponent<TextMeshProUGUI>();
+                Transform test = playerPanel.Find("DiscStock").Find("DiscCount");
+                if (test != null)
+                {
+                    Debug.Log("Found");
+                }
+                TextMeshProUGUI discStockText = playerPanel.Find("DiscStock").Find("DiscCount").GetComponent<TextMeshProUGUI>();
+                if (discStockText != null)
+                {
+                    Debug.Log("Text Found");
+                }
 
-                discStockText.SetText($"Discs: {gameManager.StateManager.CurrentState.GameLogicState.PlayerList[0].DiscStock}");
+                discStockText.SetText(gameManager.StateManager.CurrentState.GameLogicState.PlayerList[0].DiscStock.ToString());
 
             }
         }

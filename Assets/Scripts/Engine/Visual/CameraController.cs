@@ -30,7 +30,7 @@ namespace EDBG.Engine.Visual
 
         public void Initialize()
         {
-            gameCamera = GetComponent<Camera>();
+            gameCamera = transform.Find("MapCamera").GetComponent<Camera>();
 
             UpdateAspectRatio(Screen.width, Screen.height);
 
@@ -52,7 +52,7 @@ namespace EDBG.Engine.Visual
             else
             {
                 orientation = ScreenOrientation.Portrait;
-                position = new Vector3(1.85f, 2, 0);
+                position = new Vector3(2.5f, 2, 0);
                 gameCamera.pixelRect = new Rect(0, 0, width, height);
             }
 
@@ -60,37 +60,36 @@ namespace EDBG.Engine.Visual
             if (currentAspectRatio >= targetAspectRatio)
             {
                 orthographicSize =
-                    (orientation == ScreenOrientation.LandscapeLeft || orientation == ScreenOrientation.LandscapeRight ? LandscapeZoom : PortraitZoom) * scaleFactor;
+                    (orientation == ScreenOrientation.LandscapeLeft || orientation == ScreenOrientation.LandscapeRight ? LandscapeZoom : PortraitZoom) * scaleFactor / 2f;
             }
             else
             {
                 orthographicSize =
-                    (orientation == ScreenOrientation.LandscapeLeft || orientation == ScreenOrientation.LandscapeRight ? LandscapeZoom : PortraitZoom) / scaleFactor;
+                    (orientation == ScreenOrientation.LandscapeLeft || orientation == ScreenOrientation.LandscapeRight ? LandscapeZoom : PortraitZoom) / scaleFactor / 2f;
             }
             if (orthographicSize > 0)
                 gameCamera.orthographicSize = orthographicSize;
             else Debug.LogError("Invalid camera size");
             transform.position = position;
         }
-        //TODO: proper clamp
+
         public void MoveCamera(float horizontal, float vertical)
         {
 
             float panSpeed = gameCamera.orthographicSize * PanAcceleration;
             float newX = horizontal * panSpeed * Time.deltaTime;
             float newZ = vertical * panSpeed * Time.deltaTime;
-            if (transform.localPosition.x + newX > 10 || transform.localPosition.x + newX < -10)
+            if (transform.position.x + newX > 10 || transform.position.x + newX < -4)
                 newX = 0;
-            if (transform.localPosition.y + newZ > 10 || transform.localPosition.y + newZ < -10)
+            if (transform.position.y + newZ > 10 || transform.position.y + newZ < -4)
                 newZ = 0;
             transform.Translate(new Vector3(newX, newZ, newX), Space.World);
-
 
         }
 
         public void ZoomCamera(float deltaY)
         {
-            if (gameCamera.orthographicSize - deltaY >= 0 && gameCamera.orthographicSize - deltaY <= 4)
+            if (gameCamera.orthographicSize - deltaY >= 0 && gameCamera.orthographicSize - deltaY <= 15)
             {
                 gameCamera.orthographicSize -= deltaY;
 

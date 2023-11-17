@@ -52,7 +52,7 @@ namespace EDBG.GameLogic.Core
             StateManager.CurrentState.GameLogicState.DiceTray.SetDice(5);
             StateManager.CurrentState.GameLogicState.DiceTray.RollAllDice();
             DiceTrayObject.SetDice(StateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
-
+            GameUI.Initialize(this);
 
 
         }
