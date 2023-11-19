@@ -34,7 +34,7 @@ namespace EDBG.Engine.Visual
         public Material GetTileMaterial(TileColors color)
         {
             //return materialManager.GetMaterial($"{color}Material");
-            return materialManager.GetMaterial($"DiscColors/{color}WoodMaterial");
+            return materialManager.GetMaterial($"TileColors/{color}TileMaterial");
         }
 
         public Material GetMaterial(string name)

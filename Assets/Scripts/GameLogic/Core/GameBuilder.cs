@@ -14,7 +14,7 @@ namespace EDBG.GameLogic.Core
         private static MapGrid BuildMap(int mapHeight, int mapWidth)
         {
             Stack<int> faces = new Stack<int>(UtilityFunctions.GetShuffledList(mapHeight, 1, 2, 3, 4, 5, 6));
-            Stack<TileColors> colors = new Stack<TileColors>(UtilityFunctions.GetShuffledList(mapHeight, TileColors.Red, TileColors.Green, TileColors.White, TileColors.Black));
+            Stack<TileColors> colors = new Stack<TileColors>(UtilityFunctions.GetShuffledList(mapHeight, TileColors.Red, TileColors.Green, TileColors.White, TileColors.Blue));
 
             MapGrid mapGrid = new MapGrid(mapHeight, mapWidth);
             for (int i = 0; i < mapHeight; i++)
@@ -26,11 +26,9 @@ namespace EDBG.GameLogic.Core
                     if (i == 0 && j == 0)
                     {
                         ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.Black));
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.Black));
                     }
                     else if (i == 3 && j == 3)
                     {
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.White));
                         ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.White));
                     }
                     mapGrid.SetCell(tile);
