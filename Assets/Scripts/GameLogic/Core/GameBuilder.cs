@@ -14,27 +14,41 @@ namespace EDBG.GameLogic.Core
         private static MapGrid BuildMap(int mapHeight, int mapWidth)
         {
             Stack<int> faces = new Stack<int>(UtilityFunctions.GetShuffledList(mapHeight, 1, 2, 3, 4, 5, 6));
-            Stack<TileColors> colors = new Stack<TileColors>(UtilityFunctions.GetShuffledList(mapHeight, TileColors.Red, TileColors.Green, TileColors.White, TileColors.Blue));
-
+            TileColors[] colorsArray = {TileColors.Green, TileColors.Green, TileColors.Green,TileColors.Green, TileColors.Red, TileColors.Red, TileColors.Red, TileColors.Red,
+                TileColors.Blue, TileColors.Blue, TileColors.Blue, TileColors.Blue, TileColors.Black, TileColors.Black,
+            };
+            List<TileColors> shuffledColorList = new List<TileColors>(colorsArray);
+            UtilityFunctions.ShuffleList(shuffledColorList);
+            Stack<TileColors> tileColorsStack = new Stack<TileColors>(shuffledColorList);
             MapGrid mapGrid = new MapGrid(mapHeight, mapWidth);
             for (int i = 0; i < mapHeight; i++)
             {
                 for (int j = 0; j < mapWidth; j++)
                 {
-                    MapTile tile = new MapTile(new GamePosition(i, j), faces.Pop(), colors.Pop());
-                    tile.ComponentOnTile = new GameStack<Disc>();
+                    MapTile tile;
+
                     if (i == 0 && j == 0)
                     {
+                        tile = new MapTile(new GamePosition(i, j), faces.Pop(), TileColors.White);
+                        tile.ComponentOnTile = new GameStack<Disc>();
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.Black));
                         ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.Black));
                     }
                     else if (i == 3 && j == 3)
                     {
+                        tile = new MapTile(new GamePosition(i, j), faces.Pop(), TileColors.White);
+                        tile.ComponentOnTile = new GameStack<Disc>();
                         ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.White));
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.White));
+                    }
+                    else
+                    {
+                        tile = new MapTile(new GamePosition(i, j), faces.Pop(), tileColorsStack.Pop());
                     }
                     mapGrid.SetCell(tile);
                 }
             }
-            
+
             return mapGrid;
         }
 

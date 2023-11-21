@@ -13,18 +13,6 @@ namespace EDBG.Utilities
 
         }
 
-        public static void ShuffleArray<T>(T[] array)
-        {
-            int length = array.Length;
-            //Fischer-Yates implementation
-            for (int i = length - 1; i > 0; i--)
-            {
-                int j = i + UnityEngine.Random.Range(0, length - i);
-                T temp = array[i];
-                array[i] = array[j];
-                array[j] = temp;
-            }
-        }
 
         public static void ShuffleList<T>(List<T> list)
         {
@@ -36,6 +24,18 @@ namespace EDBG.Utilities
                 T temp = list[i];
                 list[i] = list[j];
                 list[j] = temp;
+            }
+        }
+        public static void ShuffleArray<T>(T[] array)
+        {
+            int length = array.Length;
+            //Fischer-Yates implementation
+            for (int i = length - 1; i > 0; i--)
+            {
+                int j = i + UnityEngine.Random.Range(0, length - i);
+                T temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
             }
         }
 
