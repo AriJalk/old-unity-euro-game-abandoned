@@ -27,7 +27,7 @@ namespace EDBG.GameLogic.Core
 
         public Transform GameWorld;
         public CameraController MapCamera;
-        public Camera DiceCamera;
+        public Camera TokenCamera;
         public GameUI GameUI;
         public DiceTrayObject DiceTrayObject;
 
@@ -51,7 +51,6 @@ namespace EDBG.GameLogic.Core
 
             StateManager.CurrentState.GameLogicState.DiceTray.SetDice(5);
             StateManager.CurrentState.GameLogicState.DiceTray.RollAllDice();
-            DiceTrayObject.SetDice(StateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
             GameUI.Initialize(this);
 
 
@@ -132,7 +131,7 @@ namespace EDBG.GameLogic.Core
         {
             CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
             cameraRaycaster.Raycast(position);
-            cameraRaycaster = DiceCamera.GetComponent<CameraRaycaster>();
+            cameraRaycaster = TokenCamera.GetComponent<CameraRaycaster>();
             cameraRaycaster.Raycast(position);
         }
 
