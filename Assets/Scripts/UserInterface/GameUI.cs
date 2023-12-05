@@ -48,46 +48,11 @@ namespace EDBG.UserInterface
         public void Initialize(GameManager manager)
         {
             gameManager = manager;
-            actionPanel = transform.Find("ActionPanel");
-            gameCommands = transform.Find("StatusBar").Find("GameCommands");
-            undoAction = gameCommands.Find("UndoAction").GetComponent<UIAction>();
-            confirmAction = gameCommands.Find("ConfirmAction").GetComponent<UIAction>();
-
-            confirmAction.Button.onClick.AddListener(delegate { ActionClicked(confirmAction); });
-            undoAction.Button.onClick.AddListener(delegate { ActionClicked(undoAction); });
-
             uiEvents = new UIEvents();
-            BuildInfo();
         }
 
-        //TODO: dynamic action prefab in ui
-        public void BuildActions()
-        {
 
-        }
-
-        public void BuildInfo()
-        {
-            Transform playerPanel = transform.Find("PlayerPanel");
-            if (playerPanel != null)
-            {
-                Transform test = playerPanel.Find("DiscStock").Find("DiscCount");
-                if (test != null)
-                {
-                    Debug.Log("Found");
-                }
-                TextMeshProUGUI discStockText = playerPanel.Find("DiscStock").Find("DiscCount").GetComponent<TextMeshProUGUI>();
-                if (discStockText != null)
-                {
-                    Debug.Log("Text Found");
-                }
-
-                discStockText.SetText(gameManager.StateManager.CurrentState.GameLogicState.PlayerList[0].DiscStock.ToString());
-
-            }
-        }
-
-        public void SetElementLock(UIElements element, bool isLocked)
+        public void SetElementLock(bool isLocked, UIElements element)
         {
             switch (element)
             {
@@ -99,6 +64,24 @@ namespace EDBG.UserInterface
                     break;
                 default:
                     break;
+            }
+        }
+
+        public void SetElementLock(bool isLocked, params UIElements[] elements)
+        {
+            foreach(UIElements element in elements)
+            {
+                switch (element)
+                {
+                    case UIElements.UndoButton:
+                        undoAction.Button.interactable = !isLocked;
+                        break;
+                    case UIElements.ConfirmButton:
+                        confirmAction.Button.interactable = !isLocked;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 

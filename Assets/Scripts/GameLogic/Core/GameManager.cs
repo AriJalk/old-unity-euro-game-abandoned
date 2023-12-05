@@ -111,7 +111,7 @@ namespace EDBG.GameLogic.Core
 
             }
         }
-        void MoveCamera(Vector2 axis)
+        private void MoveCamera(Vector2 axis)
         {
             MapCamera.MoveCamera(axis.x, axis.y);
         }
@@ -127,7 +127,7 @@ namespace EDBG.GameLogic.Core
         }
 
         //TODO: move to UI
-        void SelectObject(bool[] mouseButtons, Vector2 position)
+        private void SelectObject(bool[] mouseButtons, Vector2 position)
         {
             CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
             cameraRaycaster.Raycast(position);
@@ -135,7 +135,7 @@ namespace EDBG.GameLogic.Core
             cameraRaycaster.Raycast(position);
         }
 
-        void ZoomCamera(float deltaY)
+        private void ZoomCamera(float deltaY)
         {
             MapCamera.ZoomCamera(deltaY / 5);
         }
