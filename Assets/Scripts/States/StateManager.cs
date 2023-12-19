@@ -28,5 +28,10 @@ namespace EDBG.States
         {
             _stateStack.Push(state);
         }
+
+        public GameState PopState()
+        {
+            return _stateStack.Pop();
+        }
     }
 }

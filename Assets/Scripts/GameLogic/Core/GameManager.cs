@@ -42,7 +42,7 @@ namespace EDBG.GameLogic.Core
 
             GameUI.Initialize(this);
 
-
+            TileRulesLogic.GetCellsInDirectLine(StateManager.CurrentState.GameLogicState.MapGrid, StateManager.CurrentState.GameLogicState.MapGrid.GetCell(1, 1));
         }
 
 

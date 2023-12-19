@@ -49,6 +49,15 @@ namespace EDBG.GameLogic.MapSystem
         {
             return new MapTile(this);
         }
+
+        public Player GetOwner()
+        {
+            if(ComponentOnTile != null)
+            {
+                return ComponentOnTile.Owner;
+            } 
+            return null;
+        }
     }
 
 }

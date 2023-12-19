@@ -4,7 +4,13 @@ namespace EDBG.GameLogic.Components
 {
     public class Disc : IGameComponent
     {
-        public Player Player { get; private set; }
+        private Player _owner;
+        public override Player Owner {
+            get
+            { 
+                return _owner; 
+            } 
+        }
         public PlayerColors DiscColor
         {
             get; private set;
@@ -12,12 +18,13 @@ namespace EDBG.GameLogic.Components
 
         public Disc(Player player)
         {
+            _owner = player;
             DiscColor = player.PlayerColor;
         }
 
         private Disc(Disc other)
         {
-            Player = other.Player;
+            _owner = other._owner;
             DiscColor = other.DiscColor;
         }
 

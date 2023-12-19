@@ -1,3 +1,4 @@
+using EDBG.GameLogic.Rules;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,13 @@ namespace EDBG.GameLogic.Components
 
     public class GameStack<T> : IGameComponent where T : IGameComponent
     {
+        public override Player Owner
+        {
+            get
+            {
+                return PeekTopItem().Owner;
+            }
+        }
         private List<T> itemsList;
 
         public int Count

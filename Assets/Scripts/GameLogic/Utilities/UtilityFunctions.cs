@@ -8,12 +8,6 @@ namespace EDBG.Utilities
     public static class UtilityFunctions
     {
 
-        static UtilityFunctions()
-        {
-
-        }
-
-
         public static void ShuffleList<T>(List<T> list)
         {
             int length = list.Count;

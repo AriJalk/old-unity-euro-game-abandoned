@@ -5,6 +5,8 @@ namespace EDBG.GameLogic.Components
 {
     public class Die : IGameComponent
     {
+        public override Player Owner { get; }
+
         private int _result;
 
         public int Result
