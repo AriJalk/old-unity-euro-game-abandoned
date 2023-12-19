@@ -15,7 +15,7 @@ namespace EDBG.GameLogic.Rules
         /// <param name="cell"></param>
         /// <param name="distance"></param>
         /// <returns>
-        /// True for cell in distance
+        /// True for cells in distance
         /// </returns>
         public static bool[,] GetCellsInDistance(GridContainer map, ICell cell, int distance)
         {
