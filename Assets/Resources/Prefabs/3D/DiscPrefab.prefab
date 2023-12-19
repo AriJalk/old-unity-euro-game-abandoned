@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2814054000489851018}
   - component: {fileID: 7060750623348296857}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DiscPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,14 +110,47 @@ PrefabInstance:
       value: DiscModel
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: eb17f58def173b74483cb0e183dd942f, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: eb17f58def173b74483cb0e183dd942f, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: eb17f58def173b74483cb0e183dd942f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 89482866706083222}
   m_SourcePrefab: {fileID: 100100000, guid: eb17f58def173b74483cb0e183dd942f, type: 3}
+--- !u!1 &4863241655582992865 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: eb17f58def173b74483cb0e183dd942f, type: 3}
+  m_PrefabInstance: {fileID: 5745710581992985776}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &89482866706083222
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4863241655582992865}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.099999994, y: 0.03, z: 0.099999994}
+  m_Center: {x: 0, y: 0.015, z: 0}
 --- !u!4 &5203456544369832795 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: eb17f58def173b74483cb0e183dd942f, type: 3}

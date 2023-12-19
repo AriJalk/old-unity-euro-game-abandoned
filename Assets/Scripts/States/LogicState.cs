@@ -5,22 +5,19 @@ using EDBG.GameLogic.MapSystem;
 using EDBG.GameLogic.Components;
 using EDBG.GameLogic.Rules;
 
-namespace EDBG.GameLogic.State
+namespace EDBG.States
 {
     public class LogicState : ICloneable
     {
         public int CurrentPlayerIndex {  get; set; }
         public MapGrid MapGrid { get; set; }
-        public DiceTray DiceTray { get; set; }
-
-
 
         public List<Player> PlayerList { get; set; }
 
-        public LogicState(MapGrid mapGrid)
+        public LogicState(MapGrid mapGrid, params Player[] players)
         {
             MapGrid = mapGrid;
-            PlayerList = new List<Player>();
+            PlayerList = new List<Player>(players);
         }
 
         private LogicState(LogicState other)
@@ -31,8 +28,6 @@ namespace EDBG.GameLogic.State
                 {
                     MapGrid = (MapGrid)other.MapGrid.Clone();
                 }
-                if (other.DiceTray != null)
-                    DiceTray = (DiceTray)other.DiceTray.Clone();  
                 CurrentPlayerIndex = other.CurrentPlayerIndex;
                 if (other.PlayerList != null)
                 {

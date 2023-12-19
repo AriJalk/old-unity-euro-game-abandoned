@@ -1,5 +1,6 @@
 namespace EDBG.GameLogic.Rules
 {
+
     public enum Ownership
     {
         HumanPlayer,
@@ -7,7 +8,7 @@ namespace EDBG.GameLogic.Rules
         Neutral,
     }
 
-    public enum PieceColors
+    public enum PlayerColors
     {
         Neutral,
         Red,
@@ -16,16 +17,6 @@ namespace EDBG.GameLogic.Rules
         Yellow,
         Black,
         White,
-    }
-
-    public enum DiscColors
-    {
-        White,
-        Black,
-        Blue,
-        Red,
-        Green,
-        Yellow,
     }
     
     public enum TileColors

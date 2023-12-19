@@ -26,7 +26,7 @@ namespace EDBG.Engine.Visual
             _instance = this;
         }
 
-        public Material GetDiscMaterial(DiscColors color)
+        public Material GetDiscMaterial(PlayerColors color)
         {
             return materialManager.GetMaterial($"DiscColors/{color}WoodMaterial");
         }

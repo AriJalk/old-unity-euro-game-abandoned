@@ -4,9 +4,9 @@ namespace EDBG.GameLogic.Components
 {
 	public class Cube
 	{
-		private PieceColors _color;
+		private PlayerColors _color;
 
-		public PieceColors Color
+		public PlayerColors Color
 		{
 			get { return _color; }
 			set { _color = value; }

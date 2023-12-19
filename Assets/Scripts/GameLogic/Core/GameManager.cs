@@ -1,17 +1,8 @@
-using System.Collections.Generic;
-
 using UnityEngine;
-
 using EDBG.Engine.Core;
 using EDBG.Engine.Visual;
-
-using EDBG.Utilities.DataTypes;
-
 using EDBG.GameLogic.Rules;
-using EDBG.GameLogic.MapSystem;
-using EDBG.GameLogic.Components;
 using EDBG.UserInterface;
-using Unity.VisualScripting;
 using EDBG.States;
 
 namespace EDBG.GameLogic.Core
@@ -49,8 +40,6 @@ namespace EDBG.GameLogic.Core
             //Render map
             engineManager.MapRenderer.RenderMap(StateManager.CurrentState.GameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
 
-            StateManager.CurrentState.GameLogicState.DiceTray.SetDice(5);
-            StateManager.CurrentState.GameLogicState.DiceTray.RollAllDice();
             GameUI.Initialize(this);
 
 
@@ -130,9 +119,12 @@ namespace EDBG.GameLogic.Core
         private void SelectObject(bool[] mouseButtons, Vector2 position)
         {
             CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
-            cameraRaycaster.Raycast(position);
-            cameraRaycaster = TokenCamera.GetComponent<CameraRaycaster>();
-            cameraRaycaster.Raycast(position);
+            Transform tile = cameraRaycaster.Raycast(position, LayerMask.GetMask("Disc"));
+            if (tile != null)
+            {
+                Debug.Log(tile.parent.parent.parent.name);
+            }
+
         }
 
         private void ZoomCamera(float deltaY)
@@ -142,7 +134,7 @@ namespace EDBG.GameLogic.Core
 
         private void UndoState()
         {
-            DiceTrayObject.SetDice(StateManager.CurrentState.GameLogicState.DiceTray, engineManager.PrefabManager);
+
         }
     }
 }

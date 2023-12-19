@@ -4,12 +4,12 @@ namespace EDBG.GameLogic.Components
 {
     public class Disc : IGameComponent
     {
-        public DiscColors DiscColor
+        public PlayerColors DiscColor
         {
             get; private set;
         }
 
-        public Disc(DiscColors discColor)
+        public Disc(PlayerColors discColor)
         {
             DiscColor = discColor;
         }

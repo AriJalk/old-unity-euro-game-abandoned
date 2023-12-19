@@ -8,6 +8,8 @@ public class SquareTileObject : MonoBehaviour
     public const float TILE_SPACING = 0.01f;
     public const float TILE_HEIGHT = 0.05f;
 
+    public Transform Stack;
+
     public MapTile TileData
     {
         get;

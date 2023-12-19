@@ -14,12 +14,6 @@ namespace EDBG.UserInterface
 {
     public class GameUI : MonoBehaviour
     {
-        public enum UIElements
-        {
-            HumanPlayerActions,
-            UndoButton,
-            ConfirmButton,
-        }
         //UI panels
         private Transform actionPanel;
         private Transform gameCommands;
@@ -28,7 +22,6 @@ namespace EDBG.UserInterface
         private UIAction undoAction;
 
         private GameManager gameManager;
-        private UIEvents uiEvents;
 
 
         public TextMeshProUGUI StatusText;
@@ -48,7 +41,6 @@ namespace EDBG.UserInterface
         public void Initialize(GameManager manager)
         {
             gameManager = manager;
-            uiEvents = new UIEvents();
         }
 
 
@@ -84,11 +76,5 @@ namespace EDBG.UserInterface
                 }
             }
         }
-
-        private void ActionClicked(UIAction action)
-        {
-            uiEvents.SelectAction(action);
-        }
-
     }
 }

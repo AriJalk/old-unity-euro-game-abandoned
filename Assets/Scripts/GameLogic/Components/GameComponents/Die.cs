@@ -27,9 +27,9 @@ namespace EDBG.GameLogic.Components
             }
         }
 
-        private PieceColors _color;
+        private PlayerColors _color;
 
-        public PieceColors Color
+        public PlayerColors Color
         {
             get { return _color; }
             set { _color = value; }
@@ -39,7 +39,7 @@ namespace EDBG.GameLogic.Components
         public Die()
         {
             _result = 1;
-            _color = PieceColors.White;
+            _color = PlayerColors.White;
         }
 
         //Copy Constructor
@@ -49,7 +49,7 @@ namespace EDBG.GameLogic.Components
             _color = die.Color;
         }
 
-        public Die(int index, int face, PieceColors color)
+        public Die(int index, int face, PlayerColors color)
         {
             _result = face;
             _color = color;

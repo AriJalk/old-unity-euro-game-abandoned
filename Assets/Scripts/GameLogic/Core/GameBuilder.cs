@@ -31,15 +31,15 @@ namespace EDBG.GameLogic.Core
                     {
                         tile = new MapTile(new GamePosition(i, j), faces.Pop(), TileColors.White);
                         tile.ComponentOnTile = new GameStack<Disc>();
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.Black));
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.Black));
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PlayerColors.Black));
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PlayerColors.Black));
                     }
                     else if (i == 3 && j == 3)
                     {
                         tile = new MapTile(new GamePosition(i, j), faces.Pop(), TileColors.White);
                         tile.ComponentOnTile = new GameStack<Disc>();
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.White));
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(DiscColors.White));
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PlayerColors.White));
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PlayerColors.White));
                     }
                     else
                     {
@@ -57,8 +57,7 @@ namespace EDBG.GameLogic.Core
             GameState state;
             MapGrid mapGrid = BuildMap(mapHeight, mapWidth);
             LogicState logicState = new LogicState(mapGrid, players);
-            UIState uiState = new UIState();
-            state = new GameState(logicState, uiState);
+            state = new GameState(logicState);
 
             return state;
         }

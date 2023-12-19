@@ -54,22 +54,22 @@ namespace EDBG.Utilities
         }
 
 
-        public static PieceColors GetRandomComponentColor()
+        public static PlayerColors GetRandomComponentColor()
         {
-            PieceColors color = PieceColors.White;
+            PlayerColors color = PlayerColors.White;
             switch (UnityEngine.Random.Range(0, 4))
             {
                 case 0:
-                    color = PieceColors.White;
+                    color = PlayerColors.White;
                     break;
                 case 1:
-                    color = PieceColors.Blue;
+                    color = PlayerColors.Blue;
                     break;
                 case 2:
-                    color = PieceColors.Green;
+                    color = PlayerColors.Green;
                     break;
                 case 3:
-                    color = PieceColors.Red;
+                    color = PlayerColors.Red;
                     break;
                 default:
                     break;

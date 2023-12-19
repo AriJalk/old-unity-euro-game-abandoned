@@ -3,7 +3,7 @@ using EDBG.UserInterface;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 
-namespace EDBG.GameLogic.Core
+namespace EDBG.States
 {
     public class StateManager
     {
