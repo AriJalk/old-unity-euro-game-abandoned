@@ -33,8 +33,8 @@ namespace EDBG.GameLogic.Core
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
 
             //Set new game
-            HumanPlayer human = new HumanPlayer("Human", 10, new BeginnerCorporation(Ownership.HumanPlayer));
-            BotPlayer bot = new BotPlayer("Bot", 10, new BeginnerCorporation(Ownership.BotPlayer));
+            HumanPlayer human = new HumanPlayer("HumanPlayer", PlayerColors.Black, 10, new BeginnerCorporation(Ownership.HumanPlayer));
+            BotPlayer bot = new BotPlayer("BotPlayer", PlayerColors.White, 10, new BeginnerCorporation(Ownership.BotPlayer));
             StateManager.PushState(GameBuilder.BuildInitialState(4, 4, human, bot));
 
             //Render map

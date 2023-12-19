@@ -11,7 +11,7 @@ namespace EDBG.GameLogic.Core
 {
     public static class GameBuilder
     {
-        private static MapGrid BuildMap(int mapHeight, int mapWidth)
+        private static MapGrid BuildMap(int mapHeight, int mapWidth, params Player[] players)
         {
             Stack<int> faces = new Stack<int>(UtilityFunctions.GetShuffledList(mapHeight, 1, 2, 3, 4, 5, 6));
             TileColors[] colorsArray = {TileColors.Green, TileColors.Green, TileColors.Green,TileColors.Green, TileColors.Red, TileColors.Red, TileColors.Red, TileColors.Red,
@@ -31,15 +31,15 @@ namespace EDBG.GameLogic.Core
                     {
                         tile = new MapTile(new GamePosition(i, j), faces.Pop(), TileColors.White);
                         tile.ComponentOnTile = new GameStack<Disc>();
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PlayerColors.Black));
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PlayerColors.Black));
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(players[0]));
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(players[0]));
                     }
                     else if (i == 3 && j == 3)
                     {
                         tile = new MapTile(new GamePosition(i, j), faces.Pop(), TileColors.White);
                         tile.ComponentOnTile = new GameStack<Disc>();
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PlayerColors.White));
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(PlayerColors.White));
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(players[1]));
+                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(players[1]));
                     }
                     else
                     {
@@ -55,7 +55,7 @@ namespace EDBG.GameLogic.Core
         public static GameState BuildInitialState(int mapWidth, int mapHeight, params Player[] players)
         {
             GameState state;
-            MapGrid mapGrid = BuildMap(mapHeight, mapWidth);
+            MapGrid mapGrid = BuildMap(mapHeight, mapWidth, players);
             LogicState logicState = new LogicState(mapGrid, players);
             state = new GameState(logicState);
 

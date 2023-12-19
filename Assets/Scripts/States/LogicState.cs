@@ -12,12 +12,16 @@ namespace EDBG.States
         public int CurrentPlayerIndex {  get; set; }
         public MapGrid MapGrid { get; set; }
 
-        public List<Player> PlayerList { get; set; }
+        public List<PlayerStateData> PlayerStateList { get; set; }
 
         public LogicState(MapGrid mapGrid, params Player[] players)
         {
             MapGrid = mapGrid;
-            PlayerList = new List<Player>(players);
+            PlayerStateList = new List<PlayerStateData>();
+            foreach(Player player in players)
+            {
+                PlayerStateList.Add(new PlayerStateData(player));
+            }
         }
 
         private LogicState(LogicState other)
@@ -29,12 +33,12 @@ namespace EDBG.States
                     MapGrid = (MapGrid)other.MapGrid.Clone();
                 }
                 CurrentPlayerIndex = other.CurrentPlayerIndex;
-                if (other.PlayerList != null)
+                if (other.PlayerStateList != null)
                 {
-                    PlayerList = new List<Player>();
-                    foreach(Player player in other.PlayerList)
+                    PlayerStateList = new List<PlayerStateData>();
+                    foreach(PlayerStateData stateData in other.PlayerStateList)
                     {
-                        PlayerList.Add((Player)player.Clone());
+                        PlayerStateList.Add((PlayerStateData)stateData.Clone());
                     }
                 }
             }
@@ -47,7 +51,7 @@ namespace EDBG.States
 
         public Player GetCurrentPlayer()
         {
-            return PlayerList[CurrentPlayerIndex];
+            return PlayerStateList[CurrentPlayerIndex].Player;
         }
     }
 }

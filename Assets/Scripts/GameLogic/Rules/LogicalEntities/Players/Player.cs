@@ -15,6 +15,15 @@ namespace EDBG.GameLogic.Rules
             set { _name = value; }
         }
 
+        private PlayerColors _playerColor;
+
+        public PlayerColors PlayerColor
+        {
+            get { return _playerColor; }
+            set { _playerColor = value; }
+        }
+
+
         private Corporation _corporation;
 
         public Corporation Corporation
@@ -24,40 +33,39 @@ namespace EDBG.GameLogic.Rules
         }
 
 
-        private int _discStock;
+        private int _initialDiscStock;
 
-        public int DiscStock
+        public int InitialDiscStock
         {
-            get { return _discStock; }
+            get { return _initialDiscStock; }
             set
             {
-                _discStock = value;
+                _initialDiscStock = value;
             }
         }
 
 
-        public Player(string name, int discStock, Corporation corporation)
+        public Player(string name, PlayerColors color, int discStock, Corporation corporation)
         {
             _name = name;
-            _discStock = discStock;
+            _playerColor = color;
+            _initialDiscStock = discStock;
             _corporation = corporation;
+
         }
 
 
         private Player(Player other)
         {
             _name = other._name;
-            _discStock = other._discStock;
+            _playerColor = other._playerColor;
+            _initialDiscStock = other._initialDiscStock;
             _corporation = other._corporation;
         }
 
         public virtual object Clone()
         {
-            Player clone = (Player)this.MemberwiseClone();
-            clone._name = this._name;
-            clone._discStock = this._discStock;
-            clone._corporation = this._corporation;
-            return clone;
+            return new Player(this);
         }
     }
 
