@@ -42,7 +42,12 @@ namespace EDBG.GameLogic.Core
 
             GameUI.Initialize(this);
 
+            // Test tile search
             TileRulesLogic.GetCellsInDirectLine(StateManager.CurrentState.GameLogicState.MapGrid, StateManager.CurrentState.GameLogicState.MapGrid.GetCell(1, 1));
+
+            // Test bfs
+            bool[,] distanceMap = TileRulesLogic.GetCellsInDistance(StateManager.CurrentState.GameLogicState.MapGrid, StateManager.CurrentState.GameLogicState.MapGrid.GetCell(1, 1), 2);
+            Debug.Log(distanceMap);
         }
 
 
