@@ -7,8 +7,26 @@ using EDBG.GameLogic.Rules;
 
 namespace EDBG.States
 {
+    public enum RoundStates
+    {
+        GameStart,
+        ChooseTile,
+        ChooseDisc,
+        ChooseDemandTile,
+        ChooseUpgrade,
+        BotTurn,
+    }
+
     public class LogicState : ICloneable
     {
+        private RoundStates _roundState;
+
+        public RoundStates RoundState
+        {
+            get { return _roundState; }
+            set { _roundState = value; }
+        }
+
         public int CurrentPlayerIndex {  get; set; }
         public MapGrid MapGrid { get; set; }
 
@@ -22,6 +40,7 @@ namespace EDBG.States
             {
                 PlayerStateList.Add(new PlayerStateData(player));
             }
+            RoundState = RoundStates.ChooseTile;
         }
 
         private LogicState(LogicState other)
@@ -41,6 +60,7 @@ namespace EDBG.States
                         PlayerStateList.Add((PlayerStateData)stateData.Clone());
                     }
                 }
+                RoundState = other.RoundState;
             }
         }
 

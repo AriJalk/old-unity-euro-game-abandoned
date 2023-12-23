@@ -19,6 +19,14 @@ namespace EDBG.States
             }
         }
 
+        public int Count
+        {
+            get
+            {
+                return _stateStack.Count;
+            }
+        }
+
         public StateManager()
         {
             _stateStack = new Stack<GameState>();
@@ -27,6 +35,11 @@ namespace EDBG.States
         public void PushState(GameState state)
         {
             _stateStack.Push(state);
+        }
+
+        public void PushCurrentState()
+        {
+            _stateStack.Push(CurrentState.Clone() as GameState);
         }
 
         public GameState PopState()

@@ -18,6 +18,7 @@ namespace EDBG.States
 
         public PlayerStateData(Player player)
         {
+            Player = player;
             DiscStock = player.InitialDiscStock;
         }
         public object Clone()

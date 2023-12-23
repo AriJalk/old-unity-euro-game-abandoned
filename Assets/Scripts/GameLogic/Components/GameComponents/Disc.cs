@@ -16,6 +16,16 @@ namespace EDBG.GameLogic.Components
             get; private set;
         }
 
+        public override bool IsNull
+        {
+            get
+            {
+                if (Owner == null)
+                    return true;
+                return false;
+            }
+        }
+
         public Disc(Player player)
         {
             _owner = player;

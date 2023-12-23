@@ -11,7 +11,9 @@ namespace EDBG.GameLogic.Components
         {
             get
             {
-                return PeekTopItem().Owner;
+                if(itemsList != null && Count > 0)
+                    return PeekTopItem().Owner;
+                return null;
             }
         }
         private List<T> itemsList;
@@ -19,6 +21,18 @@ namespace EDBG.GameLogic.Components
         public int Count
         {
             get { return itemsList.Count; }
+        }
+
+        public override bool IsNull
+        {
+            get
+            {
+                if (itemsList == null)
+                {
+                    return true;
+                }
+                return false;
+            }
         }
 
         public GameStack()
@@ -32,7 +46,7 @@ namespace EDBG.GameLogic.Components
             itemsList = new List<T>(count);
             for (int i = 0; i < count; i++)
             {
-                itemsList.Add(otherStack.GetItemByIndex(i));
+                itemsList.Add(otherStack.GetItemByIndex(i).Clone() as T);
             }
         }
 
@@ -90,11 +104,6 @@ namespace EDBG.GameLogic.Components
 
         public override object Clone()
         {
-            GameStack<T> clone = new GameStack<T>();
-            foreach (T item in itemsList)
-            {
-                clone.itemsList.Add(item.Clone() as T);
-            }
             return new GameStack<T>(this);
         }
     }

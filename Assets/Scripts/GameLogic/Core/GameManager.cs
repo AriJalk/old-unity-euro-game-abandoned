@@ -4,6 +4,7 @@ using EDBG.Engine.Visual;
 using EDBG.GameLogic.Rules;
 using EDBG.UserInterface;
 using EDBG.States;
+using EDBG.GameLogic.MapSystem;
 
 namespace EDBG.GameLogic.Core
 {
@@ -54,6 +55,10 @@ namespace EDBG.GameLogic.Core
         void Update()
         {
             engineManager.InputHandler.Listen();
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                UndoState();
+            }
         }
 
         private void OnDestroy()
@@ -124,13 +129,38 @@ namespace EDBG.GameLogic.Core
         private void SelectObject(bool[] mouseButtons, Vector2 position)
         {
             CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
+            /*
             Transform tile = cameraRaycaster.Raycast(position, LayerMask.GetMask("Disc"));
             if (tile != null)
             {
                 Debug.Log(tile.parent.parent.parent.name);
             }
+            */
+            switch (StateManager.CurrentState.GameLogicState.RoundState)
+            {
+                case RoundStates.GameStart:
+                    break;
+                case RoundStates.ChooseTile:
+                    SquareTileObject tile = cameraRaycaster.Raycast(position, LayerMask.GetMask("Tile")).GetComponent<SquareTileObject>();
+                    if(tile != null)
+                    {
+                        ChooseTile chooseTile = new ChooseTile(tile.TileData, StateManager.CurrentState.GameLogicState);
 
+                        bool result = TileRulesLogic.IsTileValid(chooseTile);
+                        Debug.Log(result);
+                        if(result == true)
+                        {
+                            StateManager.PushCurrentState();
+                            TileRulesLogic.AddDiscToTile(chooseTile);
+                            StateManager.CurrentState.GameLogicState.MapGrid.SetCell(chooseTile.SelectedTile);
+                            engineManager.MapRenderer.RenderMap(StateManager.CurrentState.GameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
+                        }
+                    }
+                    break;
+            }
         }
+
+
 
         private void ZoomCamera(float deltaY)
         {
@@ -139,7 +169,12 @@ namespace EDBG.GameLogic.Core
 
         private void UndoState()
         {
-
+            if(StateManager.Count > 1)
+            {
+                StateManager.PopState();
+                engineManager.MapRenderer.RenderMap(StateManager.CurrentState.GameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
+            }
         }
+             
     }
 }

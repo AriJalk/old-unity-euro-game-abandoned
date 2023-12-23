@@ -4,7 +4,7 @@ namespace EDBG.Utilities.DataTypes
 {
     public abstract class GridContainer : ICloneable
     {
-        private ICell[,] _grid;
+        protected ICell[,] _grid;
 
         public readonly int Rows;
 

@@ -37,6 +37,7 @@ namespace EDBG.GameLogic.Components
             set { _color = value; }
         }
 
+        public override bool IsNull => throw new System.NotImplementedException();
 
         public Die()
         {
@@ -70,7 +71,7 @@ namespace EDBG.GameLogic.Components
 
         public override object Clone()
         {
-            return new Die(this);
+            throw new System.NotImplementedException();
         }
     }
 }

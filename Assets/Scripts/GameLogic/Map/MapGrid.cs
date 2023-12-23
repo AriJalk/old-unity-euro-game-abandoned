@@ -1,3 +1,4 @@
+using EDBG.GameLogic.Components;
 using EDBG.Utilities.DataTypes;
 
 namespace EDBG.GameLogic.MapSystem
@@ -9,11 +10,15 @@ namespace EDBG.GameLogic.MapSystem
 
         }
 
-        public MapGrid(MapGrid other) : base(other) { }
+        public MapGrid(MapGrid other) : base(other) 
+        {
+
+        }
 
         public override object Clone()
         {
-            return new MapGrid(this);
+            MapGrid newGrid = new MapGrid(this);
+            return newGrid;
         }
     }
 }

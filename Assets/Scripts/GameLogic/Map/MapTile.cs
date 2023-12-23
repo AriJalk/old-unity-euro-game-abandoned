@@ -1,4 +1,4 @@
-using EDBG.GameLogic.Rules;
+﻿using EDBG.GameLogic.Rules;
 using EDBG.Utilities.DataTypes;
 using EDBG.GameLogic.Components;
 
@@ -42,7 +42,8 @@ namespace EDBG.GameLogic.MapSystem
             TileColor = tile.TileColor;
             GamePosition = tile.GamePosition;
             DieFace = tile.DieFace;
-            ComponentOnTile = (IGameComponent)tile.ComponentOnTile.Clone();
+            if(tile.ComponentOnTile!= null)
+                ComponentOnTile = (IGameComponent)tile.ComponentOnTile.Clone();
         }
 
         public object Clone()
