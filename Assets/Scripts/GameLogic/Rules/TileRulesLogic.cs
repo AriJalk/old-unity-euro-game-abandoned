@@ -12,6 +12,50 @@ namespace EDBG.GameLogic.Rules
     // TODO: Rename class, singleton
     public class TileRulesLogic
     {
+
+        private static bool IsNextFloorPossible(GridContainer map, MapTile originTile, Player player)
+        {
+            List<ICell> tiles = GetCellsWithComponentInAllDirections(map, originTile, player, true, true);
+            byte tilesWithPlayerDiscs = (byte)tiles.Count;
+            
+            // 2nd floor requires 1 additional disc from connected tile, 3 requires 2 etc
+            if (tilesWithPlayerDiscs < ((GameStack<Disc>)originTile.ComponentOnTile).Count + 1)
+                return false;
+            return true;
+        }
+
+        private static List<ICell> GetCellsWithComponentInDirection(GridContainer map, ICell originCell, Player player, bool canBlock, bool isPlayerOwned, Direction direction)
+        {
+            MapTile tile = originCell as MapTile;
+            List<ICell> cells = new List<ICell>();
+            while (map.GetNeighbor(tile, direction) != null)
+            {
+                tile = map.GetNeighbor(tile, direction) as MapTile;
+                if (tile.ComponentOnTile != null)
+                {
+                    if ((tile.ComponentOnTile.Owner == player || tile.ComponentOnTile.Owner == null) ||
+                        (tile.ComponentOnTile.Owner != null && tile.ComponentOnTile.Owner != player && !isPlayerOwned))
+                    {
+                        cells.Add(tile);
+                        if (canBlock)
+                            break;
+                    }
+                }
+            }
+            return cells;
+        }
+
+        private static List<ICell> GetCellsWithComponentInAllDirections(GridContainer map, ICell originCell, Player player, bool canBlock, bool isPlayerOwned)
+        {
+            List<ICell> cells = GetCellsWithComponentInDirection(map, originCell, player, canBlock, isPlayerOwned, Direction.Left);
+            cells.AddRange(GetCellsWithComponentInDirection(map, originCell, player, canBlock, isPlayerOwned, Direction.Right));
+            cells.AddRange(GetCellsWithComponentInDirection(map, originCell, player, canBlock, isPlayerOwned, Direction.Up));
+            cells.AddRange(GetCellsWithComponentInDirection(map, originCell, player, canBlock, isPlayerOwned, Direction.Down));
+
+            return cells;
+        }
+
+
         /// <summary>
         /// Receives a grid container and a cell, return 2d array of true where in distance to cell
         /// </summary>
@@ -39,7 +83,7 @@ namespace EDBG.GameLogic.Rules
             return distanceMap;
         }
 
-        public static List<ICell> GetCellsInDirectLine(GridContainer map, ICell originCell)
+        public static List<ICell> GetCellsInDirectLine(GridContainer map, ICell originCell, bool canBlock)
         {
             List<ICell> cells = new List<ICell>();
 
@@ -47,14 +91,18 @@ namespace EDBG.GameLogic.Rules
             for (int i = 0; i < map.Rows; i++)
             {
                 if (i != originCell.GamePosition.Row)
+                {
                     cells.Add(map.GetCell(i, originCell.GamePosition.Col));
+                }
             }
 
             // Get cells in row
             for (int i = 0; i < map.Columns; i++)
             {
                 if (i != originCell.GamePosition.Col)
+                {
                     cells.Add(map.GetCell(originCell.GamePosition.Row, i));
+                }
             }
 
             // Test
@@ -63,22 +111,6 @@ namespace EDBG.GameLogic.Rules
                 Debug.Log(cellx.GamePosition);
 
             return cells;
-        }
-
-        private static bool IsNextFloorPossible(GridContainer map, MapTile originTile, Player player)
-        {
-            List<MapTile> tiles = GetCellsInDirectLine(map, originTile).Cast<MapTile>().ToList();
-            byte tilesWithPlayerDiscs = 0;
-            foreach (MapTile tile in tiles)
-            {
-                if (tile.ComponentOnTile != null && tile.ComponentOnTile.Owner == player)
-                    tilesWithPlayerDiscs++;
-
-            }
-            // 2nd floor requires 1 additional disc from connected tile, 3 requires 2 etc
-            if (tilesWithPlayerDiscs < ((GameStack<Disc>)originTile.ComponentOnTile).Count)
-                return false;
-            return true;
         }
 
         public static bool IsTileValid(ChooseTile chooseTile)
