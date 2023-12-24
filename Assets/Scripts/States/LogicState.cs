@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EDBG.GameLogic.MapSystem;
 using EDBG.GameLogic.Components;
 using EDBG.GameLogic.Rules;
+using UnityEngine;
 
 namespace EDBG.States
 {
@@ -11,6 +12,7 @@ namespace EDBG.States
     {
         GameStart,
         ChooseTile,
+        ChooseStack,
         ChooseDisc,
         ChooseDemandTile,
         ChooseUpgrade,
@@ -24,13 +26,19 @@ namespace EDBG.States
         public RoundStates RoundState
         {
             get { return _roundState; }
-            set { _roundState = value; }
+            set 
+            { 
+                _roundState = value;
+
+            }
         }
 
         public byte CurrentPlayerIndex {  get; set; }
         public MapGrid MapGrid { get; set; }
 
         public List<PlayerStateData> PlayerStateList { get; set; }
+
+        public MapTile TargetTile { get; set; }
 
         public LogicState(MapGrid mapGrid, params Player[] players)
         {
@@ -61,6 +69,7 @@ namespace EDBG.States
                     }
                 }
                 RoundState = other.RoundState;
+                TargetTile = other.TargetTile;
             }
         }
 

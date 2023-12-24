@@ -59,6 +59,16 @@ namespace EDBG.GameLogic.MapSystem
             } 
             return null;
         }
+
+        public override bool Equals(object obj)
+        {
+            MapTile other = obj as MapTile;
+            if(other != null)
+            {
+                return GamePosition.Equals(other.GamePosition);
+            }
+            return false;
+        }
     }
 
 }

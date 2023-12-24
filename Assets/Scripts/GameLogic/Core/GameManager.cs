@@ -146,6 +146,7 @@ namespace EDBG.GameLogic.Core
                 case RoundStates.GameStart:
                     break;
                 case RoundStates.ChooseTile:
+
                     if (mouseButtons[0] == true)
                         ChooseTile(position);
                     else if (mouseButtons[1] == true)
@@ -153,11 +154,16 @@ namespace EDBG.GameLogic.Core
 
                     }
                     break;
+                case RoundStates.ChooseStack:
+                    if (mouseButtons[0] == true)
+                        ChooseStack(position);
+                    break;
             }
         }
 
         private void ChooseTile(Vector2 position)
         {
+
             CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
 
             Transform tileTransform = cameraRaycaster.Raycast(position, LayerMask.GetMask("Tile"));
@@ -199,15 +205,12 @@ namespace EDBG.GameLogic.Core
                     {
                         Debug.Log("Larger Stack: " + bigTile.GamePosition);
                         //TODO: select between options
-                        if (tiles.Count == 1)
+                        if (tiles.Count > 0)
                         {
                             StateManager.PushCurrentState();
-                            MapTile captureOrigin = StateManager.CurrentState.GameLogicState.MapGrid.GetCell(bigTile.GamePosition) as MapTile;
-                            chooseTile.UpdateState(StateManager.CurrentState.GameLogicState);
-                            chooseTile.SelectedTile.ComponentOnTile = bigTile.ComponentOnTile;
-                            captureOrigin.ComponentOnTile = null;
-                            RenderGameState();
-                            SwapPlayers();
+                            StateManager.CurrentState.GameLogicState.TargetTile = chooseTile.SelectedTile;
+                            StateManager.CurrentState.GameLogicState.RoundState = RoundStates.ChooseStack;
+                            Debug.Log("ChooseStack start: Choose stack to capture with");
                         }
                     }
                 }
@@ -220,9 +223,38 @@ namespace EDBG.GameLogic.Core
                         (StateManager.CurrentState.GameLogicState.CurrentPlayerIndex == 0) ? (byte)1 : (byte)0;
         }
 
-        private void ChooseDisc()
+        private void ChooseStack(Vector2 position)
         {
 
+            ChooseTile chooseTile = new ChooseTile(StateManager.CurrentState.GameLogicState.TargetTile, StateManager.CurrentState.GameLogicState);
+            List<MapTile> legalTiles = TileRulesLogic.GetBiggerOpponentStackTiles(chooseTile);
+            CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
+
+            Transform tileTransform = cameraRaycaster.Raycast(position, LayerMask.GetMask("Tile"));
+            if (tileTransform != null)
+            {
+                MapTile captureOrigin = tileTransform.GetComponent<SquareTileObject>().TileData;
+                bool isMatching = false;
+                foreach(MapTile tile in legalTiles)
+                {
+                    if (captureOrigin.Equals(tile))
+                    {
+                        isMatching = true;
+                        break;
+                    }
+                }
+                if(isMatching == true)
+                {
+                    StateManager.PushCurrentState();
+                    captureOrigin = StateManager.CurrentState.GameLogicState.MapGrid.GetCell(captureOrigin.GamePosition) as MapTile;
+                    chooseTile.UpdateState(StateManager.CurrentState.GameLogicState);
+                    chooseTile.SelectedTile.ComponentOnTile = captureOrigin.ComponentOnTile;
+                    captureOrigin.ComponentOnTile = null;
+                    RenderGameState();
+                    StateManager.CurrentState.GameLogicState.RoundState = RoundStates.ChooseTile;
+                    SwapPlayers();
+                }
+            }
         }
 
         private void ZoomCamera(float deltaY)

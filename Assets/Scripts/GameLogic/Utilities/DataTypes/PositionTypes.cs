@@ -31,6 +31,13 @@ namespace EDBG.Utilities.DataTypes
         {
             return $"({_row}, {_col})";
         }
+
+        public override bool Equals(object obj)
+        {
+            GamePosition other = (GamePosition)obj;
+            return Row == other.Row && Col == other.Col;
+
+        }
     }
 
     public enum Direction { Left, Right, Up, Down, UpLeft, DownLeft, UpRight, DownRight, Neutral }
