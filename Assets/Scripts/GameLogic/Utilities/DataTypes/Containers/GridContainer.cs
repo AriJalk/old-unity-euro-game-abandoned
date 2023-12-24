@@ -42,6 +42,15 @@ namespace EDBG.Utilities.DataTypes
             return null;
         }
 
+        public virtual ICell GetCell(GamePosition position)
+        {
+            if (IsValidCoordinate(position.Row, position.Col))
+            {
+                return _grid[position.Row, position.Col];
+            }
+            return null;
+        }
+
         public virtual GridContainer GetCellAsContainer(int row, int col)
         {
             ICell cell = _grid[row, col];

@@ -10,7 +10,7 @@ namespace EDBG.GameLogic.Rules
 		public MapTile SelectedTile
 		{
 			get { return _selectedTile; }
-			set { _selectedTile = value; }
+			private set { _selectedTile = value; }
 		}
 
 		private LogicState _logicState;
@@ -18,13 +18,20 @@ namespace EDBG.GameLogic.Rules
 		public LogicState LogicState
 		{
 			get { return _logicState; }
-			set { _logicState = value; }
+			private set { _logicState = value; }
 		}
 
 		public ChooseTile(MapTile selectedTile, LogicState state)
 		{
 			_selectedTile = selectedTile.Clone() as MapTile;
 			_logicState = state;
+		}
+
+		public void UpdateState(LogicState newState)
+		{
+            _logicState = newState;
+            _selectedTile = _logicState.MapGrid.GetCell(_selectedTile.GamePosition) as MapTile;
+			
 		}
 	}
 }
