@@ -166,6 +166,7 @@ namespace EDBG.GameLogic.Core
                 SquareTileObject tile = tileTransform.GetComponent<SquareTileObject>();
                 ChooseTile chooseTile = new ChooseTile(tile.TileData, StateManager.CurrentState.GameLogicState);
                 Player owner = chooseTile.SelectedTile.GetOwner();
+                // Empty Tile
                 if (owner == null)
                 {
                     StateManager.PushCurrentState();
@@ -174,6 +175,8 @@ namespace EDBG.GameLogic.Core
                     RenderGameState();
                     SwapPlayers();
                 }
+
+                // Player owned tile
                 else if (owner == StateManager.CurrentState.GameLogicState.GetCurrentPlayer())
                 {
                     if (TileRulesLogic.IsNextFloorPossible(chooseTile.LogicState.MapGrid, chooseTile.SelectedTile, chooseTile.LogicState.GetCurrentPlayer()))
@@ -186,12 +189,24 @@ namespace EDBG.GameLogic.Core
                     }    
 
                 }
+                // Opponent owned tile
                 else if (owner == StateManager.CurrentState.GameLogicState.GetOtherPlayer())
                 {
                     List<MapTile> tiles = TileRulesLogic.GetBiggerOpponentStackTiles(chooseTile);
                     foreach(MapTile bigTile in tiles )
                     {
                         Debug.Log("Larger Stack: " + bigTile.GamePosition);
+                        //TODO: select between options
+                        if (tiles.Count == 1)
+                        {
+                            StateManager.PushCurrentState();
+                            chooseTile.SelectedTile.ComponentOnTile = bigTile.ComponentOnTile;
+                            bigTile.ComponentOnTile = null;
+                            StateManager.CurrentState.GameLogicState.MapGrid.SetCell(chooseTile.SelectedTile);
+                            StateManager.CurrentState.GameLogicState.MapGrid.SetCell(bigTile);
+                            RenderGameState();
+                            SwapPlayers();
+                        }
                     }
                 }
             }
