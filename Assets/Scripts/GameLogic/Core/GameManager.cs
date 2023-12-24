@@ -5,6 +5,7 @@ using EDBG.GameLogic.Rules;
 using EDBG.UserInterface;
 using EDBG.States;
 using EDBG.GameLogic.MapSystem;
+using UnityEngine.UIElements;
 
 namespace EDBG.GameLogic.Core
 {
@@ -22,6 +23,7 @@ namespace EDBG.GameLogic.Core
         public Camera TokenCamera;
         public GameUI GameUI;
         public DiceTrayObject DiceTrayObject;
+        public Transform MapHolder;
 
 
         void Start()
@@ -39,7 +41,7 @@ namespace EDBG.GameLogic.Core
             StateManager.PushState(GameBuilder.BuildInitialState(4, 4, human, bot));
 
             //Render map
-            engineManager.MapRenderer.RenderMap(StateManager.CurrentState.GameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
+            RenderGameState();
 
             GameUI.Initialize(this);
 
@@ -129,7 +131,7 @@ namespace EDBG.GameLogic.Core
         //TODO: move to UI
         private void SelectObject(bool[] mouseButtons, Vector2 position)
         {
-            CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
+            
             /*
             Transform tile = cameraRaycaster.Raycast(position, LayerMask.GetMask("Disc"));
             if (tile != null)
@@ -142,26 +144,46 @@ namespace EDBG.GameLogic.Core
                 case RoundStates.GameStart:
                     break;
                 case RoundStates.ChooseTile:
-                    SquareTileObject tile = cameraRaycaster.Raycast(position, LayerMask.GetMask("Tile")).GetComponent<SquareTileObject>();
-                    if(tile != null)
+                    if (mouseButtons[0] == true)
+                        ChooseTile(position);
+                    else if (mouseButtons[1] == true)
                     {
-                        ChooseTile chooseTile = new ChooseTile(tile.TileData, StateManager.CurrentState.GameLogicState);
 
-                        bool result = TileRulesLogic.IsTileValid(chooseTile);
-                        Debug.Log(result);
-                        if(result == true)
-                        {
-                            StateManager.PushCurrentState();
-                            TileRulesLogic.AddDiscToTile(chooseTile);
-                            StateManager.CurrentState.GameLogicState.MapGrid.SetCell(chooseTile.SelectedTile);
-                            engineManager.MapRenderer.RenderMap(StateManager.CurrentState.GameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
-                        }
                     }
                     break;
             }
         }
 
+        private void ChooseTile(Vector2 position)
+        {
+            CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
 
+            Transform tileTransform = cameraRaycaster.Raycast(position, LayerMask.GetMask("Tile"));
+            if (tileTransform != null)
+            {
+                SquareTileObject tile = tileTransform.GetComponent<SquareTileObject>();
+                ChooseTile chooseTile = new ChooseTile(tile.TileData, StateManager.CurrentState.GameLogicState);
+
+                bool result = TileRulesLogic.IsTileValid(chooseTile);
+                Debug.Log(result);
+                if (result == true)
+                {
+                    StateManager.PushCurrentState();
+                    TileRulesLogic.AddDiscToTile(chooseTile);
+                    StateManager.CurrentState.GameLogicState.MapGrid.SetCell(chooseTile.SelectedTile);
+                    RenderGameState();
+                    StateManager.CurrentState.GameLogicState.CurrentPlayerIndex = 
+                        (StateManager.CurrentState.GameLogicState.CurrentPlayerIndex == 0)? (byte)1 : (byte)0 ;
+
+                    //StateManager.CurrentState.GameLogicState.RoundState = RoundStates.ChooseDisc;
+                }
+            }
+        }
+
+        private void ChooseDisc()
+        {
+
+        }
 
         private void ZoomCamera(float deltaY)
         {
@@ -173,8 +195,18 @@ namespace EDBG.GameLogic.Core
             if(StateManager.Count > 1)
             {
                 StateManager.PopState();
-                engineManager.MapRenderer.RenderMap(StateManager.CurrentState.GameLogicState.MapGrid, GameWorld.Find("SquareMapHolder"));
+                RenderGameState();
             }
+        }
+
+        private void RenderGameState()
+        {
+            engineManager.MapRenderer.RenderMap(StateManager.CurrentState.GameLogicState.MapGrid, MapHolder);
+        }
+
+        private void RenderGameState(GameState gameState)
+        {
+            engineManager.MapRenderer.RenderMap(gameState.GameLogicState.MapGrid, MapHolder);
         }
              
     }

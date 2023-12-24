@@ -27,7 +27,7 @@ namespace EDBG.States
             set { _roundState = value; }
         }
 
-        public int CurrentPlayerIndex {  get; set; }
+        public byte CurrentPlayerIndex {  get; set; }
         public MapGrid MapGrid { get; set; }
 
         public List<PlayerStateData> PlayerStateList { get; set; }

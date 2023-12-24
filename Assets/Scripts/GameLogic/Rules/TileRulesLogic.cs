@@ -16,12 +16,21 @@ namespace EDBG.GameLogic.Rules
         private static bool IsNextFloorPossible(GridContainer map, MapTile originTile, Player player)
         {
             List<ICell> tiles = GetCellsWithComponentInAllDirections(map, originTile, player, true, true);
-            byte tilesWithPlayerDiscs = (byte)tiles.Count;
-            
+            int tilesWithPlayerDiscs = tiles.Count;
+
             // 2nd floor requires 1 additional disc from connected tile, 3 requires 2 etc
             if (tilesWithPlayerDiscs < ((GameStack<Disc>)originTile.ComponentOnTile).Count + 1)
                 return false;
             return true;
+        }
+
+        public static List<ICell> GetTilesThatContribute(GridContainer map, MapTile originTile, Player player)
+        {
+
+            List<ICell> tiles = GetCellsWithComponentInAllDirections(map, originTile, player, true, true);
+            int tilesWithPlayerDiscs = tiles.Count;
+
+            return tiles;
         }
 
         private static List<ICell> GetCellsWithComponentInDirection(GridContainer map, ICell originCell, Player player, bool canBlock, bool isPlayerOwned, Direction direction)
@@ -139,6 +148,28 @@ namespace EDBG.GameLogic.Rules
             if (chooseTile.SelectedTile.ComponentOnTile == null)
                 chooseTile.SelectedTile.ComponentOnTile = new GameStack<Disc>();
             ((GameStack<Disc>)chooseTile.SelectedTile.ComponentOnTile).PushItem(new Disc(chooseTile.LogicState.GetCurrentPlayer()));
+        }
+
+        public static List<ICell> GetSmallerOpponentStacks(ChooseTile chosenTile)
+        {
+            GameStack<Disc> originStack = chosenTile.SelectedTile.ComponentOnTile as GameStack<Disc>;
+            if (originStack == null)
+                return null;
+            int stackSize = originStack.Count;
+            Player opponent = chosenTile.LogicState.CurrentPlayerIndex == 0 ? 
+                chosenTile.LogicState.PlayerStateList[1].Player : chosenTile.LogicState.PlayerStateList[0].Player;
+            
+            List<ICell> cells = GetCellsWithComponentInAllDirections(chosenTile.LogicState.MapGrid, chosenTile.SelectedTile, opponent, true, true);
+            foreach(MapTile tile in cells)
+            {
+                if (tile != null)
+                {
+                    GameStack<Disc> stack = tile.ComponentOnTile as GameStack<Disc>;
+                    if (stack.Count < stackSize)
+                        cells.Add(tile);
+                }
+            }
+            return cells;
         }
     }
 }

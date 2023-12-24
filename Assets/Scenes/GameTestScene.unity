@@ -940,6 +940,7 @@ MonoBehaviour:
   TokenCamera: {fileID: 1422328857}
   GameUI: {fileID: 1429696182}
   DiceTrayObject: {fileID: 0}
+  MapHolder: {fileID: 991677590}
 --- !u!1 &392168650
 GameObject:
   m_ObjectHideFlags: 0

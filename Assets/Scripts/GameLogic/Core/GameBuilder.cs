@@ -13,7 +13,7 @@ namespace EDBG.GameLogic.Core
     {
         private static MapGrid BuildMap(int mapHeight, int mapWidth, params Player[] players)
         {
-            Stack<int> faces = new Stack<int>(UtilityFunctions.GetShuffledList(mapHeight, 1, 2, 3, 4, 5, 6));
+            Stack<int> faces = new Stack<int>(UtilityFunctions.GetShuffledList(mapHeight - 1, 1, 2, 3, 4, 5, 6));
             TileColors[] colorsArray = {TileColors.Green, TileColors.Green, TileColors.Green,TileColors.Green, TileColors.Red, TileColors.Red, TileColors.Red, TileColors.Red,
                 TileColors.Blue, TileColors.Blue, TileColors.Blue, TileColors.Blue, TileColors.Black, TileColors.Black,
             };
