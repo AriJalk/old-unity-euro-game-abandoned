@@ -6,6 +6,8 @@ using EDBG.UserInterface;
 using EDBG.States;
 using EDBG.GameLogic.MapSystem;
 using UnityEngine.UIElements;
+using System.Collections.Generic;
+using EDBG.Utilities.DataTypes;
 
 namespace EDBG.GameLogic.Core
 {
@@ -131,7 +133,7 @@ namespace EDBG.GameLogic.Core
         //TODO: move to UI
         private void SelectObject(bool[] mouseButtons, Vector2 position)
         {
-            
+
             /*
             Transform tile = cameraRaycaster.Raycast(position, LayerMask.GetMask("Disc"));
             if (tile != null)
@@ -163,21 +165,42 @@ namespace EDBG.GameLogic.Core
             {
                 SquareTileObject tile = tileTransform.GetComponent<SquareTileObject>();
                 ChooseTile chooseTile = new ChooseTile(tile.TileData, StateManager.CurrentState.GameLogicState);
-
-                bool result = TileRulesLogic.IsTileValid(chooseTile);
-                Debug.Log(result);
-                if (result == true)
+                Player owner = chooseTile.SelectedTile.GetOwner();
+                if (owner == null)
                 {
                     StateManager.PushCurrentState();
                     TileRulesLogic.AddDiscToTile(chooseTile);
                     StateManager.CurrentState.GameLogicState.MapGrid.SetCell(chooseTile.SelectedTile);
                     RenderGameState();
-                    StateManager.CurrentState.GameLogicState.CurrentPlayerIndex = 
-                        (StateManager.CurrentState.GameLogicState.CurrentPlayerIndex == 0)? (byte)1 : (byte)0 ;
+                    SwapPlayers();
+                }
+                else if (owner == StateManager.CurrentState.GameLogicState.GetCurrentPlayer())
+                {
+                    if (TileRulesLogic.IsNextFloorPossible(chooseTile.LogicState.MapGrid, chooseTile.SelectedTile, chooseTile.LogicState.GetCurrentPlayer()))
+                    {
+                        StateManager.PushCurrentState();
+                        TileRulesLogic.AddDiscToTile(chooseTile);
+                        StateManager.CurrentState.GameLogicState.MapGrid.SetCell(chooseTile.SelectedTile);
+                        RenderGameState();
+                        SwapPlayers();
+                    }    
 
-                    //StateManager.CurrentState.GameLogicState.RoundState = RoundStates.ChooseDisc;
+                }
+                else if (owner == StateManager.CurrentState.GameLogicState.GetOtherPlayer())
+                {
+                    List<MapTile> tiles = TileRulesLogic.GetBiggerOpponentStackTiles(chooseTile);
+                    foreach(MapTile bigTile in tiles )
+                    {
+                        Debug.Log("Larger Stack: " + bigTile.GamePosition);
+                    }
                 }
             }
+        }
+
+        private void SwapPlayers()
+        {
+            StateManager.CurrentState.GameLogicState.CurrentPlayerIndex =
+                        (StateManager.CurrentState.GameLogicState.CurrentPlayerIndex == 0) ? (byte)1 : (byte)0;
         }
 
         private void ChooseDisc()
@@ -192,7 +215,7 @@ namespace EDBG.GameLogic.Core
 
         private void UndoState()
         {
-            if(StateManager.Count > 1)
+            if (StateManager.Count > 1)
             {
                 StateManager.PopState();
                 RenderGameState();
@@ -208,6 +231,6 @@ namespace EDBG.GameLogic.Core
         {
             engineManager.MapRenderer.RenderMap(gameState.GameLogicState.MapGrid, MapHolder);
         }
-             
+
     }
 }

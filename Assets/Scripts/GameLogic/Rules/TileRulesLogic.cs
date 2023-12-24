@@ -13,7 +13,7 @@ namespace EDBG.GameLogic.Rules
     public class TileRulesLogic
     {
 
-        private static bool IsNextFloorPossible(GridContainer map, MapTile originTile, Player player)
+        public static bool IsNextFloorPossible(GridContainer map, MapTile originTile, Player player)
         {
             List<ICell> tiles = GetCellsWithComponentInAllDirections(map, originTile, player, true, true);
             int tilesWithPlayerDiscs = tiles.Count;
@@ -150,26 +150,27 @@ namespace EDBG.GameLogic.Rules
             ((GameStack<Disc>)chooseTile.SelectedTile.ComponentOnTile).PushItem(new Disc(chooseTile.LogicState.GetCurrentPlayer()));
         }
 
-        public static List<ICell> GetSmallerOpponentStacks(ChooseTile chosenTile)
+        public static List<MapTile> GetBiggerOpponentStackTiles(ChooseTile chosenTile)
         {
             GameStack<Disc> originStack = chosenTile.SelectedTile.ComponentOnTile as GameStack<Disc>;
             if (originStack == null)
                 return null;
             int stackSize = originStack.Count;
-            Player opponent = chosenTile.LogicState.CurrentPlayerIndex == 0 ? 
-                chosenTile.LogicState.PlayerStateList[1].Player : chosenTile.LogicState.PlayerStateList[0].Player;
+            Player player = chosenTile.LogicState.GetCurrentPlayer();
             
-            List<ICell> cells = GetCellsWithComponentInAllDirections(chosenTile.LogicState.MapGrid, chosenTile.SelectedTile, opponent, true, true);
-            foreach(MapTile tile in cells)
+            List<ICell> cells = GetCellsWithComponentInAllDirections(chosenTile.LogicState.MapGrid, chosenTile.SelectedTile, player, true, true);
+            List<MapTile> tiles = new List<MapTile>();
+            foreach(ICell cell in cells)
             {
+                MapTile tile = cell as MapTile;
                 if (tile != null)
                 {
                     GameStack<Disc> stack = tile.ComponentOnTile as GameStack<Disc>;
-                    if (stack.Count < stackSize)
-                        cells.Add(tile);
+                    if (stack.Count > stackSize)
+                        tiles.Add(tile);
                 }
             }
-            return cells;
+            return tiles;
         }
     }
 }

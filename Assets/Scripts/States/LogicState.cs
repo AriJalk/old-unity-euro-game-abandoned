@@ -74,6 +74,11 @@ namespace EDBG.States
             return PlayerStateList[CurrentPlayerIndex].Player;
         }
 
+        public Player GetOtherPlayer()
+        {
+            return CurrentPlayerIndex == 0 ? PlayerStateList[1].Player : PlayerStateList[0].Player;
+        }
+
         public PlayerStateData GetPlayerState(Player player)
         {
             foreach(PlayerStateData stateData in PlayerStateList)
