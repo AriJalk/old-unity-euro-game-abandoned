@@ -33,9 +33,18 @@ namespace EDBG.Utilities.DataTypes
             }
         }
 
-        public virtual ICell GetCell(int row, int col)
+        public virtual T GetCell<T>(int row, int col) where T: ICell
         {
             if (IsValidCoordinate(row, col))
+            {
+                return (T)_grid[row, col];
+            }
+            return default(T);
+        }
+
+        public virtual ICell GetCell(int row, int col)
+        {
+            if(IsValidCoordinate(row, col))
             {
                 return _grid[row, col];
             }

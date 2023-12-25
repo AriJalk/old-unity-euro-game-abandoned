@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlTypes;
 using Unity.VisualScripting;
 
 namespace EDBG.Utilities.DataTypes

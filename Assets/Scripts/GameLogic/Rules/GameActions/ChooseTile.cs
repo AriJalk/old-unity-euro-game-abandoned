@@ -27,6 +27,7 @@ namespace EDBG.GameLogic.Rules
 			_logicState = state;
 		}
 
+		// Ensures tile is synced to the gamestate
 		public void UpdateState(LogicState newState)
 		{
             _logicState = newState;

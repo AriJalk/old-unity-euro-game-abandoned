@@ -29,22 +29,22 @@ namespace EDBG.Engine.Visual
             colorManager = GameEngineManager.Instance.ColorManager;
         }
 
-        public void RenderObjectsOnMap(SquareTileObject[,] tiles)
+        public void RenderObjectsOnMap(MapTileGameObject[,] tiles)
         {
-            foreach (SquareTileObject tile in tiles)
+            foreach (MapTileGameObject tile in tiles)
             {
                 RenderObjectsOnTileObject(tile);
             }
         }
 
-        public void RenderObjectsOnTileObject(SquareTileObject tile)
+        public void RenderObjectsOnTileObject(MapTileGameObject tile)
         {
             RemovePreviousDiscs(tile);
             CreateNewDiscs(tile);
         }
 
 
-        private void RemovePreviousDiscs(SquareTileObject tile)
+        private void RemovePreviousDiscs(MapTileGameObject tile)
         {
             DiscObject[] discs = tile.GetComponentsInChildren<DiscObject>();
             foreach (DiscObject disc in discs)
@@ -53,17 +53,17 @@ namespace EDBG.Engine.Visual
             }
         }
 
-        private void CreateNewDiscs(SquareTileObject tile)
+        private void CreateNewDiscs(MapTileGameObject tile)
         {
 
-            float tileHeight = SquareTileObject.TILE_HEIGHT;
+            float tileHeight = MapTileGameObject.TILE_HEIGHT;
             float discHeight = DiscObject.DISC_HEIGHT * DiscScale;
             float initialHeightOffset = 0.0f; // Adjust this value to control the initial height offset of the first disc
             float fillerDiscFactor = 6;
             float fillerDiscHeight = discHeight / fillerDiscFactor;
 
             Transform parentStack = tile.transform.Find("Stack");
-            //float gridCellSize = SquareTileObject.TILE_LENGTH / 3;
+            //float gridCellSize = MapTileGameObject.TILE_LENGTH / 3;
             if (tile.TileData.ComponentOnTile is GameStack<Disc> discStack && discStack.Count > 0)
             {
                 for (int i = 0; i < discStack.Count; i++)

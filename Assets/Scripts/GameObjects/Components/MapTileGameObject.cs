@@ -1,7 +1,7 @@
 using UnityEngine;
 using EDBG.GameLogic.MapSystem;
 
-public class SquareTileObject : MonoBehaviour
+public class MapTileGameObject : MonoBehaviour
 {
 
     public const float TILE_LENGTH = 0.5f;

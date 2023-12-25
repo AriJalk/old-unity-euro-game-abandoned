@@ -8,6 +8,7 @@ using EDBG.GameLogic.MapSystem;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
 using EDBG.Utilities.DataTypes;
+using EDBG.GameLogic.Components;
 
 namespace EDBG.GameLogic.Core
 {
@@ -52,7 +53,7 @@ namespace EDBG.GameLogic.Core
             */
 
             // Test bfs
-            bool[,] distanceMap = TileRulesLogic.GetCellsInDistance(StateManager.CurrentState.GameLogicState.MapGrid, StateManager.CurrentState.GameLogicState.MapGrid.GetCell(1, 1), 2);
+            bool[,] distanceMap = TileRulesLogic.GetCellsInDistance(StateManager.CurrentState.GameLogicState.MapGrid, StateManager.CurrentState.GameLogicState.MapGrid.GetCell<MapTile>(1, 1), 2);
             Debug.Log(distanceMap);
         }
 
@@ -80,7 +81,7 @@ namespace EDBG.GameLogic.Core
                 Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/SquareTilePrefab.");
                 return;
             }
-            engineManager.PrefabManager.RegisterPrefab<SquareTileObject>(squarePrefab);
+            engineManager.PrefabManager.RegisterPrefab<MapTileGameObject>(squarePrefab);
 
             GameObject discPrefab = Resources.Load<GameObject>("Prefabs/3D/DiscPrefab");
             if (discPrefab == null)
@@ -169,7 +170,7 @@ namespace EDBG.GameLogic.Core
             Transform tileTransform = cameraRaycaster.Raycast(position, LayerMask.GetMask("Tile"));
             if (tileTransform != null)
             {
-                SquareTileObject tile = tileTransform.GetComponent<SquareTileObject>();
+                MapTileGameObject tile = tileTransform.GetComponent<MapTileGameObject>();
                 ChooseTile chooseTile = new ChooseTile(tile.TileData, StateManager.CurrentState.GameLogicState);
                 Player owner = chooseTile.SelectedTile.GetOwner();
                 // Empty Tile
@@ -177,9 +178,9 @@ namespace EDBG.GameLogic.Core
                 {
                     StateManager.PushCurrentState();
                     chooseTile.UpdateState(StateManager.CurrentState.GameLogicState);
-                    
+
                     TileRulesLogic.AddDiscToTile(chooseTile);
-                    StateManager.CurrentState.GameLogicState.MapGrid.SetCell(chooseTile.SelectedTile);
+                    //StateManager.CurrentState.GameLogicState.MapGrid.SetCell(chooseTile.SelectedTile);
                     RenderGameState();
                     SwapPlayers();
                 }
@@ -187,32 +188,49 @@ namespace EDBG.GameLogic.Core
                 // Player owned tile
                 else if (owner == StateManager.CurrentState.GameLogicState.GetCurrentPlayer())
                 {
-                    if (TileRulesLogic.IsNextFloorPossible(chooseTile.LogicState.MapGrid, chooseTile.SelectedTile, chooseTile.LogicState.GetCurrentPlayer()))
+                    List<MapTile> tiles = TileRulesLogic.GetTilesWithComponentInAllDirections(
+                        StateManager.CurrentState.GameLogicState.MapGrid,
+                        chooseTile.SelectedTile, StateManager.CurrentState.GameLogicState.GetCurrentPlayer(), true, true);
+                    if(tiles.Count > chooseTile.SelectedTile.GetComponentOnTile<GameStack<Disc>>().Count)
                     {
                         StateManager.PushCurrentState();
                         chooseTile.UpdateState(StateManager.CurrentState.GameLogicState);
                         TileRulesLogic.AddDiscToTile(chooseTile);
+                        int excess = tiles.Count - chooseTile.SelectedTile.GetComponentOnTile<GameStack<Disc>>().Count;
+                        while(excess > 0)
+                        {
+                            TileRulesLogic.AddDiscToTile(chooseTile);
+                            excess--;
+                        }
                         RenderGameState();
                         SwapPlayers();
-                    }    
+                    }
 
                 }
                 // Opponent owned tile
                 else if (owner == StateManager.CurrentState.GameLogicState.GetOtherPlayer())
                 {
                     List<MapTile> tiles = TileRulesLogic.GetBiggerOpponentStackTiles(chooseTile);
-                    foreach(MapTile bigTile in tiles )
+                    if (tiles.Count > 0)
                     {
-                        Debug.Log("Larger Stack: " + bigTile.GamePosition);
-                        //TODO: select between options
-                        if (tiles.Count > 0)
+
+                        StateManager.PushCurrentState();
+                        StateManager.CurrentState.GameLogicState.TargetTile = chooseTile.SelectedTile;
+                        StateManager.CurrentState.GameLogicState.RoundState = RoundStates.ChooseStack;
+                        Debug.Log("ChooseStack start: Choose stack to capture with");
+                        foreach (MapTile bigTile in tiles)
                         {
-                            StateManager.PushCurrentState();
-                            StateManager.CurrentState.GameLogicState.TargetTile = chooseTile.SelectedTile;
-                            StateManager.CurrentState.GameLogicState.RoundState = RoundStates.ChooseStack;
-                            Debug.Log("ChooseStack start: Choose stack to capture with");
+                            Debug.Log("Larger Stack: " + bigTile.GamePosition);
+                            MapTileGameObject tileObject = MapHolder.Find(bigTile.ToString()).GetComponent<MapTileGameObject>();
+                            Transform stack = tileObject.transform.Find("Stack");
+                            foreach(Transform child in stack)
+                            {
+                                //TODO: preserve changes in undo
+                                child.localScale = engineManager.ObjectsRenderer.DiscScale * 2f * Vector3.one;
+                            }
                         }
                     }
+
                 }
             }
         }
@@ -233,9 +251,9 @@ namespace EDBG.GameLogic.Core
             Transform tileTransform = cameraRaycaster.Raycast(position, LayerMask.GetMask("Tile"));
             if (tileTransform != null)
             {
-                MapTile captureOrigin = tileTransform.GetComponent<SquareTileObject>().TileData;
+                MapTile captureOrigin = tileTransform.GetComponent<MapTileGameObject>().TileData;
                 bool isMatching = false;
-                foreach(MapTile tile in legalTiles)
+                foreach (MapTile tile in legalTiles)
                 {
                     if (captureOrigin.Equals(tile))
                     {
@@ -243,7 +261,7 @@ namespace EDBG.GameLogic.Core
                         break;
                     }
                 }
-                if(isMatching == true)
+                if (isMatching == true)
                 {
                     StateManager.PushCurrentState();
                     captureOrigin = StateManager.CurrentState.GameLogicState.MapGrid.GetCell(captureOrigin.GamePosition) as MapTile;

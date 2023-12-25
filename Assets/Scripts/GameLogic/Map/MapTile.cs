@@ -69,6 +69,16 @@ namespace EDBG.GameLogic.MapSystem
             }
             return false;
         }
+
+        public T GetComponentOnTile<T>() where T: IGameComponent
+        {
+            return (T)ComponentOnTile;
+        }
+
+        public override string ToString()
+        {
+            return $"Tile [{GamePosition.Row},{GamePosition.Col}]";
+        }
     }
 
 }

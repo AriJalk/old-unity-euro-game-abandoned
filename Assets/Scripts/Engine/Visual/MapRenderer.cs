@@ -11,7 +11,7 @@ namespace EDBG.Engine.Visual
     public class MapRenderer : MonoBehaviour
     {
         //TODO: move to SquareMapHolder
-        private SquareTileObject[,] tiles;
+        private MapTileGameObject[,] tiles;
 
 
         // Start is called before the first frame update
@@ -33,23 +33,23 @@ namespace EDBG.Engine.Visual
 
         public void RenderMap(MapGrid map, Transform mapHolderObject)
         {
-            tiles = new SquareTileObject[map.Rows, map.Columns];
+            tiles = new MapTileGameObject[map.Rows, map.Columns];
             RemovePreviousTiles(mapHolderObject);
             for (int row = 0; row < map.Rows; row++)
             {
                 for (int col = 0; col < map.Columns; col++)
                 {
-                    SquareTileObject tile = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<SquareTileObject>();
+                    MapTileGameObject tile = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<MapTileGameObject>();
                     tile.TileData = (MapTile)map.GetCell(row, col);
                     tile.transform.SetParent(mapHolderObject);
                     tile.transform.localScale = Vector3.one;
-                    Vector3 position = new Vector3(row * (SquareTileObject.TILE_SPACING + SquareTileObject.TILE_LENGTH)
+                    Vector3 position = new Vector3(row * (MapTileGameObject.TILE_SPACING + MapTileGameObject.TILE_LENGTH)
                         , 0.1f
-                        , col * (SquareTileObject.TILE_SPACING + SquareTileObject.TILE_LENGTH));
+                        , col * (MapTileGameObject.TILE_SPACING + MapTileGameObject.TILE_LENGTH));
                     tile.transform.localPosition = position;
                     tile.gameObject.isStatic = true;
                     tile.gameObject.SetActive(true);
-                    tile.name = "Tile [" + col + "," + row + "]";
+                    tile.name = tile.TileData.ToString();
                     tile.ApplyMaterial(ColorManager.Instance.GetTileMaterial(tile.TileData.TileColor));
                     tiles[row, col] = tile;
                     DrawDieFace(tile);
@@ -58,7 +58,7 @@ namespace EDBG.Engine.Visual
             }
         }
 
-        public SquareTileObject GetTileObject(int row, int col)
+        public MapTileGameObject GetTileObject(int row, int col)
         {
             return tiles[row, col];
         }
@@ -67,7 +67,7 @@ namespace EDBG.Engine.Visual
         {
             if (tile != null)
             {
-                SquareTileObject squareTileObject = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<SquareTileObject>();
+                MapTileGameObject squareTileObject = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<MapTileGameObject>();
                 squareTileObject.TileData = tile;
 
             }
@@ -77,14 +77,14 @@ namespace EDBG.Engine.Visual
 
         private void RemovePreviousTiles(Transform grid)
         {
-            SquareTileObject[] tiles = grid.GetComponentsInChildren<SquareTileObject>();
-            foreach (SquareTileObject tile in tiles)
+            MapTileGameObject[] tiles = grid.GetComponentsInChildren<MapTileGameObject>();
+            foreach (MapTileGameObject tile in tiles)
             {
-                GameEngineManager.Instance.PrefabManager.ReturnPoolObject<SquareTileObject>(tile);
+                GameEngineManager.Instance.PrefabManager.ReturnPoolObject<MapTileGameObject>(tile);
             }
         }
 
-        private void DrawDieFace(SquareTileObject tile)
+        private void DrawDieFace(MapTileGameObject tile)
         {
             SpriteRenderer spriteRenderer = tile.transform.GetComponentInChildren<SpriteRenderer>();
             spriteRenderer.sprite = GameEngineManager.Instance.SpriteManager.LoadSprite($"DieFaces/{tile.TileData.DieFace}");
