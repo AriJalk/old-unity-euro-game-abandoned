@@ -44,6 +44,12 @@ namespace EDBG.Engine.ResourceManagement
         public void RegisterPrefab<T>(GameObject prefab) where T : Component
         {
 
+            RegisterPrefab<T>(prefab, initialPoolSize);
+        }
+
+        public void RegisterPrefab<T>(GameObject prefab, int poolSize) where T : Component
+        {
+
             if (!prefabDict.ContainsKey(typeof(T)))
             {
                 prefabDict.Add(typeof(T), prefab);
@@ -52,7 +58,7 @@ namespace EDBG.Engine.ResourceManagement
                 {
                     SetQueue<T>();
                     PrefabPool<T> prefabPool = (PrefabPool<T>)pools[typeof(T)];
-                    for (int i = 0; i < initialPoolSize; i++)
+                    for (int i = 0; i < poolSize; i++)
                     {
                         T obj = CreateInstance<T>();
                         obj.gameObject.SetActive(false);

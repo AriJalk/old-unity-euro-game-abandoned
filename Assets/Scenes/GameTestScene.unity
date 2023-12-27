@@ -1556,7 +1556,7 @@ MonoBehaviour:
   TokenCamera: {fileID: 1422328857}
   GameUI: {fileID: 1429696182}
   DiceTrayObject: {fileID: 0}
-  MapHolder: {fileID: 991677590}
+  MapHolder: {fileID: 991677591}
 --- !u!1 &342060821
 GameObject:
   m_ObjectHideFlags: 0
@@ -4353,7 +4353,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 29.15
+  m_fontSize: 23.75
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9898,7 +9898,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18.4
+  m_fontSize: 14.95
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1

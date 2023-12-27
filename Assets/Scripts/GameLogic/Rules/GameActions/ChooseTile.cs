@@ -23,7 +23,7 @@ namespace EDBG.GameLogic.Rules
 
 		public ChooseTile(MapTile selectedTile, LogicState state)
 		{
-			_selectedTile = selectedTile.Clone() as MapTile;
+			_selectedTile = selectedTile;
 			_logicState = state;
 		}
 

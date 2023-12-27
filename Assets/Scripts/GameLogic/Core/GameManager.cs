@@ -26,7 +26,7 @@ namespace EDBG.GameLogic.Core
         public Camera TokenCamera;
         public GameUI GameUI;
         public DiceTrayObject DiceTrayObject;
-        public Transform MapHolder;
+        public SquareMapHolderObject MapHolder;
 
 
         void Start()
@@ -55,6 +55,8 @@ namespace EDBG.GameLogic.Core
             // Test bfs
             bool[,] distanceMap = TileRulesLogic.GetCellsInDistance(StateManager.CurrentState.GameLogicState.MapGrid, StateManager.CurrentState.GameLogicState.MapGrid.GetCell<MapTile>(1, 1), 2);
             Debug.Log(distanceMap);
+
+            MapHolder.Initialize(4,4); 
         }
 
 
@@ -81,7 +83,7 @@ namespace EDBG.GameLogic.Core
                 Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/SquareTilePrefab.");
                 return;
             }
-            engineManager.PrefabManager.RegisterPrefab<MapTileGameObject>(squarePrefab);
+            engineManager.PrefabManager.RegisterPrefab<MapTileGameObject>(squarePrefab, 16);
 
             GameObject discPrefab = Resources.Load<GameObject>("Prefabs/3D/DiscPrefab");
             if (discPrefab == null)
@@ -89,7 +91,7 @@ namespace EDBG.GameLogic.Core
                 Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/DiscPrefab.");
                 return;
             }
-            engineManager.PrefabManager.RegisterPrefab<DiscObject>(discPrefab);
+            engineManager.PrefabManager.RegisterPrefab<DiscObject>(discPrefab, 50);
 
             GameObject diePrefab = Resources.Load<GameObject>("Prefabs/3D/DiePrefab");
             if (diePrefab == null)
@@ -97,7 +99,7 @@ namespace EDBG.GameLogic.Core
                 Debug.Log("Die Prefab is not found in Resources/Prefabs/3D/DiePrefab");
                 return;
             }
-            engineManager.PrefabManager.RegisterPrefab<DieObject>(diePrefab);
+            engineManager.PrefabManager.RegisterPrefab<DieObject>(diePrefab, 16);
         }
 
         private void ActionSelected(UIAction action)
@@ -181,7 +183,9 @@ namespace EDBG.GameLogic.Core
 
                     TileRulesLogic.AddDiscToTile(chooseTile);
                     //StateManager.CurrentState.GameLogicState.MapGrid.SetCell(chooseTile.SelectedTile);
-                    RenderGameState();
+
+                    engineManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GameLogicState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder);
+                    //RenderGameState();
                     SwapPlayers();
                 }
 
@@ -194,15 +198,19 @@ namespace EDBG.GameLogic.Core
                     if(tiles.Count > chooseTile.SelectedTile.GetComponentOnTile<GameStack<Disc>>().Count)
                     {
                         StateManager.PushCurrentState();
-                        chooseTile.UpdateState(StateManager.CurrentState.GameLogicState);
-                        TileRulesLogic.AddDiscToTile(chooseTile);
                         int excess = tiles.Count - chooseTile.SelectedTile.GetComponentOnTile<GameStack<Disc>>().Count;
                         while(excess > 0)
                         {
+                            
+                            chooseTile.UpdateState(StateManager.CurrentState.GameLogicState);
                             TileRulesLogic.AddDiscToTile(chooseTile);
+                            //RenderDisc
+                            engineManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GameLogicState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder);
                             excess--;
                         }
-                        RenderGameState();
+                        
+                        
+
                         SwapPlayers();
                     }
 
@@ -221,13 +229,10 @@ namespace EDBG.GameLogic.Core
                         foreach (MapTile bigTile in tiles)
                         {
                             Debug.Log("Larger Stack: " + bigTile.GamePosition);
-                            MapTileGameObject tileObject = MapHolder.Find(bigTile.ToString()).GetComponent<MapTileGameObject>();
+                            MapTileGameObject tileObject = MapHolder.GetTile(bigTile.GamePosition);
                             Transform stack = tileObject.transform.Find("Stack");
-                            foreach(Transform child in stack)
-                            {
-                                //TODO: preserve changes in undo
-                                child.localScale = engineManager.ObjectsRenderer.DiscScale * 2f * Vector3.one;
-                            }
+                            stack.localScale = Vector3.one * 2f;
+
                         }
                     }
 

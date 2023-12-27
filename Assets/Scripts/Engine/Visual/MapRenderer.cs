@@ -31,7 +31,7 @@ namespace EDBG.Engine.Visual
             
         }
 
-        public void RenderMap(MapGrid map, Transform mapHolderObject)
+        public void RenderMap(MapGrid map, SquareMapHolderObject mapHolderObject)
         {
             tiles = new MapTileGameObject[map.Rows, map.Columns];
             RemovePreviousTiles(mapHolderObject);
@@ -41,7 +41,7 @@ namespace EDBG.Engine.Visual
                 {
                     MapTileGameObject tile = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<MapTileGameObject>();
                     tile.TileData = (MapTile)map.GetCell(row, col);
-                    tile.transform.SetParent(mapHolderObject);
+                    tile.transform.SetParent(mapHolderObject.transform);
                     tile.transform.localScale = Vector3.one;
                     Vector3 position = new Vector3(row * (MapTileGameObject.TILE_SPACING + MapTileGameObject.TILE_LENGTH)
                         , 0.1f
@@ -56,7 +56,10 @@ namespace EDBG.Engine.Visual
                     GameEngineManager.Instance.ObjectsRenderer.RenderObjectsOnTileObject(tile);
                 }
             }
+            mapHolderObject.SetTiles(tiles);
         }
+
+
 
         public MapTileGameObject GetTileObject(int row, int col)
         {
@@ -75,12 +78,12 @@ namespace EDBG.Engine.Visual
                 Debug.LogError("Cant render tile, tile is NULL");
         }
 
-        private void RemovePreviousTiles(Transform grid)
+        private void RemovePreviousTiles(SquareMapHolderObject grid)
         {
             MapTileGameObject[] tiles = grid.GetComponentsInChildren<MapTileGameObject>();
             foreach (MapTileGameObject tile in tiles)
             {
-                GameEngineManager.Instance.PrefabManager.ReturnPoolObject<MapTileGameObject>(tile);
+                GameEngineManager.Instance.ObjectsRenderer.RemoveTile(tile);
             }
         }
 
