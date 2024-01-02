@@ -6,6 +6,7 @@ using EDBG.Engine.ResourceManagement;
 using EDBG.Engine.Visual;
 using EDBG.Engine.InputManagement;
 using System.Runtime.InteropServices.WindowsRuntime;
+using EDBG.Engine.Animation;
 
 namespace EDBG.Engine.Core
 {
@@ -52,6 +53,7 @@ namespace EDBG.Engine.Core
         public ScreenManager ScreenManager;
         public SpriteManager SpriteManager;
         public InputEvents InputEvents;
+        public AnimationManager AnimationManager;
         //TODO: move to GameManager
         public ColorManager ColorManager {  get; private set; }
 

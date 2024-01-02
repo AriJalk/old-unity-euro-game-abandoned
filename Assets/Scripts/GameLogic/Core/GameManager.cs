@@ -9,6 +9,7 @@ using UnityEngine.UIElements;
 using System.Collections.Generic;
 using EDBG.Utilities.DataTypes;
 using EDBG.GameLogic.Components;
+using EDBG.Engine.Animation;
 
 namespace EDBG.GameLogic.Core
 {
@@ -27,6 +28,7 @@ namespace EDBG.GameLogic.Core
         public GameUI GameUI;
         public DiceTrayObject DiceTrayObject;
         public SquareMapHolderObject MapHolder;
+        public AnimationManager AnimationManager;
 
 
         void Start()
@@ -38,13 +40,14 @@ namespace EDBG.GameLogic.Core
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
 
+
             //Set new game
             HumanPlayer human = new HumanPlayer("HumanPlayer", PlayerColors.Black, 10, new BeginnerCorporation(Ownership.HumanPlayer));
             BotPlayer bot = new BotPlayer("BotPlayer", PlayerColors.White, 10, new BeginnerCorporation(Ownership.BotPlayer));
             StateManager.PushState(GameBuilder.BuildInitialState(4, 4, human, bot));
 
             //Render map
-            RenderGameState();
+            RenderGameState(true);
 
             GameUI.Initialize(this);
 
@@ -184,7 +187,7 @@ namespace EDBG.GameLogic.Core
                     TileRulesLogic.AddDiscToTile(chooseTile);
                     //StateManager.CurrentState.GameLogicState.MapGrid.SetCell(chooseTile.SelectedTile);
 
-                    engineManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GameLogicState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder);
+                    engineManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GameLogicState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder, true);
                     //RenderGameState();
                     SwapPlayers();
                 }
@@ -205,7 +208,7 @@ namespace EDBG.GameLogic.Core
                             chooseTile.UpdateState(StateManager.CurrentState.GameLogicState);
                             TileRulesLogic.AddDiscToTile(chooseTile);
                             //RenderDisc
-                            engineManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GameLogicState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder);
+                            engineManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GameLogicState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder, true);
                             excess--;
                         }
                         
@@ -231,7 +234,7 @@ namespace EDBG.GameLogic.Core
                             Debug.Log("Larger Stack: " + bigTile.GamePosition);
                             MapTileGameObject tileObject = MapHolder.GetTile(bigTile.GamePosition);
                             Transform stack = tileObject.transform.Find("Stack");
-                            stack.localScale = Vector3.one * 2f;
+                            GameEngineManager.Instance.AnimationManager.StartAnimation(stack.GetComponent<AnimatedObject>(), "BreathTrigger");
 
                         }
                     }
@@ -273,7 +276,7 @@ namespace EDBG.GameLogic.Core
                     chooseTile.UpdateState(StateManager.CurrentState.GameLogicState);
                     chooseTile.SelectedTile.ComponentOnTile = captureOrigin.ComponentOnTile;
                     captureOrigin.ComponentOnTile = null;
-                    RenderGameState();
+                    RenderGameState(false);
                     StateManager.CurrentState.GameLogicState.RoundState = RoundStates.ChooseTile;
                     SwapPlayers();
                 }
@@ -290,18 +293,18 @@ namespace EDBG.GameLogic.Core
             if (StateManager.Count > 1)
             {
                 StateManager.PopState();
-                RenderGameState();
+                RenderGameState(false);
             }
         }
 
-        private void RenderGameState()
+        private void RenderGameState(bool isAnimated)
         {
-            engineManager.MapRenderer.RenderMap(StateManager.CurrentState.GameLogicState.MapGrid, MapHolder);
+            engineManager.MapRenderer.RenderMap(StateManager.CurrentState.GameLogicState.MapGrid, MapHolder, isAnimated);
         }
 
-        private void RenderGameState(GameState gameState)
+        private void RenderGameState(GameState gameState, bool isAnimated)
         {
-            engineManager.MapRenderer.RenderMap(gameState.GameLogicState.MapGrid, MapHolder);
+            engineManager.MapRenderer.RenderMap(gameState.GameLogicState.MapGrid, MapHolder, isAnimated);
         }
 
     }

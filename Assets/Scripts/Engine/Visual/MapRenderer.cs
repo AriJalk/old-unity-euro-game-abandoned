@@ -31,7 +31,7 @@ namespace EDBG.Engine.Visual
             
         }
 
-        public void RenderMap(MapGrid map, SquareMapHolderObject mapHolderObject)
+        public void RenderMap(MapGrid map, SquareMapHolderObject mapHolderObject, bool isAnimated)
         {
             tiles = new MapTileGameObject[map.Rows, map.Columns];
             RemovePreviousTiles(mapHolderObject);
@@ -53,7 +53,7 @@ namespace EDBG.Engine.Visual
                     tile.ApplyMaterial(ColorManager.Instance.GetTileMaterial(tile.TileData.TileColor));
                     tiles[row, col] = tile;
                     DrawDieFace(tile);
-                    GameEngineManager.Instance.ObjectsRenderer.RenderObjectsOnTileObject(tile);
+                    GameEngineManager.Instance.ObjectsRenderer.RenderObjectsOnTileObject(tile, isAnimated);
                 }
             }
             mapHolderObject.SetTiles(tiles);

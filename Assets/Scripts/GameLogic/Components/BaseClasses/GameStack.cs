@@ -11,7 +11,7 @@ namespace EDBG.GameLogic.Components
         {
             get
             {
-                if(itemsList != null && Count > 0)
+                if (itemsList != null && Count > 0)
                     return PeekTopItem().Owner;
                 return null;
             }

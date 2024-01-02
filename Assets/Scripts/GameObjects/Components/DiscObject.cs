@@ -1,11 +1,12 @@
 using UnityEngine;
 
 using EDBG.GameLogic.Components;
+using EDBG.Engine.Animation;
 
-public class DiscObject : MonoBehaviour
+public class DiscObject : MonoBehaviour, IAnimationContainer
 {
-    private static int PutDownAnimationHash = Animator.StringToHash("PutDiscTrigger");
-    private Animator animator;
+    public Animator Animator { get; private set; }
+
     public const float DISC_DIAMETER = 0.1f;
     public const float DISC_HEIGHT = 0.03f;
 
@@ -14,10 +15,15 @@ public class DiscObject : MonoBehaviour
         get; set;
     }
 
+    void Awake()
+    {
+        Animator = transform.Find("DiscModel").GetComponent<Animator>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        animator = transform.Find("DiscModel").GetComponent<Animator>();
+        
     }
 
     // Update is called once per frame
@@ -26,13 +32,6 @@ public class DiscObject : MonoBehaviour
         
     }
 
-    void PutDiscDown()
-    {
-        if(animator != null)
-        {
-
-        }
-    }
 
     public void ApplyMaterial(Material material)
     {

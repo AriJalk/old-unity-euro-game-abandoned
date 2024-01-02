@@ -32,11 +32,11 @@ namespace EDBG.Engine.Visual
             colorManager = GameEngineManager.Instance.ColorManager;
         }
 
-        public void RenderObjectsOnMap(MapTileGameObject[,] tiles)
+        public void RenderObjectsOnMap(MapTileGameObject[,] tiles, bool isAnimated)
         {
             foreach (MapTileGameObject tile in tiles)
             {
-                RenderObjectsOnTileObject(tile);
+                RenderObjectsOnTileObject(tile, isAnimated);
             }
         }
 
@@ -50,11 +50,11 @@ namespace EDBG.Engine.Visual
             GameEngineManager.Instance.PrefabManager.ReturnPoolObject(tile);
         }
 
-        public void RenderObjectsOnTileObject(MapTileGameObject tile)
+        public void RenderObjectsOnTileObject(MapTileGameObject tile, bool isAnimated)
         {
             RemovePreviousDiscs(tile);
             tile.Stack.localScale = Vector3.one;
-            CreateNewDiscs(tile);
+            CreateNewDiscs(tile, isAnimated);
         }
 
 
@@ -67,7 +67,7 @@ namespace EDBG.Engine.Visual
             }
         }
 
-        private void CreateNewDiscs(MapTileGameObject tile)
+        private void CreateNewDiscs(MapTileGameObject tile, bool isAnimated)
         {
             float discHeight = DiscObject.DISC_HEIGHT * DiscScale;
             float initialHeightOffset = 0.0f; // Adjust this value to control the initial height offset of the first disc
@@ -80,35 +80,41 @@ namespace EDBG.Engine.Visual
             {
                 for (int i = 0; i < discStack.Count; i++)
                 {
-
-                    DiscObject newDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<DiscObject>();
-                    newDisc.name = "Disc";
-                    newDisc.discData = discStack.GetItemByIndex(i);
-                    newDisc.transform.SetParent(tile.Stack);
-                    newDisc.transform.localScale = Vector3.one * DiscScale;
+                    // Create main disc
+                    DiscObject mainDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<DiscObject>();
+                    mainDisc.name = "Disc";
+                    mainDisc.discData = discStack.GetItemByIndex(i);
+                    mainDisc.transform.SetParent(tile.Stack);
+                    mainDisc.transform.localScale = Vector3.one * DiscScale;
                     Vector3 position = new Vector3(0, i * discHeight + initialHeightOffset + ((i != 0) ? fillerDiscHeight * i : 0), 0);
-                    newDisc.transform.localPosition = position;
+                    mainDisc.transform.localPosition = position;
 
                     // Apply Material based on disc color
-                    newDisc.ApplyMaterial(colorManager.GetDiscMaterial(newDisc.discData.DiscColor));
-                    //Create filler disc
+                    mainDisc.ApplyMaterial(colorManager.GetDiscMaterial(mainDisc.discData.DiscColor));
+
+
+                    // Create filler disc
                     if (i < discStack.Count - 1)
                     {
-                        newDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<DiscObject>();
-                        newDisc.transform.SetParent(tile.Stack);
-                        newDisc.transform.localScale = new Vector3(DiscScale, DiscScale / fillerDiscFactor, DiscScale);
-                        newDisc.transform.name = "Filler Disc";
+                        DiscObject fillerDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<DiscObject>();
+                        fillerDisc.transform.SetParent(tile.Stack);
+                        fillerDisc.transform.localScale = new Vector3(DiscScale, DiscScale / fillerDiscFactor, DiscScale);
+                        fillerDisc.transform.name = "Filler Disc";
                         float fillerYPos = position.y + discHeight;
-                        newDisc.transform.localPosition = new Vector3(0, fillerYPos, 0);
-                        newDisc.ApplyMaterial(colorManager.GetMaterial(
-                            discStack.GetItemByIndex(i).DiscColor ==
-                            GameLogic.Rules.PlayerColors.White ? "BlackFiller" : "WhiteFiller"));
+                        fillerDisc.transform.localPosition = new Vector3(0, fillerYPos, 0);
+                        fillerDisc.ApplyMaterial(colorManager.GetMaterial(
+                            discStack.GetItemByIndex(i + 1).DiscColor == GameLogic.Rules.PlayerColors.White ? "BlackFiller" : "WhiteFiller"));
+                        //TODO: combine
+                        if (isAnimated == true)
+                            GameEngineManager.Instance.AnimationManager.StartAnimation(fillerDisc, "PutDiscTrigger");
                     }
+                    if (isAnimated == true)
+                        GameEngineManager.Instance.AnimationManager.StartAnimation(mainDisc, "PutDiscTrigger");
                 }
             }
         }
 
-        public void PlaceNewDisc(Disc disc, MapTile tileData, SquareMapHolderObject mapHolder)
+        public void PlaceNewDisc(Disc disc, MapTile tileData, SquareMapHolderObject mapHolder, bool isAnimated)
         {
             MapTileGameObject tileObject = mapHolder.GetTile(tileData.GamePosition);
             tileObject.TileData = tileData;
@@ -145,6 +151,7 @@ namespace EDBG.Engine.Visual
                             disc.DiscColor ==
                             GameLogic.Rules.PlayerColors.White ? "BlackFiller" : "WhiteFiller"));
                     newDiscHeight = newFillerHeight + fillerDiscHeight;
+                    newDisc.transform.Find("DiscModel").GetComponent<Animator>().SetTrigger(Animator.StringToHash("PutDiscTrigger"));
 
                 }
                 //Add regular disc
@@ -157,6 +164,7 @@ namespace EDBG.Engine.Visual
                 newDisc.transform.localPosition = position;
                 // Apply Material based on disc color
                 newDisc.ApplyMaterial(colorManager.GetDiscMaterial(newDisc.discData.DiscColor));
+                newDisc.transform.Find("DiscModel").GetComponent<Animator>().SetTrigger(Animator.StringToHash("PutDiscTrigger"));
             }
         }
 
