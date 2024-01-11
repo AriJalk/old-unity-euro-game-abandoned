@@ -6,23 +6,12 @@ namespace EDBG.Engine.ResourceManagement
     /// <summary>
     /// Loads materials
     /// </summary>
-    public class MaterialManager : MonoBehaviour
+    public class MaterialManager
     {
 
         private Dictionary<string, Material> materialPool;
 
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-        public void Initialize()
+        public MaterialManager()
         {
             materialPool = new Dictionary<string, Material>();
         }

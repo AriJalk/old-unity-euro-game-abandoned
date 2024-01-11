@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace EDBG.Engine.ResourceManagement
 {
     //TODO: Add rawimage functionality
-    public class SpriteManager : MonoBehaviour
+    public class SpriteManager
     {
         // A dictionary to store loaded sprites by their names
         private Dictionary<string, Sprite> loadedSprites = new Dictionary<string, Sprite>();

@@ -4,23 +4,12 @@ using EDBG.Engine.Core;
 
 namespace EDBG.Engine.InputManagement
 {
-    public class InputHandler : MonoBehaviour
+    public class InputHandler
     {
         private InputEvents inputEvents;
 
-        // Start is called before the first frame update
-        void Start()
-        {
 
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
-        public void Initialize()
+        public InputHandler()
         {
             inputEvents = GameEngineManager.Instance.InputEvents;
         }

@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 using EDBG.Engine.ResourceManagement;
 using EDBG.Engine.Visual;
 using EDBG.Engine.InputManagement;
-using System.Runtime.InteropServices.WindowsRuntime;
 using EDBG.Engine.Animation;
 
 namespace EDBG.Engine.Core
@@ -44,37 +43,41 @@ namespace EDBG.Engine.Core
             }
         }
 
+        public InputHandler InputHandler { get; private set; }
+        public InputEvents InputEvents { get; private set; }
+        public SpriteManager SpriteManager { get; private set; }
+        public PlatformManager PlatformManager { get; private set; }
+        public MaterialManager MaterialManager { get; private set; }
+        public MapRenderer MapRenderer { get; private set; }
+        public ObjectsRenderer ObjectsRenderer { get; private set; }
+        public ColorManager ColorManager { get; private set; }
+
+        //Mono Objects
         public PrefabManager PrefabManager;
-        public MapRenderer MapRenderer;
-        public ObjectsRenderer ObjectsRenderer;
-        public MaterialManager MaterialManager;
-        public InputHandler InputHandler;
-        public PlatformManager PlatformManager;
         public ScreenManager ScreenManager;
-        public SpriteManager SpriteManager;
-        public InputEvents InputEvents;
         public AnimationManager AnimationManager;
-        //TODO: move to GameManager
-        public ColorManager ColorManager {  get; private set; }
+
 
         void Awake()
         {
-            InitizalizeScripts();
+            
+            InputEvents = new InputEvents();
+            InputHandler = new InputHandler();
+            MaterialManager = new MaterialManager();
+            ColorManager = new ColorManager();
+            MapRenderer = new MapRenderer();
+            ObjectsRenderer = new ObjectsRenderer();
+            PlatformManager = new PlatformManager();
+            SpriteManager = new SpriteManager();
 
+            ScreenManager.Initialize();
+            PrefabManager.Initialize();
+            Random.InitState((int)System.DateTime.Now.Ticks);
         }
 
-        void InitizalizeScripts()
+        void Update()
         {
-            ColorManager = new ColorManager();
-            InputEvents = new InputEvents();
-            InputHandler.Initialize();
-            PrefabManager.Initialize();
-            MaterialManager.Initialize();
-            MapRenderer.Initialize();
-            ObjectsRenderer.Initialize();
-            PlatformManager.Initialize();
-            ScreenManager.Initialize();
-            Random.InitState((int)System.DateTime.Now.Ticks);
+            InputHandler.Listen();
         }
 
         public void LoadScene(string sceneName)

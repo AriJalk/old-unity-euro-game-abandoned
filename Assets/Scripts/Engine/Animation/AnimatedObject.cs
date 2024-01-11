@@ -9,12 +9,20 @@ public class AnimatedObject : MonoBehaviour, IAnimationContainer
 {
     public Animator Animator { get; private set; }
 
-    private void Start()
+
+    void Awake()
     {
         Animator = GetComponent<Animator>();
     }
+
+    private void Start()
+    {
+        
+    }
+
     public void OnAnimationEnd()
     {
         GameEngineManager.Instance.AnimationManager.OnAnimationEnd(this);
     }
+
 }

@@ -65,7 +65,7 @@ namespace EDBG.GameLogic.Core
 
         void Update()
         {
-            engineManager.InputHandler.Listen();
+
             if (Input.GetKeyDown(KeyCode.U))
             {
                 UndoState();
@@ -234,7 +234,7 @@ namespace EDBG.GameLogic.Core
                             Debug.Log("Larger Stack: " + bigTile.GamePosition);
                             MapTileGameObject tileObject = MapHolder.GetTile(bigTile.GamePosition);
                             Transform stack = tileObject.transform.Find("Stack");
-                            GameEngineManager.Instance.AnimationManager.StartAnimation(stack.GetComponent<AnimatedObject>(), "BreathTrigger");
+                            GameEngineManager.Instance.AnimationManager.StartAnimation(stack.GetComponent<AnimatedObject>(), "Breathing");
 
                         }
                     }

@@ -8,28 +8,10 @@ using EDBG.GameLogic.Rules;
 
 namespace EDBG.Engine.Visual
 {
-    public class MapRenderer : MonoBehaviour
+    public class MapRenderer
     {
         //TODO: move to SquareMapHolder
         private MapTileGameObject[,] tiles;
-
-
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
-        public void Initialize()
-        {
-            
-        }
 
         public void RenderMap(MapGrid map, SquareMapHolderObject mapHolderObject, bool isAnimated)
         {

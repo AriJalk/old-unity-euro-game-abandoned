@@ -18,14 +18,14 @@ namespace EDBG.Engine.Animation
             get { return animationsRunning > 0; }
         }
 
-        public void StartAnimation(IAnimationContainer animatedObject, string trigger)
+        public void StartAnimation(IAnimationContainer animatedObject, string animationName)
         {
             // Hash trigger string if needed
-            if (!stringHashDictionary.ContainsKey(trigger))
+            if (!stringHashDictionary.ContainsKey(animationName))
             {
-                stringHashDictionary.Add(trigger, Animator.StringToHash(trigger));
+                stringHashDictionary.Add(animationName, Animator.StringToHash(animationName));
             }
-            animatedObject.Animator.SetTrigger(stringHashDictionary[trigger]);
+            animatedObject.Animator.Play(stringHashDictionary[animationName]);
             animationsRunning++;
         }
 
@@ -34,7 +34,7 @@ namespace EDBG.Engine.Animation
             animationsRunning--;
             if (animationsRunning == 0)
             {
-                //raise revent here
+                Debug.Log("All animation ended");
             }
         }
 

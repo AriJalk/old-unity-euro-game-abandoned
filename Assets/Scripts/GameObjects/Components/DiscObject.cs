@@ -5,14 +5,19 @@ using EDBG.Engine.Animation;
 
 public class DiscObject : MonoBehaviour, IAnimationContainer
 {
-    public Animator Animator { get; private set; }
-
     public const float DISC_DIAMETER = 0.1f;
     public const float DISC_HEIGHT = 0.03f;
+    public const float DISC_SCALE = 2.5f;
 
     public Disc discData
     {
         get; set;
+    }
+
+    public Animator Animator 
+    {
+        get;
+        private set;
     }
 
     void Awake()

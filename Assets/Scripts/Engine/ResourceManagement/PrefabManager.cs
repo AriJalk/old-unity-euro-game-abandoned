@@ -17,23 +17,6 @@ namespace EDBG.Engine.ResourceManagement
         private Transform unactiveObjects;
         private readonly int initialPoolSize = 100;
 
-
-
-        void Start()
-        {
-
-        }
-
-        void Update()
-        {
-            // Your update logic here
-        }
-
-        void Awake()
-        {
-
-        }
-
         public void Initialize()
         {
             pools = new Dictionary<Type, object>();

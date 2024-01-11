@@ -2,21 +2,9 @@ using UnityEngine;
 
 namespace EDBG.Engine.Core
 {
-    public class PlatformManager : MonoBehaviour
+    public class PlatformManager
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
-        public void Initialize()
+        public PlatformManager()
         {
             // Call platform-specific methods or perform platform-specific actions here
             if (Application.platform == RuntimePlatform.Android)
