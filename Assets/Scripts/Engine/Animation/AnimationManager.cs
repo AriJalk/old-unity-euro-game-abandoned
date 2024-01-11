@@ -13,7 +13,8 @@ namespace EDBG.Engine.Animation
 
         private Dictionary<string, int> stringHashDictionary = new Dictionary<string, int>();
         private List<AnimatedObject> runningAnimators = new List<AnimatedObject>();
-        private Stack<AnimatedObject> objectsToLoop = new Stack<AnimatedObject>();
+        private Stack<AnimatedObject> animationsToStart = new Stack<AnimatedObject>();
+        private Stack<AnimatedObject> animationsToStop = new Stack<AnimatedObject>();
 
         public bool IsAnimationsRunning
         {
@@ -27,6 +28,19 @@ namespace EDBG.Engine.Animation
 
         private void LateUpdate()
         {
+            while (animationsToStop.Count > 0)
+            {
+                AnimatedObject anim = animationsToStop.Pop();
+                anim.Animator.Play(stringHashDictionary["Empty"]);
+                runningAnimators.Remove(anim);
+            }
+            while (animationsToStart.Count > 0)
+            {
+                AnimatedObject anim = animationsToStart.Pop();
+                anim.gameObject.SetActive(true);
+                anim.Animator.Play(anim.AnimationHash);
+                runningAnimators.Add(anim);
+            }
 
         }
 
@@ -39,20 +53,19 @@ namespace EDBG.Engine.Animation
                 stringHashDictionary.Add(animationName, Animator.StringToHash(animationName));
             }
             animatedObject.AnimationHash = stringHashDictionary[animationName];
-            animatedObject.Animator.Play(stringHashDictionary[animationName]);
-            runningAnimators.Add(animatedObject);
+            animatedObject.gameObject.SetActive(false);
+            animationsToStart.Push(animatedObject);
             Debug.Log("Animation: " + animationName);
         }
 
 
         public void StopAllAnimations()
         {
-            while (runningAnimators.Count > 0)
+            for (int i = 0; i < runningAnimators.Count; i++)
             {
-                AnimatedObject animatedObject = runningAnimators[0];
-                animatedObject.IsLooping = false;
-                animatedObject.transform.localScale = Vector3.one;
-                runningAnimators.RemoveAt(0);
+                AnimatedObject animObj = runningAnimators[i];
+                animObj.transform.localScale = Vector3.one;
+                animationsToStop.Push(animObj);
             }
         }
 

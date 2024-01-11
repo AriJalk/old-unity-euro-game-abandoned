@@ -93,10 +93,17 @@ namespace EDBG.Engine.Visual
                             discStack.GetItemByIndex(i + 1).DiscColor == GameLogic.Rules.PlayerColors.White ? "BlackFiller" : "WhiteFiller"));
                         //TODO: combine
                         if (isAnimated == true)
+                        {
                             GameEngineManager.Instance.AnimationManager.StartAnimation(fillerDisc.AnimatedObject, "PutDisc");
+
+                        }
+
                     }
                     if (isAnimated == true)
+                    {
                         GameEngineManager.Instance.AnimationManager.StartAnimation(mainDisc.AnimatedObject, "PutDisc");
+                    }
+                        
                 }
             }
         }
