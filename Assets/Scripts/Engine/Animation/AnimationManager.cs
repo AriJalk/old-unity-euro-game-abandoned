@@ -11,14 +11,19 @@ namespace EDBG.Engine.Animation
         public event AnimationCompletedEventHandler AnimationCompleted;
 
         private Dictionary<string, int> stringHashDictionary = new Dictionary<string, int>();
-        private int animationsRunning = 0;
+        private List<AnimatedObject> runningAnimators = new List<AnimatedObject>();
 
         public bool IsAnimationsRunning
         {
-            get { return animationsRunning > 0; }
+            get { return runningAnimators.Count > 0; }
         }
 
-        public void StartAnimation(IAnimationContainer animatedObject, string animationName)
+        private void Awake()
+        {
+            stringHashDictionary.Add("Empty", Animator.StringToHash("Empty"));
+        }
+
+        public void StartAnimation(AnimatedObject animatedObject, string animationName)
         {
             // Hash trigger string if needed
             if (!stringHashDictionary.ContainsKey(animationName))
@@ -26,18 +31,34 @@ namespace EDBG.Engine.Animation
                 stringHashDictionary.Add(animationName, Animator.StringToHash(animationName));
             }
             animatedObject.Animator.Play(stringHashDictionary[animationName]);
-            animationsRunning++;
+            runningAnimators.Add(animatedObject);
+            Debug.Log("Animation: " + animationName);
         }
 
-        public void OnAnimationEnd(AnimatedObject animatedObject)
+        public void StopAllAnimations()
         {
-            animationsRunning--;
-            if (animationsRunning == 0)
+            while (runningAnimators.Count > 0)
+            {
+                AnimatedObject animatedObject = runningAnimators[0];
+                animatedObject.IsLooping = false;
+                animatedObject.Animator.Play(stringHashDictionary["Empty"]);
+                runningAnimators.RemoveAt(0);
+            }
+        }
+
+    public void OnAnimationEnd(AnimatedObject animatedObject)
+    {
+        if (animatedObject.IsLooping == false)
+        {
+            animatedObject.Animator.Play(stringHashDictionary["Empty"]);
+            runningAnimators.Remove(animatedObject);
+            if (runningAnimators.Count == 0)
             {
                 Debug.Log("All animation ended");
             }
         }
-
-
     }
+
+
+}
 }

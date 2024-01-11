@@ -19,6 +19,7 @@ namespace EDBG.GameLogic.Core
     public class GameManager : MonoBehaviour
     {
         public StateManager StateManager { get; private set; }
+        public AnimationManager AnimationManager { get; private set; }
 
         private GameEngineManager engineManager;
 
@@ -28,7 +29,7 @@ namespace EDBG.GameLogic.Core
         public GameUI GameUI;
         public DiceTrayObject DiceTrayObject;
         public SquareMapHolderObject MapHolder;
-        public AnimationManager AnimationManager;
+
 
 
         void Start()
@@ -39,6 +40,7 @@ namespace EDBG.GameLogic.Core
             LoadPrefabs();
             engineManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
+            AnimationManager = engineManager.AnimationManager;
 
 
             //Set new game
@@ -59,7 +61,7 @@ namespace EDBG.GameLogic.Core
             bool[,] distanceMap = TileRulesLogic.GetCellsInDistance(StateManager.CurrentState.GameLogicState.MapGrid, StateManager.CurrentState.GameLogicState.MapGrid.GetCell<MapTile>(1, 1), 2);
             Debug.Log(distanceMap);
 
-            MapHolder.Initialize(4,4); 
+            MapHolder.Initialize(4, 4);
         }
 
 
@@ -198,21 +200,19 @@ namespace EDBG.GameLogic.Core
                     List<MapTile> tiles = TileRulesLogic.GetTilesWithComponentInAllDirections(
                         StateManager.CurrentState.GameLogicState.MapGrid,
                         chooseTile.SelectedTile, StateManager.CurrentState.GameLogicState.GetCurrentPlayer(), true, true);
-                    if(tiles.Count > chooseTile.SelectedTile.GetComponentOnTile<GameStack<Disc>>().Count)
+                    if (tiles.Count > chooseTile.SelectedTile.GetComponentOnTile<GameStack<Disc>>().Count)
                     {
                         StateManager.PushCurrentState();
                         int excess = tiles.Count - chooseTile.SelectedTile.GetComponentOnTile<GameStack<Disc>>().Count;
-                        while(excess > 0)
+                        while (excess > 0)
                         {
-                            
+
                             chooseTile.UpdateState(StateManager.CurrentState.GameLogicState);
                             TileRulesLogic.AddDiscToTile(chooseTile);
                             //RenderDisc
                             engineManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GameLogicState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder, true);
                             excess--;
                         }
-                        
-                        
 
                         SwapPlayers();
                     }
@@ -233,9 +233,9 @@ namespace EDBG.GameLogic.Core
                         {
                             Debug.Log("Larger Stack: " + bigTile.GamePosition);
                             MapTileGameObject tileObject = MapHolder.GetTile(bigTile.GamePosition);
-                            Transform stack = tileObject.transform.Find("Stack");
-                            GameEngineManager.Instance.AnimationManager.StartAnimation(stack.GetComponent<AnimatedObject>(), "Breathing");
-
+                            Transform stack = tileObject.Stack.transform;
+                            stack.GetComponent<AnimatedObject>().IsLooping = true;
+                            AnimationManager.StartAnimation(stack.GetComponent<AnimatedObject>(), "Breathing");
                         }
                     }
 
@@ -249,6 +249,7 @@ namespace EDBG.GameLogic.Core
                         (StateManager.CurrentState.GameLogicState.CurrentPlayerIndex == 0) ? (byte)1 : (byte)0;
         }
 
+        //TODO: change target
         private void ChooseStack(Vector2 position)
         {
 
@@ -261,14 +262,8 @@ namespace EDBG.GameLogic.Core
             {
                 MapTile captureOrigin = tileTransform.GetComponent<MapTileGameObject>().TileData;
                 bool isMatching = false;
-                foreach (MapTile tile in legalTiles)
-                {
-                    if (captureOrigin.Equals(tile))
-                    {
-                        isMatching = true;
-                        break;
-                    }
-                }
+                if (legalTiles.Contains(captureOrigin))
+                    isMatching = true;
                 if (isMatching == true)
                 {
                     StateManager.PushCurrentState();
@@ -279,6 +274,14 @@ namespace EDBG.GameLogic.Core
                     RenderGameState(false);
                     StateManager.CurrentState.GameLogicState.RoundState = RoundStates.ChooseTile;
                     SwapPlayers();
+                }
+                //Switch target if possible
+                else if (captureOrigin.GetOwner() == chooseTile.SelectedTile.GetOwner() && !captureOrigin.Equals(chooseTile.SelectedTile))
+                {
+                    StateManager.PopState();
+                    AnimationManager.StopAllAnimations();
+                    StateManager.CurrentState.GameLogicState.RoundState = RoundStates.ChooseTile;
+                    ChooseTile(position);
                 }
             }
         }
@@ -293,6 +296,8 @@ namespace EDBG.GameLogic.Core
             if (StateManager.Count > 1)
             {
                 StateManager.PopState();
+                if (StateManager.CurrentState.GameLogicState.RoundState == RoundStates.ChooseStack)
+                    StateManager.PopState();
                 RenderGameState(false);
             }
         }

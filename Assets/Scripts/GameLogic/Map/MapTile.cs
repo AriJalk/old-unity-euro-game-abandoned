@@ -1,6 +1,8 @@
 ﻿using EDBG.GameLogic.Rules;
 using EDBG.Utilities.DataTypes;
 using EDBG.GameLogic.Components;
+using System.Collections.Generic;
+using System;
 
 namespace EDBG.GameLogic.MapSystem
 {
@@ -60,15 +62,6 @@ namespace EDBG.GameLogic.MapSystem
             return null;
         }
 
-        public override bool Equals(object obj)
-        {
-            MapTile other = obj as MapTile;
-            if(other != null)
-            {
-                return GamePosition.Equals(other.GamePosition);
-            }
-            return false;
-        }
 
         public T GetComponentOnTile<T>() where T: IGameComponent
         {
@@ -78,6 +71,17 @@ namespace EDBG.GameLogic.MapSystem
         public override string ToString()
         {
             return $"Tile [{GamePosition.Row},{GamePosition.Col}]";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is MapTile tile &&
+                   EqualityComparer<GamePosition>.Default.Equals(GamePosition, tile.GamePosition);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(GamePosition);
         }
     }
 

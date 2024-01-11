@@ -1,3 +1,5 @@
+using System;
+
 namespace EDBG.Utilities.DataTypes
 {
     public struct GamePosition
@@ -32,12 +34,19 @@ namespace EDBG.Utilities.DataTypes
             return $"({_row}, {_col})";
         }
 
+
         public override bool Equals(object obj)
         {
-            GamePosition other = (GamePosition)obj;
-            return Row == other.Row && Col == other.Col;
-
+            return obj is GamePosition position &&
+                   _row == position._row &&
+                   _col == position._col;
         }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_row, _col);
+        }
+
     }
 
     public enum Direction { Left, Right, Up, Down, UpLeft, DownLeft, UpRight, DownRight, Neutral }

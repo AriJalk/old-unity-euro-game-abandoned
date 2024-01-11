@@ -7,17 +7,13 @@ using UnityEngine;
 
 public class AnimatedObject : MonoBehaviour, IAnimationContainer
 {
-    public Animator Animator { get; private set; }
+    public Animator Animator { get; protected set; }
+    public bool IsLooping { get; set; }
 
-
-    void Awake()
+    private void Awake()
     {
         Animator = GetComponent<Animator>();
-    }
-
-    private void Start()
-    {
-        
+        IsLooping = false;
     }
 
     public void OnAnimationEnd()

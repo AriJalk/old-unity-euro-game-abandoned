@@ -3,26 +3,24 @@ using UnityEngine;
 using EDBG.GameLogic.Components;
 using EDBG.Engine.Animation;
 
-public class DiscObject : MonoBehaviour, IAnimationContainer
+public class DiscObject : MonoBehaviour
 {
     public const float DISC_DIAMETER = 0.1f;
     public const float DISC_HEIGHT = 0.03f;
     public const float DISC_SCALE = 2.5f;
+    public const float FILLER_FACTOR = 3f;
+
+    public AnimatedObject AnimatedObject { get; private set; }
 
     public Disc discData
     {
         get; set;
     }
 
-    public Animator Animator 
-    {
-        get;
-        private set;
-    }
 
     void Awake()
     {
-        Animator = transform.Find("DiscModel").GetComponent<Animator>();
+        AnimatedObject = transform.Find("DiscModel").GetComponent<AnimatedObject>();
     }
 
     // Start is called before the first frame update
