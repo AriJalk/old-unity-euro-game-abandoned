@@ -154,12 +154,6 @@ namespace EDBG.Engine.Visual
             }
         }
 
-        public void PlaceDiscAnimated(Disc disc, MapTileGameObject tile)
-        {
-            int height = tile.TileData.GetComponentOnTile<GameStack<Disc>>().Count;
-
-        }
-
 
     }
 }

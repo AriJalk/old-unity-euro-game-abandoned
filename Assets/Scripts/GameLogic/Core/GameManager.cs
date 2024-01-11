@@ -74,9 +74,16 @@ namespace EDBG.GameLogic.Core
             }
         }
 
+        private void LateUpdate()
+        {
+            
+        }
+
         private void OnDestroy()
         {
             engineManager.InputEvents.UnsubscribeFromAllEvents(MoveCamera, SelectObject, ZoomCamera);
+            engineManager.ScreenManager.ScreenChanged -= ScreenChanged;
+
         }
 
         private void LoadPrefabs()
@@ -249,7 +256,6 @@ namespace EDBG.GameLogic.Core
                         (StateManager.CurrentState.GameLogicState.CurrentPlayerIndex == 0) ? (byte)1 : (byte)0;
         }
 
-        //TODO: change target
         private void ChooseStack(Vector2 position)
         {
 
@@ -280,7 +286,6 @@ namespace EDBG.GameLogic.Core
                 {
                     StateManager.PopState();
                     AnimationManager.StopAllAnimations();
-                    StateManager.CurrentState.GameLogicState.RoundState = RoundStates.ChooseTile;
                     ChooseTile(position);
                 }
             }

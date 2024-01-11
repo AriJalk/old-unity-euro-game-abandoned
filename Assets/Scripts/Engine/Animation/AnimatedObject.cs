@@ -8,6 +8,7 @@ using UnityEngine;
 public class AnimatedObject : MonoBehaviour, IAnimationContainer
 {
     public Animator Animator { get; protected set; }
+    public int AnimationHash { get; set; }
     public bool IsLooping { get; set; }
 
     private void Awake()
