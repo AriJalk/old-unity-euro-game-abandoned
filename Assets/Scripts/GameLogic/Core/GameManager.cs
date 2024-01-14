@@ -274,7 +274,7 @@ namespace EDBG.GameLogic.Core
                     chooseTile.UpdateState(StateManager.CurrentState);
                     chooseTile.SelectedTile.ComponentOnTile = captureOrigin.ComponentOnTile;
                     captureOrigin.ComponentOnTile = null;
-                    RenderGameState(false);
+                    Director.BuildGameState(currentState, false);
                     StateManager.CurrentState.RoundState = RoundStates.ChooseTile;
                     SwapPlayers();
                 }
@@ -300,7 +300,7 @@ namespace EDBG.GameLogic.Core
                 StateManager.PopState();
                 if (StateManager.CurrentState.RoundState == RoundStates.ChooseStack)
                     StateManager.PopState();
-                RenderGameState(false);
+                Director.BuildGameState(currentState, false);
             }
         }
 

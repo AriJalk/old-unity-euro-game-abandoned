@@ -9,6 +9,8 @@ using UnityEngine;
 public class AnimatedObject : MonoBehaviour, IAnimationContainer
 {
     private GameDirector director;
+
+    public Transform Model;
     public Animator Animator { get; protected set; }
     public int AnimationHash { get; set; }
     public bool IsLooping { get; set; }

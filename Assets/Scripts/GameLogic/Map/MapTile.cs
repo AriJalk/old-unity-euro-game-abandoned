@@ -81,12 +81,7 @@ namespace EDBG.GameLogic.MapSystem
 
         public override bool Equals(object obj)
         {
-            return obj is MapTile tile &&
-                   EqualityComparer<GamePosition>.Default.Equals(GamePosition, tile.GamePosition) &&
-                   _tileColor == tile._tileColor &&
-                   TileColor == tile.TileColor &&
-                   DieFace == tile.DieFace &&
-                   EqualityComparer<IGameComponent>.Default.Equals(ComponentOnTile, tile.ComponentOnTile);
+            return obj is MapTile tile && GamePosition.Equals(tile.GamePosition);
         }
     }
 

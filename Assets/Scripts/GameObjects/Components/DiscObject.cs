@@ -10,8 +10,6 @@ public class DiscObject : MonoBehaviour
     public const float DISC_SCALE = 2.5f;
     public const float FILLER_FACTOR = 3f;
 
-    public AnimatedObject AnimatedObject { get; private set; }
-
     public Disc DiscData
     {
         get; set;
@@ -20,7 +18,7 @@ public class DiscObject : MonoBehaviour
 
     void Awake()
     {
-        AnimatedObject = transform.Find("DiscModel").GetComponent<AnimatedObject>();
+
     }
 
     // Start is called before the first frame update

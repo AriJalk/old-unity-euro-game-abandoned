@@ -81,9 +81,15 @@ namespace EDBG.Engine.Visual
                     mainDisc.transform.localScale = Vector3.one * DiscObject.DISC_SCALE;
                     Vector3 position = new Vector3(0, i * discHeight + initialHeightOffset + ((i != 0) ? fillerDiscHeight * i : 0), 0);
                     mainDisc.transform.localPosition = position;
-
                     // Apply Material based on disc color
                     mainDisc.ApplyMaterial(colorManager.GetDiscMaterial(mainDisc.DiscData.DiscColor));
+
+                    if (isAnimated == true)
+                    {
+                        mainDisc.GetComponent<AnimatedObject>().Model.gameObject.SetActive(false);
+                        if (i == 0)
+                            director.AddAnimationSimultanious(mainDisc.GetComponent<AnimatedObject>(), "PlaceDisc");
+                    }
                     // Create filler disc
                     if (i < discStack.Count - 1)
                     {
@@ -95,10 +101,14 @@ namespace EDBG.Engine.Visual
                         fillerDisc.transform.localPosition = new Vector3(0, fillerYPos, 0);
                         fillerDisc.ApplyMaterial(colorManager.GetMaterial(
                             discStack.GetItemByIndex(i + 1).DiscColor == GameLogic.Rules.PlayerColors.White ? "BlackFiller" : "WhiteFiller"));
-                        director.AddAnimationToSequence(fillerDisc.AnimatedObject, "PlaceDisc");
-
+                        if (isAnimated == true)
+                        {
+                            fillerDisc.GetComponent<AnimatedObject>().Model.gameObject.SetActive(false);
+                            director.AddAnimationSimultanious(fillerDisc.GetComponent<AnimatedObject>(), "PlaceDisc");
+                        }
                     }
-                    director.AddAnimationToSequence(mainDisc.AnimatedObject, "PlaceDisc");
+                    if (i != 0 && isAnimated == true)
+                        director.AddAnimationSimultanious(mainDisc.GetComponent<AnimatedObject>(), "PlaceDisc");
 
                 }
             }
@@ -141,11 +151,11 @@ namespace EDBG.Engine.Visual
                             disc.DiscColor ==
                             GameLogic.Rules.PlayerColors.White ? "BlackFiller" : "WhiteFiller"));
                     newDiscHeight = newFillerHeight + fillerDiscHeight;
-                    fillerDisc.gameObject.SetActive(false);
-                    director.AddAnimationToSequence(fillerDisc.AnimatedObject, "PlaceDisc");
+                    fillerDisc.GetComponent<AnimatedObject>().Model.gameObject.SetActive(false);
+                    director.AddAnimationToSequence(fillerDisc.GetComponent<AnimatedObject>(), "PlaceDisc");
 
                 }
-                
+
                 //Add regular disc
                 Vector3 position = new Vector3(0, newDiscHeight, 0);
                 newDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<DiscObject>();
@@ -156,8 +166,8 @@ namespace EDBG.Engine.Visual
                 newDisc.transform.localPosition = position;
                 // Apply Material based on disc color
                 newDisc.ApplyMaterial(colorManager.GetDiscMaterial(newDisc.DiscData.DiscColor));
-                newDisc.gameObject.SetActive(false);
-                director.AddAnimationToSequence(newDisc.AnimatedObject, "PlaceDisc");
+                newDisc.GetComponent<AnimatedObject>().Model.gameObject.SetActive(false);
+                director.AddAnimationToSequence(newDisc.GetComponent<AnimatedObject>(), "PlaceDisc");
             }
         }
 

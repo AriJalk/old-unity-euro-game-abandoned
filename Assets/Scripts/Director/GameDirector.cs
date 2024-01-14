@@ -92,7 +92,7 @@ namespace EDBG.Director
         // Call only in late update after updating hash code in animatedObject
         private void PlayAnimation(AnimatedObject animatedObject)
         {
-            animatedObject.gameObject.SetActive(true);
+            animatedObject.Model.gameObject.SetActive(true);
             animatedObject.Animator.Play(animatedObject.AnimationHash);
         }
 
