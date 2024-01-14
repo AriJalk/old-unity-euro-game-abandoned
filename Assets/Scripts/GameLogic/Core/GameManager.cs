@@ -73,7 +73,7 @@ namespace EDBG.GameLogic.Core
 
         private void LateUpdate()
         {
-            
+
         }
 
         private void OnDestroy()
@@ -173,7 +173,7 @@ namespace EDBG.GameLogic.Core
                             ChooseStack(position);
                         break;
                 }
-            }  
+            }
         }
 
         private void ChooseTile(Vector2 position)
@@ -301,8 +301,11 @@ namespace EDBG.GameLogic.Core
             if (StateManager.Count > 1)
             {
                 StateManager.PopState();
-                if (StateManager.CurrentState.RoundState == RoundStates.ChooseStack)
+                if (StateManager.CurrentState.RoundState == RoundStates.ChooseStack && StateManager.Count > 1)
+                {
                     StateManager.PopState();
+                }
+
                 Director.BuildGameState(currentState, false);
             }
         }
