@@ -52,14 +52,11 @@ namespace EDBG.GameLogic.Core
             return mapGrid;
         }
 
-        public static GameState BuildInitialState(int mapWidth, int mapHeight, params Player[] players)
+        public static LogicState BuildInitialState(int mapWidth, int mapHeight, params Player[] players)
         {
-            GameState state;
             MapGrid mapGrid = BuildMap(mapHeight, mapWidth, players);
             LogicState logicState = new LogicState(mapGrid, players);
-            state = new GameState(logicState);
-
-            return state;
+            return logicState;
         }
 
 

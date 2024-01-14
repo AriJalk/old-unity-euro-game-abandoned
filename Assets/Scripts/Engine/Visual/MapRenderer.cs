@@ -2,9 +2,7 @@ using UnityEngine;
 
 using EDBG.Engine.Core;
 using EDBG.GameLogic.MapSystem;
-using System;
-using Unity.VisualScripting;
-using EDBG.GameLogic.Rules;
+using EDBG.Director;
 
 namespace EDBG.Engine.Visual
 {
@@ -12,6 +10,12 @@ namespace EDBG.Engine.Visual
     {
         //TODO: move to SquareMapHolder
         private MapTileGameObject[,] tiles;
+        private GameDirector director;
+
+        public void SetDirector(GameDirector director)
+        {
+            this.director = director;
+        }
 
         public void RenderMap(MapGrid map, MapHolder mapHolderObject, bool isAnimated)
         {

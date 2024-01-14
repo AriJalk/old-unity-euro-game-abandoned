@@ -7,9 +7,9 @@ namespace EDBG.States
 {
     public class StateManager
     {
-        private Stack<GameState> _stateStack;
+        private Stack<LogicState> _stateStack;
 
-        public GameState CurrentState
+        public LogicState CurrentState
         {
             get
             {
@@ -29,20 +29,20 @@ namespace EDBG.States
 
         public StateManager()
         {
-            _stateStack = new Stack<GameState>();
+            _stateStack = new Stack<LogicState>();
         }
 
-        public void PushState(GameState state)
+        public void PushState(LogicState state)
         {
             _stateStack.Push(state);
         }
 
         public void PushCurrentState()
         {
-            _stateStack.Push(CurrentState.Clone() as GameState);
+            _stateStack.Push(CurrentState.Clone() as LogicState);
         }
 
-        public GameState PopState()
+        public LogicState PopState()
         {
             return _stateStack.Pop();
         }

@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class AnimatedObject : MonoBehaviour, IAnimationContainer
 {
-    private DirectorCore director;
+    private GameDirector director;
     public Animator Animator { get; protected set; }
     public int AnimationHash { get; set; }
     public bool IsLooping { get; set; }
@@ -20,7 +20,7 @@ public class AnimatedObject : MonoBehaviour, IAnimationContainer
 
     private void Start()
     {
-        director = GameObject.Find("Director").GetComponent<DirectorCore>();
+        director = GameObject.Find("Director").GetComponent<GameDirector>();
     }
 
     public void OnAnimationEnd()

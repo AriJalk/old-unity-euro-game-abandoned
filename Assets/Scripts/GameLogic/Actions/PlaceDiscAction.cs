@@ -12,7 +12,7 @@ namespace EDBG.GameLogic.Actions
         const string name = "Place Disc";
         const string animationName = "PlaceDisc";
 
-        DirectorCore director;
+        GameDirector director;
         MapTile tile;
         Player player;
 
@@ -29,7 +29,7 @@ namespace EDBG.GameLogic.Actions
             }
         }
 
-        public PlaceDiscAction(DirectorCore director, MapTile tile, Player player)
+        public PlaceDiscAction(GameDirector director, MapTile tile, Player player)
         {
             this.director = director;
             this.tile = tile;
