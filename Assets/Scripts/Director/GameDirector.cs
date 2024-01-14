@@ -1,7 +1,5 @@
 ﻿using EDBG.Engine.Core;
-using EDBG.Engine.Visual;
 using EDBG.GameLogic.Actions;
-using EDBG.GameLogic.MapSystem;
 using EDBG.States;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,7 +32,7 @@ namespace EDBG.Director
         {
             get
             {
-                return animationsInSequence.Count == 0;
+                return animationsInSequence.Count != 0;
             }
         }
 

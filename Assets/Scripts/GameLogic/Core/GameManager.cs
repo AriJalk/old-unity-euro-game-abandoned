@@ -153,24 +153,27 @@ namespace EDBG.GameLogic.Core
                 Debug.Log(tile.parent.parent.parent.name);
             }
             */
-            switch (StateManager.CurrentState.RoundState)
+            if (Director.IsGameLocked == false)
             {
-                case RoundStates.GameStart:
-                    break;
-                case RoundStates.ChooseTile:
+                switch (StateManager.CurrentState.RoundState)
+                {
+                    case RoundStates.GameStart:
+                        break;
+                    case RoundStates.ChooseTile:
 
-                    if (mouseButtons[0] == true)
-                        ChooseTile(position);
-                    else if (mouseButtons[1] == true)
-                    {
+                        if (mouseButtons[0] == true)
+                            ChooseTile(position);
+                        else if (mouseButtons[1] == true)
+                        {
 
-                    }
-                    break;
-                case RoundStates.ChooseStack:
-                    if (mouseButtons[0] == true)
-                        ChooseStack(position);
-                    break;
-            }
+                        }
+                        break;
+                    case RoundStates.ChooseStack:
+                        if (mouseButtons[0] == true)
+                            ChooseStack(position);
+                        break;
+                }
+            }  
         }
 
         private void ChooseTile(Vector2 position)
