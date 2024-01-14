@@ -2,7 +2,7 @@ using EDBG.Utilities.DataTypes;
 using UnityEngine;
 
 
-public class SquareMapHolderObject : MonoBehaviour
+public class MapHolder : MonoBehaviour
 {
     private MapTileGameObject[,] tiles;
 

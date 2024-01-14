@@ -1,3 +1,4 @@
+using EDBG.Director;
 using EDBG.Engine.Animation;
 using EDBG.Engine.Core;
 using EDBG.GameLogic.Core;
@@ -7,6 +8,7 @@ using UnityEngine;
 
 public class AnimatedObject : MonoBehaviour, IAnimationContainer
 {
+    private DirectorCore director;
     public Animator Animator { get; protected set; }
     public int AnimationHash { get; set; }
     public bool IsLooping { get; set; }
@@ -14,12 +16,16 @@ public class AnimatedObject : MonoBehaviour, IAnimationContainer
     private void Awake()
     {
         Animator = GetComponent<Animator>();
-        IsLooping = false;
+    }
+
+    private void Start()
+    {
+        director = GameObject.Find("Director").GetComponent<DirectorCore>();
     }
 
     public void OnAnimationEnd()
     {
-        GameEngineManager.Instance.AnimationManager.OnAnimationEnd(this);
+        director.OnAnimationEnd(this);
     }
 
 }

@@ -73,15 +73,20 @@ namespace EDBG.GameLogic.MapSystem
             return $"Tile [{GamePosition.Row},{GamePosition.Col}]";
         }
 
-        public override bool Equals(object obj)
-        {
-            return obj is MapTile tile &&
-                   EqualityComparer<GamePosition>.Default.Equals(GamePosition, tile.GamePosition);
-        }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(GamePosition);
+            return HashCode.Combine(GamePosition, _tileColor, TileColor, DieFace, ComponentOnTile);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is MapTile tile &&
+                   EqualityComparer<GamePosition>.Default.Equals(GamePosition, tile.GamePosition) &&
+                   _tileColor == tile._tileColor &&
+                   TileColor == tile.TileColor &&
+                   DieFace == tile.DieFace &&
+                   EqualityComparer<IGameComponent>.Default.Equals(ComponentOnTile, tile.ComponentOnTile);
         }
     }
 

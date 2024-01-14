@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using EDBG.Utilities.DataTypes;
 using EDBG.GameLogic.Components;
 using EDBG.Engine.Animation;
+using EDBG.Director;
 
 namespace EDBG.GameLogic.Core
 {
@@ -28,7 +29,8 @@ namespace EDBG.GameLogic.Core
         public Camera TokenCamera;
         public GameUI GameUI;
         public DiceTrayObject DiceTrayObject;
-        public SquareMapHolderObject MapHolder;
+        public MapHolder MapHolder;
+        public DirectorCore Director;
 
 
 

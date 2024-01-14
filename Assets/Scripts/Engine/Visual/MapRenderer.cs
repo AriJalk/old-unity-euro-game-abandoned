@@ -13,7 +13,7 @@ namespace EDBG.Engine.Visual
         //TODO: move to SquareMapHolder
         private MapTileGameObject[,] tiles;
 
-        public void RenderMap(MapGrid map, SquareMapHolderObject mapHolderObject, bool isAnimated)
+        public void RenderMap(MapGrid map, MapHolder mapHolderObject, bool isAnimated)
         {
             tiles = new MapTileGameObject[map.Rows, map.Columns];
             RemovePreviousTiles(mapHolderObject);
@@ -60,7 +60,7 @@ namespace EDBG.Engine.Visual
                 Debug.LogError("Cant render tile, tile is NULL");
         }
 
-        private void RemovePreviousTiles(SquareMapHolderObject grid)
+        private void RemovePreviousTiles(MapHolder grid)
         {
             MapTileGameObject[] tiles = grid.GetComponentsInChildren<MapTileGameObject>();
             foreach (MapTileGameObject tile in tiles)

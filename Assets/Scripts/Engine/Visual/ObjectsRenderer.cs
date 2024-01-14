@@ -70,14 +70,14 @@ namespace EDBG.Engine.Visual
                     // Create main disc
                     DiscObject mainDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<DiscObject>();
                     mainDisc.name = "Disc";
-                    mainDisc.discData = discStack.GetItemByIndex(i);
+                    mainDisc.DiscData = discStack.GetItemByIndex(i);
                     mainDisc.transform.SetParent(tile.Stack.transform);
                     mainDisc.transform.localScale = Vector3.one * DiscObject.DISC_SCALE;
                     Vector3 position = new Vector3(0, i * discHeight + initialHeightOffset + ((i != 0) ? fillerDiscHeight * i : 0), 0);
                     mainDisc.transform.localPosition = position;
 
                     // Apply Material based on disc color
-                    mainDisc.ApplyMaterial(colorManager.GetDiscMaterial(mainDisc.discData.DiscColor));
+                    mainDisc.ApplyMaterial(colorManager.GetDiscMaterial(mainDisc.DiscData.DiscColor));
 
 
                     // Create filler disc
@@ -108,7 +108,7 @@ namespace EDBG.Engine.Visual
             }
         }
 
-        public void PlaceNewDisc(Disc disc, MapTile tileData, SquareMapHolderObject mapHolder, bool isAnimated)
+        public void PlaceNewDisc(Disc disc, MapTile tileData, MapHolder mapHolder, bool isAnimated)
         {
             MapTileGameObject tileObject = mapHolder.GetTile(tileData.GamePosition);
             tileObject.TileData = tileData;
@@ -150,13 +150,13 @@ namespace EDBG.Engine.Visual
                 //Add regular disc
                 Vector3 position = new Vector3(0, newDiscHeight, 0);
                 newDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<DiscObject>();
-                newDisc.discData = disc;
+                newDisc.DiscData = disc;
                 newDisc.name = "Disc";
                 newDisc.transform.SetParent(stack);
                 newDisc.transform.localScale = Vector3.one * DiscObject.DISC_SCALE;
                 newDisc.transform.localPosition = position;
                 // Apply Material based on disc color
-                newDisc.ApplyMaterial(colorManager.GetDiscMaterial(newDisc.discData.DiscColor));
+                newDisc.ApplyMaterial(colorManager.GetDiscMaterial(newDisc.DiscData.DiscColor));
                 GameEngineManager.Instance.AnimationManager.StartAnimation(newDisc.AnimatedObject, "PutDisc");
             }
         }

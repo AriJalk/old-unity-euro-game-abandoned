@@ -12,7 +12,7 @@ public class DiscObject : MonoBehaviour
 
     public AnimatedObject AnimatedObject { get; private set; }
 
-    public Disc discData
+    public Disc DiscData
     {
         get; set;
     }
