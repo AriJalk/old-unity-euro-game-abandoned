@@ -266,10 +266,7 @@ namespace EDBG.GameLogic.Core
             if (tileTransform != null)
             {
                 MapTile captureOrigin = tileTransform.GetComponent<MapTileGameObject>().TileData;
-                bool isMatching = false;
                 if (legalTiles.Contains(captureOrigin))
-                    isMatching = true;
-                if (isMatching == true)
                 {
                     StateManager.PushCurrentState();
                     captureOrigin = StateManager.CurrentState.MapGrid.GetCell(captureOrigin.GamePosition) as MapTile;
@@ -282,7 +279,7 @@ namespace EDBG.GameLogic.Core
                     SwapPlayers();
                 }
                 //Switch target if possible
-                else if (captureOrigin.GetOwner() == chooseTile.SelectedTile.GetOwner() && !captureOrigin.Equals(chooseTile.SelectedTile))
+                else
                 {
                     StateManager.PopState();
                     Director.StopAllAnimations();
