@@ -55,7 +55,6 @@ namespace EDBG.Engine.Core
         //Mono Objects
         public PrefabManager PrefabManager;
         public ScreenManager ScreenManager;
-        public AnimationManager AnimationManager;
 
 
         void Awake()

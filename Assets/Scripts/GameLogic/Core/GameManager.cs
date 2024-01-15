@@ -27,7 +27,6 @@ namespace EDBG.GameLogic.Core
             }
         }
         public StateManager StateManager { get; private set; }
-        public AnimationManager AnimationManager { get; private set; }
 
         private GameEngineManager engineManager;
 
@@ -51,7 +50,6 @@ namespace EDBG.GameLogic.Core
             engineManager.ScreenManager.ScreenChanged += ScreenChanged;
             engineManager.ObjectsRenderer.SetDirector(Director);
             engineManager.MapRenderer.SetDirector(Director);
-            AnimationManager = engineManager.AnimationManager;
 
 
             //Set new game
@@ -236,13 +234,14 @@ namespace EDBG.GameLogic.Core
                         StateManager.CurrentState.TargetTile = chooseTile.SelectedTile;
                         StateManager.CurrentState.RoundState = RoundStates.ChooseStack;
                         Debug.Log("ChooseStack start: Choose stack to capture with");
+                        Director.StopAllAnimations();
                         foreach (MapTile bigTile in tiles)
                         {
                             Debug.Log("Larger Stack: " + bigTile.GamePosition);
                             MapTileGameObject tileObject = MapHolder.GetTile(bigTile.GamePosition);
                             Transform stack = tileObject.Stack.transform;
                             stack.GetComponent<AnimatedObject>().IsLooping = true;
-                            AnimationManager.StartAnimation(stack.GetComponent<AnimatedObject>(), "Breathing");
+                            Director.AddAnimationLooping(stack.GetComponent<AnimatedObject>(), "Breathing");
                         }
                     }
 
@@ -277,6 +276,7 @@ namespace EDBG.GameLogic.Core
                     chooseTile.UpdateState(StateManager.CurrentState);
                     chooseTile.SelectedTile.ComponentOnTile = captureOrigin.ComponentOnTile;
                     captureOrigin.ComponentOnTile = null;
+                    Director.StopAllAnimations();
                     Director.BuildGameState(currentState, false);
                     StateManager.CurrentState.RoundState = RoundStates.ChooseTile;
                     SwapPlayers();
@@ -285,7 +285,7 @@ namespace EDBG.GameLogic.Core
                 else if (captureOrigin.GetOwner() == chooseTile.SelectedTile.GetOwner() && !captureOrigin.Equals(chooseTile.SelectedTile))
                 {
                     StateManager.PopState();
-                    AnimationManager.StopAllAnimations();
+                    Director.StopAllAnimations();
                     ChooseTile(position);
                 }
             }
@@ -298,15 +298,18 @@ namespace EDBG.GameLogic.Core
 
         private void UndoState()
         {
-            if (StateManager.Count > 1)
+            if (!Director.IsGameLocked)
             {
-                StateManager.PopState();
-                if (StateManager.CurrentState.RoundState == RoundStates.ChooseStack && StateManager.Count > 1)
+                if (StateManager.Count > 1)
                 {
                     StateManager.PopState();
+                    if (StateManager.CurrentState.RoundState == RoundStates.ChooseStack && StateManager.Count > 1)
+                    {
+                        StateManager.PopState();
+                    }
+                    Director.StopAllAnimations();
+                    Director.BuildGameState(currentState, false);
                 }
-
-                Director.BuildGameState(currentState, false);
             }
         }
 

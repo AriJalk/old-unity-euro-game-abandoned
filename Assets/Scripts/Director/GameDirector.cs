@@ -32,7 +32,7 @@ namespace EDBG.Director
         {
             get
             {
-                return animationsInSequence.Count != 0;
+                return animationsInSequence.Count > 0 || animationsToStart.Count > 0 || animationsToStop.Count > 0;
             }
         }
 
@@ -66,6 +66,8 @@ namespace EDBG.Director
             while (animationsToStop.Count > 0)
             {
                 AnimatedObject animatedObject = animationsToStop.Dequeue();
+                // Internal hash field is not replaced in case a stopped object will also start in the update
+                animatedObject.Animator.Play(stringHashDictionary["Empty"]);
             }
             while (animationsToStart.Count > 0)
             {
@@ -77,6 +79,11 @@ namespace EDBG.Director
             {
                 isSequenceAnimationStopped = false;
                 PlayAnimation(animationsInSequence.Peek());
+            }
+            foreach (AnimatedObject animatedObject in loopingAnimations)
+            {
+                //TODO: better timing
+                animatedObject.PlayAnimation();
             }
 
         }
@@ -92,6 +99,31 @@ namespace EDBG.Director
         {
             animatedObject.Model.gameObject.SetActive(true);
             animatedObject.Animator.Play(animatedObject.AnimationHash);
+        }
+
+        public void StopAllAnimations()
+        {
+
+            while(loopingAnimations.Count > 0)
+            {
+                animationsToStop.Enqueue(loopingAnimations[0]);
+                loopingAnimations.RemoveAt(0);
+            }
+
+            while(simultaniousAnimations.Count > 0)
+            {
+                animationsToStop.Enqueue(simultaniousAnimations[0]);
+                simultaniousAnimations.RemoveAt(0);
+            }
+            while(animationsToStart.Count > 0)
+            {
+                animationsToStop.Enqueue(animationsToStart.Dequeue());
+            }
+            while(loopingAnimations.Count > 0)
+            {
+                animationsToStop.Enqueue(loopingAnimations[0]);
+                loopingAnimations.RemoveAt(0);
+            }
         }
 
         public void AddActionToSequence(ActionBase action)
@@ -124,6 +156,16 @@ namespace EDBG.Director
             }
             animatedObject.AnimationHash = stringHashDictionary[animationName];
             animationsToStart.Enqueue(animatedObject);
+        }
+        public void AddAnimationLooping(AnimatedObject animatedObject, string animationName)
+        {
+            // Hash trigger string if needed
+            if (!stringHashDictionary.ContainsKey(animationName))
+            {
+                stringHashDictionary.Add(animationName, Animator.StringToHash(animationName));
+            }
+            animatedObject.AnimationHash = stringHashDictionary[animationName];
+            loopingAnimations.Add(animatedObject);
         }
 
         public void OnAnimationEnd(AnimatedObject animatedObject)

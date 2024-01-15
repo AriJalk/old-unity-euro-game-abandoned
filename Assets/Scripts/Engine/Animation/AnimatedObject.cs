@@ -30,4 +30,11 @@ public class AnimatedObject : MonoBehaviour, IAnimationContainer
         director.OnAnimationEnd(this);
     }
 
+    public void PlayAnimation()
+    {
+        if(!Model.gameObject.activeSelf)
+            Model.gameObject.SetActive(true);
+        Animator.Play(AnimationHash);
+    }
+
 }
