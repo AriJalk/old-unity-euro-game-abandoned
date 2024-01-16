@@ -9,11 +9,14 @@ using UnityEngine;
 public class AnimatedObject : MonoBehaviour, IAnimationContainer
 {
     private GameDirector director;
+    private bool isAnimationPreparing;
 
     public Transform Model;
     public Animator Animator { get; protected set; }
     public int AnimationHash { get; set; }
     public bool IsLooping { get; set; }
+
+
 
     private void Awake()
     {
@@ -25,6 +28,16 @@ public class AnimatedObject : MonoBehaviour, IAnimationContainer
         director = GameObject.Find("Director").GetComponent<GameDirector>();
     }
 
+    private void Update()
+    {
+        
+    }
+
+    private void LateUpdate()
+    {
+        
+    }
+
     public void OnAnimationEnd()
     {
         director.OnAnimationEnd(this);
@@ -32,9 +45,14 @@ public class AnimatedObject : MonoBehaviour, IAnimationContainer
 
     public void PlayAnimation()
     {
-        if(!Model.gameObject.activeSelf)
+        
+        if (!Model.gameObject.activeSelf)
             Model.gameObject.SetActive(true);
         Animator.Play(AnimationHash);
     }
 
+    public void ResetPosition()
+    {
+        transform.localPosition = Vector3.zero;
+    }
 }

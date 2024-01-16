@@ -34,7 +34,6 @@ namespace EDBG.Engine.Visual
                         , col * (MapTileGameObject.TILE_SPACING + MapTileGameObject.TILE_LENGTH));
                     tile.transform.localPosition = position;
                     tile.gameObject.isStatic = true;
-                    tile.gameObject.SetActive(true);
                     tile.name = tile.TileData.ToString();
                     tile.ApplyMaterial(ColorManager.Instance.GetTileMaterial(tile.TileData.TileColor));
                     tiles[row, col] = tile;

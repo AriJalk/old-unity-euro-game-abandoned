@@ -5,10 +5,14 @@ using EDBG.Engine.Animation;
 
 public class DiscObject : MonoBehaviour
 {
+    public Transform Model;
+    public AnimatedObject AnimatedObject;
+
     public const float DISC_DIAMETER = 0.1f;
     public const float DISC_HEIGHT = 0.03f;
     public const float DISC_SCALE = 2.5f;
     public const float FILLER_FACTOR = 3f;
+
 
     public Disc DiscData
     {
@@ -36,11 +40,9 @@ public class DiscObject : MonoBehaviour
 
     public void ApplyMaterial(Material material)
     {
-        // Find the child GameObject with the model
-        GameObject modelObject = transform.Find("DiscModel").gameObject;
 
         // Get the Renderer component of the modelObject
-        Renderer modelRenderer = modelObject.GetComponent<Renderer>();
+        Renderer modelRenderer = Model.GetComponent<Renderer>();
 
         // Assign the new material to the modelRenderer
         modelRenderer.material = material;

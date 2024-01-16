@@ -72,13 +72,13 @@ namespace EDBG.Director
             while (animationsToStart.Count > 0)
             {
                 AnimatedObject animatedObject = animationsToStart.Dequeue();
-                PlayAnimation(animatedObject);
+                animatedObject.PlayAnimation();
                 simultaniousAnimations.Add(animatedObject);
             }
             if (animationsInSequence.Count > 0 && isSequenceAnimationStopped == true)
             {
                 isSequenceAnimationStopped = false;
-                PlayAnimation(animationsInSequence.Peek());
+                animationsInSequence.Peek().PlayAnimation();
             }
             foreach (AnimatedObject animatedObject in loopingAnimations)
             {
@@ -91,14 +91,6 @@ namespace EDBG.Director
         public void Initialize()
         {
 
-        }
-
-
-        // Call only in late update after updating hash code in animatedObject
-        private void PlayAnimation(AnimatedObject animatedObject)
-        {
-            animatedObject.Model.gameObject.SetActive(true);
-            animatedObject.Animator.Play(animatedObject.AnimationHash);
         }
 
         public void StopAllAnimations()
