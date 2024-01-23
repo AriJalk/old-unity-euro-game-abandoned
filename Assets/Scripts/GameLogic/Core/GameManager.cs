@@ -189,13 +189,12 @@ namespace EDBG.GameLogic.Core
                 if (owner == null)
                 {
                     StateManager.PushCurrentState();
+                    //TODO: move to director
+                    //Add disc to tile logic map
                     chooseTile.UpdateState(StateManager.CurrentState);
-
                     TileRulesLogic.AddDiscToTile(chooseTile);
-                    //StateManager.CurrentState.GameLogicState.MapGrid.SetCell(chooseTile.SelectedTile);
 
                     engineManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder, true);
-                    //RenderGameState();
                     SwapPlayers();
                 }
 
