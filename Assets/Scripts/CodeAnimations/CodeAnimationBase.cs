@@ -5,6 +5,6 @@ using UnityEngine;
 
 public abstract class CodeAnimationBase : MonoBehaviour
 {
-    public GameDirector GameDirector;
     public abstract void PlayAnimation();
+    public abstract void StopAnimation();
 }

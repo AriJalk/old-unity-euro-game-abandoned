@@ -7,6 +7,7 @@ using EDBG.GameLogic.MapSystem;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.UIElements;
 using EDBG.Director;
+using Unity.VisualScripting;
 
 namespace EDBG.Engine.Visual
 {
@@ -86,9 +87,8 @@ namespace EDBG.Engine.Visual
 
                     if (isAnimated == true)
                     {
-                        mainDisc.AnimatedObject.transform.localPosition = Vector3.one * 20f;
                         if (i == 0)
-                            director.AddAnimationSimultanious(mainDisc.AnimatedObject, "PlaceDisc");
+                            mainDisc.AddComponent<PlaceDiscAnimation>();
                     }
                     // Create filler disc
                     if (i < discStack.Count - 1)
@@ -103,12 +103,13 @@ namespace EDBG.Engine.Visual
                             discStack.GetItemByIndex(i + 1).DiscColor == GameLogic.Rules.PlayerColors.White ? "BlackFiller" : "WhiteFiller"));
                         if (isAnimated == true)
                         {
-                            fillerDisc.AnimatedObject.transform.localPosition = Vector3.one * 20f;
-                            director.AddAnimationSimultanious(fillerDisc.AnimatedObject, "PlaceDisc");
+                            fillerDisc.AddComponent<PlaceDiscAnimation>();
+                            //director.AddAnimationSimultanious(fillerDisc.AnimatedObject, "PlaceDisc");
                         }
                     }
                     if (i != 0 && isAnimated == true)
-                        director.AddAnimationSimultanious(mainDisc.AnimatedObject, "PlaceDisc");
+                        mainDisc.AddComponent<PlaceDiscAnimation>();
+                        //director.AddAnimationSimultanious(mainDisc.AnimatedObject, "PlaceDisc");
 
                 }
             }
@@ -153,8 +154,7 @@ namespace EDBG.Engine.Visual
                     newDiscHeight = newFillerHeight + fillerDiscHeight;
                     if (isAnimated)
                     {
-                        fillerDisc.AnimatedObject.transform.localPosition = Vector3.one * 20f;
-                        director.AddAnimationToSequence(fillerDisc.AnimatedObject, "PlaceDisc");
+                        fillerDisc.AddComponent<PlaceDiscAnimation>();
                     }
 
 
@@ -172,8 +172,7 @@ namespace EDBG.Engine.Visual
                 newDisc.ApplyMaterial(colorManager.GetDiscMaterial(newDisc.DiscData.DiscColor));
                 if (isAnimated)
                 {
-                    newDisc.AnimatedObject.transform.localPosition = Vector3.one * 20f;
-                    director.AddAnimationToSequence(newDisc.AnimatedObject, "PlaceDisc");
+                    newDisc.AddComponent<PlaceDiscAnimation>();
                 }
             }
         }

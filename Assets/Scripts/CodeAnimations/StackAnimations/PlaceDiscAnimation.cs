@@ -1,21 +1,23 @@
 ﻿using EDBG.Director;
 using UnityEngine;
 
-public class JumpAnimation : CodeAnimationBase
+/// <summary>
+/// Disc dropping into position from above
+/// </summary>
+public class PlaceDiscAnimation : CodeAnimationBase
 {
-    public Transform Target;
-    public float JumpHeight = 1.0f;
-    public float Duration = 1.0f;
+    public float DropHeight = 1.0f;
+    public float Duration = 0.3f;
 
-    private Vector3 initialPosition;
     private float elapsedTime;
+    private Vector3 initialPosition;
+    private Vector3 targetPosition;
 
     void Start()
     {
+        targetPosition = transform.position;
+        transform.position = targetPosition + Vector3.up * DropHeight;
         initialPosition = transform.position;
-        //Swap stacks
-        Target.Find("Stack").SetParent(transform.parent);
-        transform.SetParent(Target);
         NewDirector.Instance.AddAnimation(this);
     }
 
@@ -27,13 +29,7 @@ public class JumpAnimation : CodeAnimationBase
         // Clamp normalizedTime to ensure it stays within [0, 1]
         normalizedTime = Mathf.Clamp01(normalizedTime);
 
-        // Use a curve for the jump animation
-        float jumpCurveValue = Mathf.Sin(normalizedTime * Mathf.PI);
-
-        Debug.Log("Vector - " + Vector3.Lerp(initialPosition, Target.position, normalizedTime).ToString());
-
-        // Interpolate between initial and target positions
-        transform.position = Vector3.Lerp(initialPosition, Target.position, normalizedTime) + Vector3.up * jumpCurveValue * JumpHeight;
+        transform.position = Vector3.Lerp(initialPosition, targetPosition, normalizedTime);
 
         // Update the elapsed time
         elapsedTime += Time.deltaTime;
@@ -61,7 +57,7 @@ public class JumpAnimation : CodeAnimationBase
 
     public override void StopAnimation()
     {
-        transform.position = Target.position;
+        transform.position = targetPosition;
         Destroy(this);
     }
 }

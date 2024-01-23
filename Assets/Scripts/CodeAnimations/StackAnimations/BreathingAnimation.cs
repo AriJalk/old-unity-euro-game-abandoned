@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BreathingAnimation : CodeAnimationBase
 {
-    [Range (0.1f, 10f)]
+    [Range(0.1f, 10f)]
     public float Frequency = 1.5f;
     public float Amplitude = 0.25f;
 
@@ -12,6 +12,7 @@ public class BreathingAnimation : CodeAnimationBase
     void Start()
     {
         startTime = Time.time;
+        NewDirector.Instance.AddAnimation(this);
     }
 
     void Update()
@@ -30,7 +31,7 @@ public class BreathingAnimation : CodeAnimationBase
 
         // Apply the new scale
         transform.localScale = new Vector3(newScale, newScale, newScale);
-        
+
     }
 
 
@@ -45,5 +46,12 @@ public class BreathingAnimation : CodeAnimationBase
 
         // Log for debugging
         Debug.Log("Animation started");
+    }
+
+    public override void StopAnimation()
+    {
+        transform.localScale = Vector3.one;
+        NewDirector.Instance.OnAnimationEnd(this);
+        Destroy(this);
     }
 }
