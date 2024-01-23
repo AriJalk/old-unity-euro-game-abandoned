@@ -239,7 +239,8 @@ namespace EDBG.GameLogic.Core
                         {
                             Debug.Log("Larger Stack: " + bigTile.GamePosition);
                             MapTileGameObject tileObject = MapHolder.GetTile(bigTile.GamePosition);
-                            Transform stack = tileObject.Stack.transform;
+                            //TODO: NO Find
+                            Transform stack = tileObject.StackContainer.Find("Stack");
                             stack.GetComponent<AnimatedObject>().IsLooping = true;
                             stack.AddComponent<BreathingAnimation>();
                         }
@@ -274,7 +275,11 @@ namespace EDBG.GameLogic.Core
                     chooseTile.SelectedTile.ComponentOnTile = captureOrigin.ComponentOnTile;
                     captureOrigin.ComponentOnTile = null;
                     NewDirector.Instance.StopAllAnimations();
-                    Director.BuildGameState(currentState, false);
+                    //Director.BuildGameState(currentState, false);
+                    JumpAnimation animation = MapHolder.GetTile(captureOrigin.GamePosition).StackContainer.Find("Stack").AddComponent<JumpAnimation>();
+                    animation.TargetTile = MapHolder.GetTile(chooseTile.SelectedTile.GamePosition);
+
+
                     StateManager.CurrentState.RoundState = RoundStates.ChooseTile;
                     SwapPlayers();
                 }

@@ -1,9 +1,11 @@
 ﻿using EDBG.Director;
+using EDBG.Engine.Core;
+using EDBG.Engine.Visual;
 using UnityEngine;
 
 public class JumpAnimation : CodeAnimationBase
 {
-    public Transform Target;
+    public MapTileGameObject TargetTile;
     public float JumpHeight = 1.0f;
     public float Duration = 1.0f;
 
@@ -14,8 +16,17 @@ public class JumpAnimation : CodeAnimationBase
     {
         initialPosition = transform.position;
         //Swap stacks
-        Target.Find("Stack").SetParent(transform.parent);
-        transform.SetParent(Target);
+        Transform stack = TargetTile.StackContainer.Find("Stack");
+        
+        stack.SetParent(transform.parent);
+        stack.localPosition = Vector3.zero;
+        
+        foreach(DiscObject disc in stack.GetComponentsInChildren<DiscObject>())
+        {
+            GameEngineManager.Instance.PrefabManager.ReturnPoolObject(disc);
+        }
+        transform.SetParent(TargetTile.StackContainer);
+        
         NewDirector.Instance.AddAnimation(this);
     }
 
@@ -30,10 +41,10 @@ public class JumpAnimation : CodeAnimationBase
         // Use a curve for the jump animation
         float jumpCurveValue = Mathf.Sin(normalizedTime * Mathf.PI);
 
-        Debug.Log("Vector - " + Vector3.Lerp(initialPosition, Target.position, normalizedTime).ToString());
+        Debug.Log("Vector - " + Vector3.Lerp(initialPosition, TargetTile.StackContainer.position, normalizedTime).ToString());
 
         // Interpolate between initial and target positions
-        transform.position = Vector3.Lerp(initialPosition, Target.position, normalizedTime) + Vector3.up * jumpCurveValue * JumpHeight;
+        transform.position = Vector3.Lerp(initialPosition, TargetTile.StackContainer.position, normalizedTime) + Vector3.up * jumpCurveValue * JumpHeight;
 
         // Update the elapsed time
         elapsedTime += Time.deltaTime;
@@ -61,7 +72,7 @@ public class JumpAnimation : CodeAnimationBase
 
     public override void StopAnimation()
     {
-        transform.position = Target.position;
+        transform.position = TargetTile.StackContainer.position;
         Destroy(this);
     }
 }
