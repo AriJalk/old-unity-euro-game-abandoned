@@ -280,9 +280,11 @@ namespace EDBG.GameLogic.Core
                     StateManager.PushCurrentState();
                     captureOrigin = StateManager.CurrentState.MapGrid.GetCell(captureOrigin.GamePosition) as MapTile;
                     chooseTile.UpdateState(StateManager.CurrentState);
-                    chooseTile.SelectedTile.ComponentOnTile = captureOrigin.ComponentOnTile;
-                    captureOrigin.ComponentOnTile = new GameStack<Disc>();
-                    tileTransform.GetComponent<MapTileGameObject>().TileData = captureOrigin;
+                    chooseTile.SelectedTile.ComponentOnTile = captureOrigin.ComponentOnTile.Clone() as IGameComponent;
+                    ((GameStack<Disc>)captureOrigin.ComponentOnTile).ClearStack();
+                    MapHolder.GetTile(chooseTile.SelectedTile.GamePosition).TileData = chooseTile.SelectedTile;
+                    MapHolder.GetTile(captureOrigin.GamePosition).TileData = captureOrigin;
+
                     NewDirector.Instance.StopAllAnimations();
                     //Director.BuildGameState(currentState, false);
                     JumpAnimation animation = MapHolder.GetTile(captureOrigin.GamePosition).StackContainer.Find("Stack").AddComponent<JumpAnimation>();

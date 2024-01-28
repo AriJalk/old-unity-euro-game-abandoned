@@ -102,6 +102,14 @@ namespace EDBG.GameLogic.Components
             itemsList.Remove(item);
         }
 
+        public void ClearStack()
+        {
+            while(itemsList.Count > 0)
+            {
+                itemsList.RemoveAt(0);
+            }
+        }
+
         public override object Clone()
         {
             return new GameStack<T>(this);
