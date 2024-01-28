@@ -9,7 +9,7 @@ public static class EngineUtilities
         foreach(Transform child in transform)
         {
             CleanObject(child);
-            GameObject.Find("Game Manager").GetComponent<GameManager>().EngineManager.PrefabManager.ReturnPoolObject(child);
+            GameObject.Find("Game Manager").GetComponent<GameManager>().EngineManager.ResourcesManager.PrefabManager.ReturnPoolObject(child);
         }
     }
 }

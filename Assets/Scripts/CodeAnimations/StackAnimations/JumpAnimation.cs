@@ -24,7 +24,7 @@ public class JumpAnimation : CodeAnimationBase
         
         foreach(DiscObject disc in stack.GetComponentsInChildren<DiscObject>())
         {
-            GameObject.Find("Game Manager").GetComponent<GameManager>().EngineManager.PrefabManager.ReturnPoolObject(disc);
+            GameObject.Find("Game Manager").GetComponent<GameManager>().EngineManager.ResourcesManager.PrefabManager.ReturnPoolObject(disc);
         }
         transform.SetParent(TargetTile.StackContainer);
         

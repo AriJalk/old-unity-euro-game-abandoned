@@ -20,6 +20,7 @@ namespace EDBG.GameLogic.Core
     /// </summary>
     public class GameManager : MonoBehaviour
     {
+
         public EngineManagerScpritableObject EngineManager;
         private LogicState currentState
         {
@@ -43,7 +44,7 @@ namespace EDBG.GameLogic.Core
 
         private void Awake()
         {
-            EngineManager.InitializeScene();
+            EngineManager.InitializeScene(Director);
         }
 
         void Start()
@@ -54,15 +55,16 @@ namespace EDBG.GameLogic.Core
             LoadPrefabs();
             EngineManager.InputManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             EngineManager.ScreenManager.ScreenChanged += ScreenChanged;
-            EngineManager.ObjectsRenderer.SetDirector(Director);
-            EngineManager.MapRenderer.SetDirector(Director);
+
 
 
             //Set new game
             HumanPlayer human = new HumanPlayer("HumanPlayer", PlayerColors.Black, 10, new BeginnerCorporation(Ownership.HumanPlayer));
             BotPlayer bot = new BotPlayer("BotPlayer", PlayerColors.White, 10, new BeginnerCorporation(Ownership.BotPlayer));
             StateManager.PushState(GameBuilder.BuildInitialState(4, 4, human, bot));
-            Director.BuildGameState(currentState, true, EngineManager);
+            Director.Initialize(EngineManager);
+
+            Director.BuildGameState(currentState, true);
         }
 
 
@@ -96,7 +98,7 @@ namespace EDBG.GameLogic.Core
                 Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/SquareTilePrefab.");
                 return;
             }
-            EngineManager.PrefabManager.RegisterPrefab<MapTileGameObject>(squarePrefab, 16);
+            EngineManager.ResourcesManager.PrefabManager.RegisterPrefab<MapTileGameObject>(squarePrefab, 16);
 
             GameObject discPrefab = Resources.Load<GameObject>("Prefabs/3D/DiscPrefab");
             if (discPrefab == null)
@@ -104,7 +106,7 @@ namespace EDBG.GameLogic.Core
                 Debug.Log("Square Tile Prefab is not found in Resources/Prefabs/3D/DiscPrefab.");
                 return;
             }
-            EngineManager.PrefabManager.RegisterPrefab<DiscObject>(discPrefab, 50);
+            EngineManager.ResourcesManager.PrefabManager.RegisterPrefab<DiscObject>(discPrefab, 50);
 
             GameObject diePrefab = Resources.Load<GameObject>("Prefabs/3D/DiePrefab");
             if (diePrefab == null)
@@ -112,7 +114,7 @@ namespace EDBG.GameLogic.Core
                 Debug.Log("Die Prefab is not found in Resources/Prefabs/3D/DiePrefab");
                 return;
             }
-            EngineManager.PrefabManager.RegisterPrefab<DieObject>(diePrefab, 16);
+            EngineManager.ResourcesManager.PrefabManager.RegisterPrefab<DieObject>(diePrefab, 16);
         }
 
         private void ActionSelected(UIAction action)
@@ -201,7 +203,7 @@ namespace EDBG.GameLogic.Core
                         chooseTile.UpdateState(StateManager.CurrentState);
                         TileRulesLogic.AddDiscToTile(chooseTile);
 
-                        EngineManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder, true, EngineManager);
+                        EngineManager.VisualManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder, true);
                         SwapPlayers();
                     }
 
@@ -221,7 +223,7 @@ namespace EDBG.GameLogic.Core
                                 chooseTile.UpdateState(StateManager.CurrentState);
                                 TileRulesLogic.AddDiscToTile(chooseTile);
                                 //RenderDisc
-                                EngineManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder, true, EngineManager);
+                                EngineManager.VisualManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder, true);
                                 excess--;
                             }
 
@@ -319,18 +321,18 @@ namespace EDBG.GameLogic.Core
                     StateManager.PopState();
                 }
                 NewDirector.Instance.StopAllAnimations();
-                Director.BuildGameState(currentState, false, EngineManager);
+                Director.BuildGameState(currentState, false);
             }
         }
 
         private void RenderGameState(bool isAnimated)
         {
-            EngineManager.MapRenderer.RenderMap(StateManager.CurrentState.MapGrid, MapHolder, isAnimated, EngineManager);
+            EngineManager.VisualManager.MapRenderer.RenderMap(StateManager.CurrentState.MapGrid, MapHolder, isAnimated);
         }
 
         private void RenderGameState(LogicState gameState, bool isAnimated)
         {
-            EngineManager.MapRenderer.RenderMap(gameState.MapGrid, MapHolder, isAnimated, EngineManager);
+            EngineManager.VisualManager.MapRenderer.RenderMap(gameState.MapGrid, MapHolder, isAnimated);
         }
 
     }

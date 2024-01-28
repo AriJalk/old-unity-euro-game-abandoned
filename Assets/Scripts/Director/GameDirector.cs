@@ -8,6 +8,8 @@ namespace EDBG.Director
 {
     public sealed class GameDirector : MonoBehaviour
     {
+        private EngineManagerScpritableObject engineManager;
+
         public MapHolder MapHolder;
 
         Dictionary<string, int> stringHashDictionary = new Dictionary<string, int>();
@@ -88,9 +90,9 @@ namespace EDBG.Director
 
         }
 
-        public void Initialize()
+        public void Initialize(EngineManagerScpritableObject engineManager)
         {
-
+            this.engineManager = engineManager;
         }
 
         public void StopAllAnimations()
@@ -179,9 +181,9 @@ namespace EDBG.Director
             }
         }
 
-        public void BuildGameState(LogicState state, bool isAnimated, EngineManagerScpritableObject engineManager)
+        public void BuildGameState(LogicState state, bool isAnimated)
         {
-            engineManager.MapRenderer.RenderMap(state.MapGrid, MapHolder, isAnimated, engineManager);
+            engineManager.VisualManager.MapRenderer.RenderMap(state.MapGrid, MapHolder, isAnimated);
         }
 
     }

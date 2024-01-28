@@ -10,22 +10,22 @@ namespace EDBG.Engine.Visual
     {
         //TODO: move to SquareMapHolder
         private MapTileGameObject[,] tiles;
-        private GameDirector director;
+        private VisualManager visualManager;
 
-        public void SetDirector(GameDirector director)
+        public MapRenderer(VisualManager visualManager)
         {
-            this.director = director;
+            this.visualManager = visualManager;
         }
 
-        public void RenderMap(MapGrid map, MapHolder mapHolderObject, bool isAnimated, EngineManagerScpritableObject engineManager)
+        public void RenderMap(MapGrid map, MapHolder mapHolderObject, bool isAnimated)
         {
             tiles = new MapTileGameObject[map.Rows, map.Columns];
-            RemovePreviousTiles(mapHolderObject, engineManager);
+            RemovePreviousTiles(mapHolderObject);
             for (int row = 0; row < map.Rows; row++)
             {
                 for (int col = 0; col < map.Columns; col++)
                 {
-                    MapTileGameObject tile = engineManager.PrefabManager.RetrievePoolObject<MapTileGameObject>();
+                    MapTileGameObject tile = visualManager.ResourcesManager.PrefabManager.RetrievePoolObject<MapTileGameObject>();
                     tile.TileData = (MapTile)map.GetCell(row, col);
                     tile.transform.SetParent(mapHolderObject.transform);
                     tile.transform.localScale = Vector3.one;
@@ -35,10 +35,10 @@ namespace EDBG.Engine.Visual
                     tile.transform.localPosition = position;
                     tile.gameObject.isStatic = true;
                     tile.name = tile.TileData.ToString();
-                    tile.ApplyMaterial(engineManager.ColorManager.GetTileMaterial(tile.TileData.TileColor));
+                    tile.ApplyMaterial(visualManager.ColorManager.GetTileMaterial(tile.TileData.TileColor));
                     tiles[row, col] = tile;
-                    DrawDieFace(tile, engineManager);
-                    engineManager.ObjectsRenderer.RenderObjectsOnTileObject(tile, isAnimated, engineManager);
+                    DrawDieFace(tile);
+                    visualManager.ObjectsRenderer.RenderObjectsOnTileObject(tile, isAnimated);
                 }
             }
             mapHolderObject.SetTiles(tiles);
@@ -51,11 +51,11 @@ namespace EDBG.Engine.Visual
             return tiles[row, col];
         }
 
-        public void SetTileObjectAndRender(MapTile tile, EngineManagerScpritableObject engineManager)
+        public void SetTileObjectAndRender(MapTile tile)
         {
             if (tile != null)
             {
-                MapTileGameObject squareTileObject = engineManager.PrefabManager.RetrievePoolObject<MapTileGameObject>();
+                MapTileGameObject squareTileObject = visualManager.ResourcesManager.PrefabManager.RetrievePoolObject<MapTileGameObject>();
                 squareTileObject.TileData = tile;
 
             }
@@ -63,19 +63,19 @@ namespace EDBG.Engine.Visual
                 Debug.LogError("Cant render tile, tile is NULL");
         }
 
-        private void RemovePreviousTiles(MapHolder grid, EngineManagerScpritableObject engineManager)
+        private void RemovePreviousTiles(MapHolder grid)
         {
             MapTileGameObject[] tiles = grid.GetComponentsInChildren<MapTileGameObject>();
             foreach (MapTileGameObject tile in tiles)
             {
-                engineManager.ObjectsRenderer.RemoveTile(tile, engineManager);
+                visualManager.ObjectsRenderer.RemoveTile(tile);
             }
         }
 
-        private void DrawDieFace(MapTileGameObject tile, EngineManagerScpritableObject engineManager)
+        private void DrawDieFace(MapTileGameObject tile)
         {
             SpriteRenderer spriteRenderer = tile.transform.GetComponentInChildren<SpriteRenderer>();
-            spriteRenderer.sprite = engineManager.SpriteManager.LoadSprite($"DieFaces/{tile.TileData.DieFace}");
+            spriteRenderer.sprite = visualManager.ResourcesManager.SpriteManager.LoadSprite($"DieFaces/{tile.TileData.DieFace}");
 
         }
     }

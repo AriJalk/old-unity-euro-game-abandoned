@@ -8,27 +8,27 @@ namespace EDBG.Engine.Visual
     //TODO: combine with MaterialManager
     public class ColorManager
     {
-        MaterialManager materialManager;
+        VisualManager visualManager;
 
-        public ColorManager(MaterialManager materialManager)
+        public ColorManager(VisualManager visualManager)
         {
-            this.materialManager = materialManager;
+            this.visualManager = visualManager;
         }
 
         public Material GetDiscMaterial(PlayerColors color)
         {
-            return materialManager.GetMaterial($"DiscColors/{color}WoodMaterial");
+            return visualManager.ResourcesManager.MaterialManager.GetMaterial($"DiscColors/{color}WoodMaterial");
         }
 
         public Material GetTileMaterial(TileColors color)
         {
             //return materialManager.GetMaterial($"{color}Material");
-            return materialManager.GetMaterial($"TileColors/{color}TileMaterial");
+            return visualManager.ResourcesManager.MaterialManager.GetMaterial($"TileColors/{color}TileMaterial");
         }
 
         public Material GetMaterial(string name)
         {
-            return materialManager.GetMaterial($"{name}Material");
+            return visualManager.ResourcesManager.MaterialManager.GetMaterial($"{name}Material");
         }
     }
 }
