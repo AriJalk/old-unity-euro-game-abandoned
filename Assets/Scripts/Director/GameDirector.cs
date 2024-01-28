@@ -179,9 +179,9 @@ namespace EDBG.Director
             }
         }
 
-        public void BuildGameState(LogicState state, bool isAnimated)
+        public void BuildGameState(LogicState state, bool isAnimated, EngineManagerScpritableObject engineManager)
         {
-            GameEngineManager.Instance.MapRenderer.RenderMap(state.MapGrid, MapHolder, isAnimated);
+            engineManager.MapRenderer.RenderMap(state.MapGrid, MapHolder, isAnimated, engineManager);
         }
 
     }

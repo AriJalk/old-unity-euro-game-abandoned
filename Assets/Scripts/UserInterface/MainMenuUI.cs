@@ -5,6 +5,8 @@ using EDBG.Engine.Core;
 
 public class MainMenuUI : MonoBehaviour
 {
+    [SerializeField]
+    private EngineManagerScpritableObject engineManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,8 +28,9 @@ public class MainMenuUI : MonoBehaviour
 
     }
 
+    //TODO: work with new engine class
     void LoadGameTest()
     {
-        GameEngineManager.Instance.LoadScene("GameTestScene");
+        engineManager.LoadScene("GameTestScene");
     }
 }

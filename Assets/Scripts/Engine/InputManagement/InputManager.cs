@@ -4,14 +4,19 @@ using EDBG.Engine.Core;
 
 namespace EDBG.Engine.InputManagement
 {
-    public class InputHandler
+    public class InputManager : MonoBehaviour
     {
-        private InputEvents inputEvents;
+        public InputEvents InputEvents { get; private set; }
 
 
-        public InputHandler()
+        public void Awake()
         {
-            inputEvents = GameEngineManager.Instance.InputEvents;
+            InputEvents = new InputEvents();
+        }
+
+        public void Update()
+        {
+            Listen();
         }
 
         public void Listen()
@@ -26,20 +31,20 @@ namespace EDBG.Engine.InputManagement
                     horizontalInput = 0;
                 if (Input.GetAxisRaw("Vertical") == 0)
                     verticalInput = 0;
-                inputEvents.AxisChanged(new Vector2(horizontalInput, verticalInput));
+                InputEvents.AxisChanged(new Vector2(horizontalInput, verticalInput));
             }
             bool[] mouseButtons = new bool[2];
             mouseButtons[0] = Input.GetMouseButtonDown(0);
             mouseButtons[1] = Input.GetMouseButtonDown(1);
             if (mouseButtons[0] || mouseButtons[1])
             {
-                inputEvents.MouseClicked(mouseButtons, Input.mousePosition);
+                InputEvents.MouseClicked(mouseButtons, Input.mousePosition);
             }
             Vector2 scroll = Input.mouseScrollDelta;
 
             if (scroll != Vector2.zero)
             {
-                inputEvents.MouseScrolled(scroll.y);
+                InputEvents.MouseScrolled(scroll.y);
             }
         }
     }

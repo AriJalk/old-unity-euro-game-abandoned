@@ -1518,7 +1518,7 @@ GameObject:
   - component: {fileID: 334620296}
   - component: {fileID: 334620297}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: Game Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1551,6 +1551,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e21240e3ad254634399f264e255356b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EngineManager: {fileID: 11400000, guid: 43fb223e51503ce44abcc9a350b17619, type: 2}
   GameWorld: {fileID: 1629819031}
   MapCamera: {fileID: 172808241}
   TokenCamera: {fileID: 1422328857}
@@ -3312,78 +3313,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 788013747}
   m_CullTransparentMesh: 1
---- !u!1001 &804396723
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1928818933781302020, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
-      propertyPath: ScreenManager
-      value: 
-      objectReference: {fileID: 804396724}
-    - target: {fileID: 4151882832809509968, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
-      propertyPath: m_Name
-      value: GameEngineManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721803113767635283, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721803113767635283, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721803113767635283, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721803113767635283, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721803113767635283, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721803113767635283, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721803113767635283, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721803113767635283, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721803113767635283, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721803113767635283, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
---- !u!114 &804396724 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8075131417781355301, guid: c7429ac622db1594b96bf458c435ccef, type: 3}
-  m_PrefabInstance: {fileID: 804396723}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6ccf48adbbcbe64abe97e8361400348, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &824814959
 GameObject:
   m_ObjectHideFlags: 0
@@ -4426,7 +4355,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 23.3
+  m_fontSize: 29.15
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9914,7 +9843,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14.7
+  m_fontSize: 18.4
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -10522,7 +10451,6 @@ RectTransform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 804396723}
   - {fileID: 1387928357}
   - {fileID: 1629819031}
   - {fileID: 334620296}

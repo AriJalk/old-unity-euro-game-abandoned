@@ -1,6 +1,7 @@
 ﻿using EDBG.Director;
 using EDBG.Engine.Core;
 using EDBG.Engine.Visual;
+using EDBG.GameLogic.Core;
 using UnityEngine;
 
 public class JumpAnimation : CodeAnimationBase
@@ -23,7 +24,7 @@ public class JumpAnimation : CodeAnimationBase
         
         foreach(DiscObject disc in stack.GetComponentsInChildren<DiscObject>())
         {
-            GameEngineManager.Instance.PrefabManager.ReturnPoolObject(disc);
+            GameObject.Find("Game Manager").GetComponent<GameManager>().EngineManager.PrefabManager.ReturnPoolObject(disc);
         }
         transform.SetParent(TargetTile.StackContainer);
         

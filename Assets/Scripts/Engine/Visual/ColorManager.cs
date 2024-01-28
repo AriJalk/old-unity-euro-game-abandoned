@@ -5,25 +5,14 @@ using UnityEngine;
 
 namespace EDBG.Engine.Visual
 {
+    //TODO: combine with MaterialManager
     public class ColorManager
     {
-        private static ColorManager _instance;
-
-        public static ColorManager Instance
-        {
-            get 
-            {
-                return _instance; 
-            }
-        }
-
-
         MaterialManager materialManager;
 
-        public ColorManager()
+        public ColorManager(MaterialManager materialManager)
         {
-            materialManager = GameEngineManager.Instance.MaterialManager;
-            _instance = this;
+            this.materialManager = materialManager;
         }
 
         public Material GetDiscMaterial(PlayerColors color)

@@ -4,8 +4,6 @@ using EDBG.Engine.Core;
 using EDBG.GameLogic.Components;
 using EDBG.Engine.ResourceManagement;
 using EDBG.GameLogic.MapSystem;
-using UnityEngine.Experimental.GlobalIllumination;
-using UnityEngine.UIElements;
 using EDBG.Director;
 using Unity.VisualScripting;
 
@@ -16,9 +14,9 @@ namespace EDBG.Engine.Visual
         private ColorManager colorManager;
         private GameDirector director;
 
-        public ObjectsRenderer()
+        public ObjectsRenderer(ColorManager colorManager)
         {
-            colorManager = GameEngineManager.Instance.ColorManager;
+            this.colorManager = colorManager;
         }
 
         public void SetDirector(GameDirector director)
@@ -26,43 +24,43 @@ namespace EDBG.Engine.Visual
             this.director = director;
         }
 
-        public void RenderObjectsOnMap(MapTileGameObject[,] tiles, bool isAnimated)
+        public void RenderObjectsOnMap(MapTileGameObject[,] tiles, bool isAnimated, EngineManagerScpritableObject engineManager)
         {
             foreach (MapTileGameObject tile in tiles)
             {
-                RenderObjectsOnTileObject(tile, isAnimated);
+                RenderObjectsOnTileObject(tile, isAnimated, engineManager);
             }
         }
 
-        public void RemoveTile(MapTileGameObject tile)
+        public void RemoveTile(MapTileGameObject tile, EngineManagerScpritableObject engineManager)
         {
             Transform stack = tile.StackContainer.Find("Stack").transform;
             stack.localScale = Vector3.one;
             foreach (DiscObject disc in stack.GetComponentsInChildren<DiscObject>())
             {
-                GameEngineManager.Instance.PrefabManager.ReturnPoolObject(disc);
+                engineManager.PrefabManager.ReturnPoolObject(disc);
             }
-            GameEngineManager.Instance.PrefabManager.ReturnPoolObject(tile);
+            engineManager.PrefabManager.ReturnPoolObject(tile);
         }
 
-        public void RenderObjectsOnTileObject(MapTileGameObject tile, bool isAnimated)
+        public void RenderObjectsOnTileObject(MapTileGameObject tile, bool isAnimated, EngineManagerScpritableObject engineManager)
         {
-            RemovePreviousDiscs(tile);
+            RemovePreviousDiscs(tile, engineManager);
             tile.StackContainer.Find("Stack").transform.localScale = Vector3.one;
-            CreateNewDiscs(tile, isAnimated);
+            CreateNewDiscs(tile, isAnimated, engineManager);
         }
 
 
-        private void RemovePreviousDiscs(MapTileGameObject tile)
+        private void RemovePreviousDiscs(MapTileGameObject tile, EngineManagerScpritableObject engineManager)
         {
             DiscObject[] discs = tile.StackContainer.Find("Stack").GetComponentsInChildren<DiscObject>();
             foreach (DiscObject disc in discs)
             {
-                GameEngineManager.Instance.PrefabManager.ReturnPoolObject<DiscObject>(disc);
+                engineManager.PrefabManager.ReturnPoolObject<DiscObject>(disc);
             }
         }
 
-        private void CreateNewDiscs(MapTileGameObject tile, bool isAnimated)
+        private void CreateNewDiscs(MapTileGameObject tile, bool isAnimated, EngineManagerScpritableObject engineManager)
         {
             float discHeight = DiscObject.DISC_HEIGHT * DiscObject.DISC_SCALE;
             float initialHeightOffset = 0.0f; // Adjust this value to control the initial height offset of the first disc
@@ -75,7 +73,7 @@ namespace EDBG.Engine.Visual
                 for (int i = 0; i < discStack.Count; i++)
                 {
                     // Create main disc
-                    DiscObject mainDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<DiscObject>();
+                    DiscObject mainDisc = engineManager.PrefabManager.RetrievePoolObject<DiscObject>();
                     mainDisc.name = "Disc";
                     mainDisc.DiscData = discStack.GetItemByIndex(i);
                     mainDisc.transform.SetParent(tile.StackContainer.Find("Stack").transform);
@@ -93,7 +91,7 @@ namespace EDBG.Engine.Visual
                     // Create filler disc
                     if (i < discStack.Count - 1)
                     {
-                        DiscObject fillerDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<DiscObject>();
+                        DiscObject fillerDisc = engineManager.PrefabManager.RetrievePoolObject<DiscObject>();
                         fillerDisc.transform.SetParent(tile.StackContainer.Find("Stack").transform);
                         fillerDisc.transform.localScale = new Vector3(DiscObject.DISC_SCALE, DiscObject.DISC_SCALE / DiscObject.FILLER_FACTOR, DiscObject.DISC_SCALE);
                         fillerDisc.transform.name = "Filler Disc";
@@ -115,7 +113,7 @@ namespace EDBG.Engine.Visual
             }
         }
 
-        public void PlaceNewDisc(Disc disc, MapTile tileData, MapHolder mapHolder, bool isAnimated)
+        public void PlaceNewDisc(Disc disc, MapTile tileData, MapHolder mapHolder, bool isAnimated, EngineManagerScpritableObject engineManager)
         {
             MapTileGameObject tileObject = mapHolder.GetTile(tileData.GamePosition);
             tileObject.TileData = tileData;
@@ -142,7 +140,7 @@ namespace EDBG.Engine.Visual
                 {
                     DiscObject fillerDisc;
                     newFillerHeight = discHeight * discs + fillerDiscHeight * (discs - 1);
-                    fillerDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<DiscObject>();
+                    fillerDisc = engineManager.PrefabManager.RetrievePoolObject<DiscObject>();
                     fillerDisc.name = "Filler Disc";
                     fillerDisc.transform.SetParent(stack);
                     fillerDisc.transform.localScale = new Vector3(DiscObject.DISC_SCALE, DiscObject.DISC_SCALE / DiscObject.FILLER_FACTOR, DiscObject.DISC_SCALE);
@@ -162,7 +160,7 @@ namespace EDBG.Engine.Visual
 
                 //Add regular disc
                 Vector3 position = new Vector3(0, newDiscHeight, 0);
-                newDisc = GameEngineManager.Instance.PrefabManager.RetrievePoolObject<DiscObject>();
+                newDisc = engineManager.PrefabManager.RetrievePoolObject<DiscObject>();
                 newDisc.DiscData = disc;
                 newDisc.name = "Disc";
                 newDisc.transform.SetParent(stack);

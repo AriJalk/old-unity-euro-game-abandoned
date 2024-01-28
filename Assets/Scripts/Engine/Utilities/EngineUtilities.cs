@@ -1,4 +1,5 @@
 ﻿using EDBG.Engine.Core;
+using EDBG.GameLogic.Core;
 using UnityEngine;
 
 public static class EngineUtilities
@@ -8,7 +9,7 @@ public static class EngineUtilities
         foreach(Transform child in transform)
         {
             CleanObject(child);
-            GameEngineManager.Instance.PrefabManager.ReturnPoolObject(child);
+            GameObject.Find("Game Manager").GetComponent<GameManager>().EngineManager.PrefabManager.ReturnPoolObject(child);
         }
     }
 }
