@@ -38,6 +38,9 @@ public class EngineManagerScpritableObject : ScriptableObject
         InputManager = new GameObject("Input Manager").AddComponent<InputManager>();
         InputManager.transform.SetParent(engineComponents);
 
+        ScreenManager = new GameObject("Screen Manager").AddComponent<ScreenManager>();
+        ScreenManager.transform.SetParent(engineComponents);
+
         Random.InitState((int)System.DateTime.Now.Ticks);
 
     }

@@ -283,9 +283,10 @@ namespace EDBG.GameLogic.Core
                     captureOrigin = StateManager.CurrentState.MapGrid.GetCell(captureOrigin.GamePosition) as MapTile;
                     chooseTile.UpdateState(StateManager.CurrentState);
                     chooseTile.SelectedTile.ComponentOnTile = captureOrigin.ComponentOnTile.Clone() as IGameComponent;
-                    ((GameStack<Disc>)captureOrigin.ComponentOnTile).ClearStack();
+                    captureOrigin.SetComponentOnTile<GameStack<Disc>>(null);
                     MapHolder.GetTile(chooseTile.SelectedTile.GamePosition).TileData = chooseTile.SelectedTile;
                     MapHolder.GetTile(captureOrigin.GamePosition).TileData = captureOrigin;
+
 
                     NewDirector.Instance.StopAllAnimations();
                     //Director.BuildGameState(currentState, false);
