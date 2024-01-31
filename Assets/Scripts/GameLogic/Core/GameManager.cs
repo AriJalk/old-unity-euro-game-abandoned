@@ -12,6 +12,7 @@ using EDBG.GameLogic.Components;
 using EDBG.Director;
 using Unity.VisualScripting;
 using EDBG.Commands;
+using UnityEngine.Events;
 
 namespace EDBG.GameLogic.Core
 {
@@ -20,12 +21,13 @@ namespace EDBG.GameLogic.Core
     /// </summary>
     public class GameManager : MonoBehaviour
     {
-        private LogicState currentState;
-        private Stack<CommandBase> commandStack;
+        public UnityEvent<string> GameMessageEvent;
+        
+        private TurnManager turnManager;
 
         public EngineManagerScpritableObject EngineManager;
 
-        public AnimationManager GameDirector { get; private set; }
+        public AnimationManager AnimationManager { get; private set; }
 
 
 
@@ -33,29 +35,35 @@ namespace EDBG.GameLogic.Core
         public CameraController MapCamera;
         public Camera TokenCamera;
         public GameUI GameUI;
+        public OverlayUI OverlayUI;
         public DiceTrayObject DiceTrayObject;
         public MapHolder MapHolder;
 
         private void Awake()
         {
             EngineManager.InitializeScene(MapHolder);
+            GameMessageEvent = new UnityEvent<string>();
         }
 
         void Start()
         {
-            commandStack = new Stack<CommandBase>();
+            
             MapCamera.Initialize();
             LoadPrefabs();
-            EngineManager.InputManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
+            EngineManager.InputManager.InputEvents.SubscribeToAllEvents(MoveCamera, MouseClicked, ZoomCamera);
             EngineManager.ScreenManager.ScreenChanged += ScreenChanged;
-            GameDirector = new AnimationManager();
+            AnimationManager = new AnimationManager();
 
 
             //Set new game
             HumanPlayer human = new HumanPlayer("HumanPlayer", PlayerColors.Black, PlayerColors.Red, 10, new BeginnerCorporation(Ownership.HumanPlayer));
             BotPlayer bot = new BotPlayer("BotPlayer", PlayerColors.White, PlayerColors.Black, 10, new BeginnerCorporation(Ownership.BotPlayer));
-            currentState = GameBuilder.BuildInitialState(4, 4, human, bot);
-            RenderGameState(true);
+            turnManager = new TurnManager(this,GameBuilder.BuildInitialState(4, 4, human, bot));
+            EngineManager.VisualManager.RenderGameState(true, turnManager.LogicState);
+
+            OverlayUI.Initialize(this);
+            GameMessageEvent.Invoke($"{turnManager.LogicState.CurrentPlayer.Name} Turn, select tile");
+
         }
 
 
@@ -64,7 +72,7 @@ namespace EDBG.GameLogic.Core
 
             if (Input.GetKeyDown(KeyCode.U))
             {
-                UndoState();
+                turnManager.UndoState();
             }
         }
 
@@ -75,10 +83,11 @@ namespace EDBG.GameLogic.Core
 
         private void OnDestroy()
         {
-            EngineManager.InputManager.InputEvents.UnsubscribeFromAllEvents(MoveCamera, SelectObject, ZoomCamera);
+            EngineManager.InputManager.InputEvents.UnsubscribeFromAllEvents(MoveCamera, MouseClicked, ZoomCamera);
             EngineManager.ScreenManager.ScreenChanged -= ScreenChanged;
 
         }
+
 
         private void LoadPrefabs()
         {
@@ -117,7 +126,7 @@ namespace EDBG.GameLogic.Core
             else if (action.name == "UndoCommand")
             {
                 Debug.Log("Undo");
-                UndoState();
+                turnManager.UndoState();
             }
             else
             {
@@ -140,82 +149,39 @@ namespace EDBG.GameLogic.Core
         }
 
         //TODO: move to UI
-        private void SelectObject(bool[] mouseButtons, Vector2 position)
+        private void MouseClicked(bool[] mouseButtons, Vector2 position)
         {
-
-            /*
-            Transform tile = cameraRaycaster.Raycast(position, LayerMask.GetMask("Disc"));
-            if (tile != null)
+            switch (turnManager.LogicState.RoundState)
             {
-                Debug.Log(tile.parent.parent.parent.name);
-            }
-            */
-            if (GameDirector.IsGameLocked == false)
-            {
-                switch (currentState.RoundState)
-                {
-                    case RoundStates.GameStart:
-                        break;
-                    case RoundStates.ChooseTile:
+                case RoundStates.GameStart:
+                    break;
 
-                        if (mouseButtons[0] == true)
-                            ChooseTile(position);
-                        else if (mouseButtons[1] == true)
-                        {
+                case RoundStates.ChooseTile:
+                    Transform hit = Raycast(position, LayerMask.GetMask("Tile"));
+                    if (hit != null)
+                        turnManager.SelectTile(hit.GetComponent<MapTileGameObject>().TileData);
+                    break;
 
-                        }
-                        break;
-                    case RoundStates.ChooseStack:
-                        if (mouseButtons[0] == true)
-                            ChooseStack(position);
-                        break;
-                }
+                case RoundStates.ChooseCaptureStack:
+                    break;
+                default:
+                    break;
             }
         }
 
-        private void ChooseTile(Vector2 position)
+        private Transform Raycast(Vector2 position, LayerMask layer)
         {
-            if (!GameDirector.IsGameLocked)
-            {
-                CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
-                Transform tileTransform = cameraRaycaster.Raycast(position, LayerMask.GetMask("Tile"));
-                if (tileTransform != null && currentState.CurrentPlayer.DiscStock > 0)
-                {
-                    MapTileGameObject tile = tileTransform.GetComponent<MapTileGameObject>();
-                    PlaceDiscCommand command = new PlaceDiscCommand(tile.TileData, currentState.CurrentPlayer, EngineManager.VisualManager.ObjectsRenderer);
-                    command.ExecuteCommand();
-                    commandStack.Push(command);
-                    currentState.SwapCurrentPlayer();
-                }
-            }
-
+            CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
+            Transform tileTransform = cameraRaycaster.Raycast(position, layer);
+            return tileTransform;
         }
 
-        private void ChooseStack(Vector2 position)
-        {
-
-
-        }
 
         private void ZoomCamera(float deltaY)
         {
             MapCamera.ZoomCamera(deltaY / 5);
         }
 
-        private void UndoState()
-        {
-            if (commandStack.Count > 0)
-            {
-                CommandBase command = commandStack.Pop();
-                command.UndoCommand();
-                currentState.SwapCurrentPlayer();
-            }
-        }
-
-        private void RenderGameState(bool isAnimated)
-        {
-            EngineManager.VisualManager.MapRenderer.RenderMap(currentState.MapGrid, isAnimated);
-        }
 
         private void RenderGameState(LogicState gameState, bool isAnimated)
         {

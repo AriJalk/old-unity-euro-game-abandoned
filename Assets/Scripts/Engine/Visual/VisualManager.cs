@@ -1,5 +1,7 @@
 ﻿using EDBG.Director;
 using EDBG.Engine.ResourceManagement;
+using EDBG.GameLogic.Core;
+using EDBG.States;
 using System.Resources;
 using UnityEngine;
 
@@ -31,6 +33,11 @@ namespace EDBG.Engine.Visual
             ScreenManager.transform.SetParent(parent);
 
             AnimationManager = new AnimationManager();
+        }
+
+        public void RenderGameState(bool isAnimated, LogicState logicState)
+        {
+            MapRenderer.RenderMap(logicState.MapGrid, isAnimated);
         }
     }
 }

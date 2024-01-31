@@ -10,11 +10,7 @@ namespace EDBG.States
     {
         GameStart,
         ChooseTile,
-        ChooseStack,
-        ChooseDisc,
-        ChooseDemandTile,
-        ChooseUpgrade,
-        BotTurn,
+        ChooseCaptureStack,
     }
 
     public class LogicState : ICloneable
