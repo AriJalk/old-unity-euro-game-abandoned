@@ -52,8 +52,8 @@ namespace EDBG.GameLogic.Core
 
 
             //Set new game
-            HumanPlayer human = new HumanPlayer("HumanPlayer", PlayerColors.Black, 10, new BeginnerCorporation(Ownership.HumanPlayer));
-            BotPlayer bot = new BotPlayer("BotPlayer", PlayerColors.White, 10, new BeginnerCorporation(Ownership.BotPlayer));
+            HumanPlayer human = new HumanPlayer("HumanPlayer", PlayerColors.Black, PlayerColors.Red, 10, new BeginnerCorporation(Ownership.HumanPlayer));
+            BotPlayer bot = new BotPlayer("BotPlayer", PlayerColors.White, PlayerColors.Black, 10, new BeginnerCorporation(Ownership.BotPlayer));
             currentState = GameBuilder.BuildInitialState(4, 4, human, bot);
             RenderGameState(true);
         }

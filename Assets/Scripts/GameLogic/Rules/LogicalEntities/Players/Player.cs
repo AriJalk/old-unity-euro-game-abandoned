@@ -64,10 +64,11 @@ namespace EDBG.GameLogic.Rules
 
 
 
-        public Player(string name, PlayerColors color, int discStock, Corporation corporation)
+        public Player(string name, PlayerColors playerColor, PlayerColors fillerColor, int discStock, Corporation corporation)
         {
             _name = name;
-            _playerColor = color;
+            _playerColor = playerColor;
+            _fillerColor = fillerColor;
             _initialDiscStock = discStock;
             _corporation = corporation;
             _discStock = InitialDiscStock;

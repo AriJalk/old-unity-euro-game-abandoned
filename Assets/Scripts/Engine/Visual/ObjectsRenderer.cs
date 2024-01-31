@@ -98,8 +98,7 @@ namespace EDBG.Engine.Visual
                         fillerDisc.transform.name = "Filler Disc";
                         float fillerYPos = position.y + discHeight;
                         fillerDisc.transform.localPosition = new Vector3(0, fillerYPos, 0);
-                        fillerDisc.ApplyMaterial(visualManager.ColorManager.GetMaterial(
-                            discStack.GetItemByIndex(i + 1).Owner.PlayerColor == GameLogic.Rules.PlayerColors.White ? "BlackFiller" : "WhiteFiller"));
+                        fillerDisc.ApplyMaterial(visualManager.ColorManager.GetDiscMaterial(mainDisc.DiscData.Owner.FillerColor));
                         if (isAnimated == true)
                         {
                             AddAnimation<PlaceDiscAnimation>(fillerDisc.gameObject);
@@ -147,9 +146,7 @@ namespace EDBG.Engine.Visual
                     fillerDisc.transform.localScale = new Vector3(DiscObject.DISC_SCALE, DiscObject.DISC_SCALE / DiscObject.FILLER_FACTOR, DiscObject.DISC_SCALE);
                     fillerDisc.transform.localPosition = new Vector3(0, newFillerHeight, 0);
 
-                    fillerDisc.ApplyMaterial(visualManager.ColorManager.GetMaterial(
-                            disc.Owner.PlayerColor ==
-                            GameLogic.Rules.PlayerColors.White ? "BlackFiller" : "WhiteFiller"));
+                    fillerDisc.ApplyMaterial(visualManager.ColorManager.GetDiscMaterial(disc.Owner.FillerColor));
                     newDiscHeight = newFillerHeight + fillerDiscHeight;
                     if (isAnimated)
                     {
