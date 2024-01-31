@@ -57,118 +57,143 @@ namespace EDBG.GameLogic.Rules
             return tiles;
         }
 
-    public static List<MapTile> GetTilesWithComponentInAllDirections(GridContainer map, MapTile originTile, Player player, bool canBlock, bool isPlayerOwned)
-    {
-        List<MapTile> tiles = GetTilesWithComponentInDirection(map, originTile, player, canBlock, isPlayerOwned, Direction.Left);
-        tiles.AddRange(GetTilesWithComponentInDirection(map, originTile, player, canBlock, isPlayerOwned, Direction.Right));
-        tiles.AddRange(GetTilesWithComponentInDirection(map, originTile, player, canBlock, isPlayerOwned, Direction.Up));
-        tiles.AddRange(GetTilesWithComponentInDirection(map, originTile, player, canBlock, isPlayerOwned, Direction.Down));
-
-        return tiles;
-    }
-
-
-    /// <summary>
-    /// Receives a grid container and a cell, return 2d array of true where in distance to cell
-    /// </summary>
-    /// <param name="map"></param>
-    /// <param name="cell"></param>
-    /// <param name="distance"></param>
-    /// <returns>
-    /// True for cells in distance
-    /// </returns>
-    public static bool[,] GetCellsInDistance(GridContainer map, MapTile tile, int distance)
-    {
-        BreadthFirstSearch bfs = new BreadthFirstSearch();
-        bool[,] distanceMap = bfs.Search(map, tile, distance);
-        Debug.Log("Bfs Test Start: ");
-        string mapString = string.Empty;
-        for (int i = 0; i < map.Rows; i++)
+        public static List<MapTile> GetTilesWithComponentInAllDirections(GridContainer map, MapTile originTile, Player player, bool canBlock, bool isPlayerOwned)
         {
-            for (int j = 0; j < map.Columns; j++)
+            List<MapTile> tiles = GetTilesWithComponentInDirection(map, originTile, player, canBlock, isPlayerOwned, Direction.Left);
+            tiles.AddRange(GetTilesWithComponentInDirection(map, originTile, player, canBlock, isPlayerOwned, Direction.Right));
+            tiles.AddRange(GetTilesWithComponentInDirection(map, originTile, player, canBlock, isPlayerOwned, Direction.Up));
+            tiles.AddRange(GetTilesWithComponentInDirection(map, originTile, player, canBlock, isPlayerOwned, Direction.Down));
+
+            return tiles;
+        }
+
+
+        /// <summary>
+        /// Receives a grid container and a cell, return 2d array of true where in distance to cell
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="cell"></param>
+        /// <param name="distance"></param>
+        /// <returns>
+        /// True for cells in distance
+        /// </returns>
+        public static bool[,] GetCellsInDistance(GridContainer map, MapTile tile, int distance)
+        {
+            BreadthFirstSearch bfs = new BreadthFirstSearch();
+            bool[,] distanceMap = bfs.Search(map, tile, distance);
+            Debug.Log("Bfs Test Start: ");
+            string mapString = string.Empty;
+            for (int i = 0; i < map.Rows; i++)
             {
-                mapString += distanceMap[i, j] ? "X" : "O";
+                for (int j = 0; j < map.Columns; j++)
+                {
+                    mapString += distanceMap[i, j] ? "X" : "O";
+                }
+                mapString += "\n";
             }
-            mapString += "\n";
+            Debug.Log(mapString);
+            return distanceMap;
         }
-        Debug.Log(mapString);
-        return distanceMap;
-    }
 
-    public static List<MapTile> GetTilesInDirectLine(GridContainer map, MapTile originTile, bool canBlock)
-    {
-        List<MapTile> tiles = new List<MapTile>();
-
-        // Get cells in column
-        for (int i = 0; i < map.Rows; i++)
+        public static List<MapTile> GetTilesInDirectLine(GridContainer map, MapTile originTile, bool canBlock)
         {
-            if (i != originTile.GamePosition.Row)
+            List<MapTile> tiles = new List<MapTile>();
+
+            // Get cells in column
+            for (int i = 0; i < map.Rows; i++)
             {
-                tiles.Add(map.GetCell<MapTile>(i, originTile.GamePosition.Col));
+                if (i != originTile.GamePosition.Row)
+                {
+                    tiles.Add(map.GetCell<MapTile>(i, originTile.GamePosition.Col));
+                }
             }
-        }
 
-        // Get cells in row
-        for (int i = 0; i < map.Columns; i++)
-        {
-            if (i != originTile.GamePosition.Col)
+            // Get cells in row
+            for (int i = 0; i < map.Columns; i++)
             {
-                tiles.Add(map.GetCell<MapTile>(originTile.GamePosition.Row, i));
+                if (i != originTile.GamePosition.Col)
+                {
+                    tiles.Add(map.GetCell<MapTile>(originTile.GamePosition.Row, i));
+                }
             }
+
+            return tiles;
         }
 
-        return tiles;
-    }
-
-    public static bool IsTileValid(ChooseTile chooseTile)
-    {
-        if (chooseTile.SelectedTile.ComponentOnTile == null)
+        public static bool IsTileValid(ChooseTile chooseTile)
         {
-            return true;
-        }
-        else if (
-            chooseTile.SelectedTile.ComponentOnTile.Owner == chooseTile.LogicState.GetCurrentPlayer() ||
-            chooseTile.SelectedTile.ComponentOnTile.Owner == null)
-        {
-            return TileRulesLogic.IsNextFloorPossible(
-                chooseTile.LogicState.MapGrid,
-                chooseTile.SelectedTile,
-                chooseTile.LogicState.GetCurrentPlayer());
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public static void AddDiscToTile(ChooseTile chooseTile)
-    {
-        if (chooseTile.SelectedTile.ComponentOnTile == null)
-            chooseTile.SelectedTile.ComponentOnTile = new GameStack<Disc>();
-        ((GameStack<Disc>)chooseTile.SelectedTile.ComponentOnTile).PushItem(new Disc(chooseTile.LogicState.GetCurrentPlayer()));
-    }
-
-    public static List<MapTile> GetBiggerOpponentStackTiles(ChooseTile chosenTile)
-    {
-        GameStack<Disc> originStack = chosenTile.SelectedTile.ComponentOnTile as GameStack<Disc>;
-        if (originStack == null)
-            return null;
-        int stackSize = originStack.Count;
-        Player player = chosenTile.LogicState.GetCurrentPlayer();
-
-        List<MapTile> tiles = GetTilesWithComponentInAllDirections(chosenTile.LogicState.MapGrid, chosenTile.SelectedTile, player, true, true);
-        List<MapTile> largerTiles = new List<MapTile>();
-        if (tiles.Count > 0)
-        {
-            foreach (MapTile tile in tiles)
+            if (chooseTile.SelectedTile.ComponentOnTile == null)
             {
-
-                GameStack<Disc> stack = tile.ComponentOnTile as GameStack<Disc>;
-                if (stack.Count > stackSize)
-                    largerTiles.Add(tile);
+                return true;
+            }
+            else if (
+                chooseTile.SelectedTile.ComponentOnTile.Owner == chooseTile.LogicState.GetCurrentPlayer() ||
+                chooseTile.SelectedTile.ComponentOnTile.Owner == null)
+            {
+                return TileRulesLogic.IsNextFloorPossible(
+                    chooseTile.LogicState.MapGrid,
+                    chooseTile.SelectedTile,
+                    chooseTile.LogicState.GetCurrentPlayer());
+            }
+            else
+            {
+                return false;
             }
         }
-        return largerTiles;
+
+        public static void AddDiscToTile(ChooseTile chooseTile)
+        {
+            if (chooseTile.SelectedTile.ComponentOnTile == null)
+                chooseTile.SelectedTile.ComponentOnTile = new GameStack<Disc>();
+            ((GameStack<Disc>)chooseTile.SelectedTile.ComponentOnTile).PushItem(new Disc(chooseTile.LogicState.GetCurrentPlayer()));
+        }
+
+        public static Disc AddDiscToTile(MapTile mapTile, Player player)
+        {
+            Disc disc = null;
+            if (mapTile != null && player != null)
+            {
+                if (player.DiscStock > 0)
+                {
+                    mapTile.ComponentOnTile ??= new GameStack<Disc>();
+                    GameStack<Disc> stack = mapTile.GetComponentOnTile<GameStack<Disc>>();
+                    disc = new Disc(player);
+                    stack.PushItem(disc);
+                    player.DiscStock--;
+                }
+            }
+            return disc;
+        }
+
+        public static void RemoveTopDiscFromTile(MapTile mapTile)
+        {
+            if (mapTile != null)
+            {
+                mapTile.GetComponentOnTile<GameStack<Disc>>().PopItem();
+            }
+        }
+
+        public static List<MapTile> GetBiggerOpponentStackTiles(ChooseTile chosenTile)
+        {
+            GameStack<Disc> originStack = chosenTile.SelectedTile.ComponentOnTile as GameStack<Disc>;
+            if (originStack == null)
+                return null;
+            int stackSize = originStack.Count;
+            Player player = chosenTile.LogicState.GetCurrentPlayer();
+
+            List<MapTile> tiles = GetTilesWithComponentInAllDirections(chosenTile.LogicState.MapGrid, chosenTile.SelectedTile, player, true, true);
+            List<MapTile> largerTiles = new List<MapTile>();
+            if (tiles.Count > 0)
+            {
+                foreach (MapTile tile in tiles)
+                {
+
+                    GameStack<Disc> stack = tile.ComponentOnTile as GameStack<Disc>;
+                    if (stack.Count > stackSize)
+                        largerTiles.Add(tile);
+                }
+            }
+            return largerTiles;
+        }
     }
-}
 }

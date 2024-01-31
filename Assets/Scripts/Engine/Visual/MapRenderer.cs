@@ -17,17 +17,17 @@ namespace EDBG.Engine.Visual
             this.visualManager = visualManager;
         }
 
-        public void RenderMap(MapGrid map, MapHolder mapHolderObject, bool isAnimated)
+        public void RenderMap(MapGrid map, bool isAnimated)
         {
             tiles = new MapTileGameObject[map.Rows, map.Columns];
-            RemovePreviousTiles(mapHolderObject);
+            RemovePreviousTiles(visualManager.MapHolder);
             for (int row = 0; row < map.Rows; row++)
             {
                 for (int col = 0; col < map.Columns; col++)
                 {
                     MapTileGameObject tile = visualManager.ResourcesManager.PrefabManager.RetrievePoolObject<MapTileGameObject>();
                     tile.TileData = (MapTile)map.GetCell(row, col);
-                    tile.transform.SetParent(mapHolderObject.transform);
+                    tile.transform.SetParent(visualManager.MapHolder.transform);
                     tile.transform.localScale = Vector3.one;
                     Vector3 position = new Vector3(row * (MapTileGameObject.TILE_SPACING + MapTileGameObject.TILE_LENGTH)
                         , 0.1f
@@ -41,7 +41,7 @@ namespace EDBG.Engine.Visual
                     visualManager.ObjectsRenderer.RenderObjectsOnTileObject(tile, isAnimated);
                 }
             }
-            mapHolderObject.SetTiles(tiles);
+            visualManager.MapHolder.SetTiles(tiles);
         }
 
 

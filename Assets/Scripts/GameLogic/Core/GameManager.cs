@@ -12,6 +12,7 @@ using EDBG.GameLogic.Components;
 using EDBG.Engine.Animation;
 using EDBG.Director;
 using Unity.VisualScripting;
+using EDBG.Commands;
 
 namespace EDBG.GameLogic.Core
 {
@@ -20,17 +21,12 @@ namespace EDBG.GameLogic.Core
     /// </summary>
     public class GameManager : MonoBehaviour
     {
+        private LogicState currentState;
+        private Stack<CommandBase> commandStack;
 
         public EngineManagerScpritableObject EngineManager;
-        private LogicState currentState
-        {
-            get
-            {
-                return StateManager.CurrentState;
-            }
-        }
 
-        public StateManager StateManager { get; private set; }
+
 
 
 
@@ -40,17 +36,15 @@ namespace EDBG.GameLogic.Core
         public GameUI GameUI;
         public DiceTrayObject DiceTrayObject;
         public MapHolder MapHolder;
-        public GameDirector Director;
 
         private void Awake()
         {
-            EngineManager.InitializeScene(Director);
+            EngineManager.InitializeScene(MapHolder);
         }
 
         void Start()
         {
-            StateManager = new StateManager();
-
+            commandStack = new Stack<CommandBase>();
             MapCamera.Initialize();
             LoadPrefabs();
             EngineManager.InputManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
@@ -61,10 +55,8 @@ namespace EDBG.GameLogic.Core
             //Set new game
             HumanPlayer human = new HumanPlayer("HumanPlayer", PlayerColors.Black, 10, new BeginnerCorporation(Ownership.HumanPlayer));
             BotPlayer bot = new BotPlayer("BotPlayer", PlayerColors.White, 10, new BeginnerCorporation(Ownership.BotPlayer));
-            StateManager.PushState(GameBuilder.BuildInitialState(4, 4, human, bot));
-            Director.Initialize(EngineManager);
-
-            Director.BuildGameState(currentState, true);
+            currentState = GameBuilder.BuildInitialState(4, 4, human, bot);
+            RenderGameState(true);
         }
 
 
@@ -123,7 +115,7 @@ namespace EDBG.GameLogic.Core
             {
                 Debug.Log("Confirm");
             }
-            else if (action.name == "UndoAction")
+            else if (action.name == "UndoCommand")
             {
                 Debug.Log("Undo");
                 UndoState();
@@ -159,9 +151,9 @@ namespace EDBG.GameLogic.Core
                 Debug.Log(tile.parent.parent.parent.name);
             }
             */
-            if (Director.IsGameLocked == false)
+            if (NewDirector.Instance.IsGameLocked == false)
             {
-                switch (StateManager.CurrentState.RoundState)
+                switch (currentState.RoundState)
                 {
                     case RoundStates.GameStart:
                         break;
@@ -184,127 +176,26 @@ namespace EDBG.GameLogic.Core
 
         private void ChooseTile(Vector2 position)
         {
-            if (!Director.IsGameLocked)
+            if (!NewDirector.Instance.IsGameLocked)
             {
                 CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
-
                 Transform tileTransform = cameraRaycaster.Raycast(position, LayerMask.GetMask("Tile"));
-                if (tileTransform != null)
+                if (tileTransform != null && currentState.CurrentPlayer.DiscStock > 0)
                 {
                     MapTileGameObject tile = tileTransform.GetComponent<MapTileGameObject>();
-                    ChooseTile chooseTile = new ChooseTile(tile.TileData, StateManager.CurrentState);
-                    Player owner = chooseTile.SelectedTile.GetOwner();
-                    // Empty Tile
-                    if (owner == null)
-                    {
-                        StateManager.PushCurrentState();
-                        //TODO: move to director
-                        //Add disc to tile logic map
-                        chooseTile.UpdateState(StateManager.CurrentState);
-                        TileRulesLogic.AddDiscToTile(chooseTile);
-
-                        EngineManager.VisualManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder, true);
-                        SwapPlayers();
-                    }
-
-                    // Player owned tile
-                    else if (owner == StateManager.CurrentState.GetCurrentPlayer())
-                    {
-                        List<MapTile> tiles = TileRulesLogic.GetTilesWithComponentInAllDirections(
-                            StateManager.CurrentState.MapGrid,
-                            chooseTile.SelectedTile, StateManager.CurrentState.GetCurrentPlayer(), true, true);
-                        if (tiles.Count > chooseTile.SelectedTile.GetComponentOnTile<GameStack<Disc>>().Count)
-                        {
-                            StateManager.PushCurrentState();
-                            int excess = tiles.Count - chooseTile.SelectedTile.GetComponentOnTile<GameStack<Disc>>().Count;
-                            while (excess > 0)
-                            {
-
-                                chooseTile.UpdateState(StateManager.CurrentState);
-                                TileRulesLogic.AddDiscToTile(chooseTile);
-                                //RenderDisc
-                                EngineManager.VisualManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder, true);
-                                excess--;
-                            }
-
-                            SwapPlayers();
-                        }
-
-                    }
-                    // Opponent owned tile
-                    else if (owner == StateManager.CurrentState.GetOtherPlayer())
-                    {
-                        List<MapTile> tiles = TileRulesLogic.GetBiggerOpponentStackTiles(chooseTile);
-                        if (tiles.Count > 0)
-                        {
-
-                            StateManager.PushCurrentState();
-                            StateManager.CurrentState.TargetTile = chooseTile.SelectedTile;
-                            StateManager.CurrentState.RoundState = RoundStates.ChooseStack;
-                            Debug.Log("ChooseStack start: Choose stack to capture with");
-                            NewDirector.Instance.StopAllAnimations();
-                            foreach (MapTile bigTile in tiles)
-                            {
-                                Debug.Log("Larger Stack: " + bigTile.GamePosition);
-                                MapTileGameObject tileObject = MapHolder.GetTile(bigTile.GamePosition);
-                                //TODO: NO Find
-                                Transform stack = tileObject.StackContainer.Find("Stack");
-                                stack.GetComponent<AnimatedObject>().IsLooping = true;
-                                stack.AddComponent<BreathingAnimation>();
-                            }
-                        }
-
-                    }
+                    PlaceDiscCommand command = new PlaceDiscCommand(tile.TileData, currentState.CurrentPlayer, EngineManager.VisualManager.ObjectsRenderer);
+                    command.ExecuteCommand();
+                    commandStack.Push(command);
+                    currentState.SwapCurrentPlayer();
                 }
             }
-           
-        }
 
-        private void SwapPlayers()
-        {
-            StateManager.CurrentState.CurrentPlayerIndex =
-                        (StateManager.CurrentState.CurrentPlayerIndex == 0) ? (byte)1 : (byte)0;
         }
 
         private void ChooseStack(Vector2 position)
         {
+            
 
-            ChooseTile chooseTile = new ChooseTile(StateManager.CurrentState.TargetTile, StateManager.CurrentState);
-            List<MapTile> legalTiles = TileRulesLogic.GetBiggerOpponentStackTiles(chooseTile);
-            CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
-
-            Transform tileTransform = cameraRaycaster.Raycast(position, LayerMask.GetMask("Tile"));
-            if (tileTransform != null)
-            {
-                MapTile captureOrigin = tileTransform.GetComponent<MapTileGameObject>().TileData;
-                if (legalTiles.Contains(captureOrigin))
-                {
-                    StateManager.PushCurrentState();
-                    captureOrigin = StateManager.CurrentState.MapGrid.GetCell(captureOrigin.GamePosition) as MapTile;
-                    chooseTile.UpdateState(StateManager.CurrentState);
-                    chooseTile.SelectedTile.ComponentOnTile = captureOrigin.ComponentOnTile.Clone() as IGameComponent;
-                    captureOrigin.SetComponentOnTile<GameStack<Disc>>(null);
-                    MapHolder.GetTile(chooseTile.SelectedTile.GamePosition).TileData = chooseTile.SelectedTile;
-                    MapHolder.GetTile(captureOrigin.GamePosition).TileData = captureOrigin;
-
-
-                    NewDirector.Instance.StopAllAnimations();
-                    //Director.BuildGameState(currentState, false);
-                    JumpAnimation animation = MapHolder.GetTile(captureOrigin.GamePosition).StackContainer.Find("Stack").AddComponent<JumpAnimation>();
-                    animation.TargetTile = MapHolder.GetTile(chooseTile.SelectedTile.GamePosition);
-
-
-                    StateManager.CurrentState.RoundState = RoundStates.ChooseTile;
-                    SwapPlayers();
-                }
-                //Switch target if possible
-                else
-                {
-                    StateManager.PopState();
-                    NewDirector.Instance.StopAllAnimations();
-                    ChooseTile(position);
-                }
-            }
         }
 
         private void ZoomCamera(float deltaY)
@@ -314,26 +205,21 @@ namespace EDBG.GameLogic.Core
 
         private void UndoState()
         {
-            if (StateManager.Count > 1)
+            if(commandStack.Count > 0)
             {
-                StateManager.PopState();
-                if (StateManager.CurrentState.RoundState == RoundStates.ChooseStack && StateManager.Count > 1)
-                {
-                    StateManager.PopState();
-                }
-                NewDirector.Instance.StopAllAnimations();
-                Director.BuildGameState(currentState, false);
+                CommandBase command = commandStack.Pop();
+                command.UndoCommand();
             }
         }
 
         private void RenderGameState(bool isAnimated)
         {
-            EngineManager.VisualManager.MapRenderer.RenderMap(StateManager.CurrentState.MapGrid, MapHolder, isAnimated);
+            EngineManager.VisualManager.MapRenderer.RenderMap(currentState.MapGrid, isAnimated);
         }
 
         private void RenderGameState(LogicState gameState, bool isAnimated)
         {
-            EngineManager.VisualManager.MapRenderer.RenderMap(gameState.MapGrid, MapHolder, isAnimated);
+            EngineManager.VisualManager.MapRenderer.RenderMap(gameState.MapGrid, isAnimated);
         }
 
     }

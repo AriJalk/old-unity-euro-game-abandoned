@@ -1,4 +1,5 @@
-﻿using EDBG.Engine.Core;
+﻿using EDBG.Commands;
+using EDBG.Engine.Core;
 using EDBG.GameLogic.Actions;
 using EDBG.States;
 using System.Collections.Generic;
@@ -14,9 +15,9 @@ namespace EDBG.Director
 
         Dictionary<string, int> stringHashDictionary = new Dictionary<string, int>();
 
-        Queue<ActionBase> actionsSequence = new Queue<ActionBase>();
+        Queue<CommandBase> actionsSequence = new Queue<CommandBase>();
 
-        Queue<ActionBase> simultaniousActions = new Queue<ActionBase>();
+        Queue<CommandBase> simultaniousActions = new Queue<CommandBase>();
 
         List<AnimatedObject> loopingAnimations = new List<AnimatedObject>();
 
@@ -53,13 +54,13 @@ namespace EDBG.Director
         {
             while (simultaniousActions.Count > 0)
             {
-                ActionBase action = simultaniousActions.Dequeue();
-                action.ExecuteAction();
+                CommandBase action = simultaniousActions.Dequeue();
+                action.ExecuteCommand();
             }
             if (actionsSequence.Count > 0)
             {
-                ActionBase action = actionsSequence.Dequeue();
-                action.ExecuteAction();
+                CommandBase action = actionsSequence.Dequeue();
+                action.ExecuteCommand();
             }
         }
 
@@ -120,12 +121,12 @@ namespace EDBG.Director
             }
         }
 
-        public void AddActionToSequence(ActionBase action)
+        public void AddActionToSequence(CommandBase action)
         {
             actionsSequence.Enqueue(action);
         }
 
-        public void AddActionSimultanious(ActionBase action)
+        public void AddActionSimultanious(CommandBase action)
         {
             simultaniousActions.Enqueue(action);
         }
@@ -183,7 +184,7 @@ namespace EDBG.Director
 
         public void BuildGameState(LogicState state, bool isAnimated)
         {
-            engineManager.VisualManager.MapRenderer.RenderMap(state.MapGrid, MapHolder, isAnimated);
+            engineManager.VisualManager.MapRenderer.RenderMap(state.MapGrid, isAnimated);
         }
 
     }

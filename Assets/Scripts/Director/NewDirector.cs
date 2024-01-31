@@ -24,6 +24,16 @@ public class NewDirector
         }
     }
 
+    private bool _isGameLocked;
+
+    public bool IsGameLocked
+    {
+        get { return _isGameLocked; }
+        set { _isGameLocked = value; }
+    }
+
+
+
     private List<CodeAnimationBase> runningAnimations = new List<CodeAnimationBase>();
 
     public void StopAllAnimations()

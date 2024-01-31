@@ -24,13 +24,13 @@ public class EngineManagerScpritableObject : ScriptableObject
 
 
     //TODO: remove director dependency
-    public void InitializeScene(GameDirector director)
+    public void InitializeScene(MapHolder mapHolder)
     {
         engineComponents = new GameObject("Engine Components").transform;
 
         ResourcesManager = new GameResourcesManager();
         PlatformManager = new PlatformManager();
-        VisualManager = new VisualManager(ResourcesManager, director, engineComponents);
+        VisualManager = new VisualManager(ResourcesManager, mapHolder,engineComponents);
 
 
 

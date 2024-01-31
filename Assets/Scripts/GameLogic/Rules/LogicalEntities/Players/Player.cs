@@ -44,6 +44,15 @@ namespace EDBG.GameLogic.Rules
             }
         }
 
+        private int _discStock;
+
+        public int DiscStock
+        {
+            get { return _discStock; }
+            set { _discStock = value; }
+        }
+
+
 
         public Player(string name, PlayerColors color, int discStock, Corporation corporation)
         {
@@ -51,7 +60,7 @@ namespace EDBG.GameLogic.Rules
             _playerColor = color;
             _initialDiscStock = discStock;
             _corporation = corporation;
-
+            _discStock = InitialDiscStock;
         }
 
 
@@ -61,6 +70,7 @@ namespace EDBG.GameLogic.Rules
             _playerColor = other._playerColor;
             _initialDiscStock = other._initialDiscStock;
             _corporation = other._corporation;
+            DiscStock = other._discStock;
         }
 
         public virtual object Clone()

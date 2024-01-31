@@ -11,10 +11,6 @@ namespace EDBG.GameLogic.Components
                 return _owner; 
             } 
         }
-        public PlayerColors DiscColor
-        {
-            get; private set;
-        }
 
         public override bool IsNull
         {
@@ -29,13 +25,11 @@ namespace EDBG.GameLogic.Components
         public Disc(Player player)
         {
             _owner = player;
-            DiscColor = player.PlayerColor;
         }
 
         private Disc(Disc other)
         {
             _owner = other._owner;
-            DiscColor = other.DiscColor;
         }
 
         public override object Clone()

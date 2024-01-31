@@ -15,11 +15,12 @@ namespace EDBG.Engine.Visual
 
         public GameResourcesManager ResourcesManager { get; private set; }
         public GameDirector Director { get; private set; }
+        public MapHolder MapHolder { get; private set; }
 
-        public VisualManager(GameResourcesManager resourceManager, GameDirector director, Transform parent)
+        public VisualManager(GameResourcesManager resourceManager, MapHolder mapHolder, Transform parent)
         {
             ResourcesManager = resourceManager;
-            Director = director;
+            MapHolder = mapHolder;
 
             MapRenderer = new MapRenderer(this);
             ObjectsRenderer = new ObjectsRenderer(this);

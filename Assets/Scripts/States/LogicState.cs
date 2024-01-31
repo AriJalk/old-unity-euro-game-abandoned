@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using EDBG.GameLogic.MapSystem;
-using EDBG.GameLogic.Components;
 using EDBG.GameLogic.Rules;
-using UnityEngine;
 
 namespace EDBG.States
 {
@@ -34,19 +32,26 @@ namespace EDBG.States
         }
 
         public byte CurrentPlayerIndex {  get; set; }
+        public Player CurrentPlayer
+        {
+            get
+            {
+                return PlayerList[CurrentPlayerIndex];
+            }
+        }
         public MapGrid MapGrid { get; set; }
 
-        public List<PlayerStateData> PlayerStateList { get; set; }
+        public List<Player> PlayerList { get; set; }
 
         public MapTile TargetTile { get; set; }
 
         public LogicState(MapGrid mapGrid, params Player[] players)
         {
             MapGrid = mapGrid;
-            PlayerStateList = new List<PlayerStateData>();
+            PlayerList = new List<Player>();
             foreach(Player player in players)
             {
-                PlayerStateList.Add(new PlayerStateData(player));
+                PlayerList.Add(player);
             }
             RoundState = RoundStates.ChooseTile;
         }
@@ -60,12 +65,12 @@ namespace EDBG.States
                     MapGrid = (MapGrid)other.MapGrid.Clone();
                 }
                 CurrentPlayerIndex = other.CurrentPlayerIndex;
-                if (other.PlayerStateList != null)
+                if (other.PlayerList != null)
                 {
-                    PlayerStateList = new List<PlayerStateData>();
-                    foreach(PlayerStateData stateData in other.PlayerStateList)
+                    PlayerList = new List<Player>();
+                    foreach(Player player in other.PlayerList)
                     {
-                        PlayerStateList.Add((PlayerStateData)stateData.Clone());
+                        PlayerList.Add((Player)player.Clone());
                     }
                 }
                 RoundState = other.RoundState;
@@ -80,24 +85,18 @@ namespace EDBG.States
 
         public Player GetCurrentPlayer()
         {
-            return PlayerStateList[CurrentPlayerIndex].Player;
+            return PlayerList[CurrentPlayerIndex];
         }
 
         public Player GetOtherPlayer()
         {
-            return CurrentPlayerIndex == 0 ? PlayerStateList[1].Player : PlayerStateList[0].Player;
+            return CurrentPlayerIndex == 0 ? PlayerList[1] : PlayerList[0];
         }
 
-        public PlayerStateData GetPlayerState(Player player)
+        public void SwapCurrentPlayer()
         {
-            foreach(PlayerStateData stateData in PlayerStateList)
-            {
-                if(stateData.Player == player)
-                {
-                    return stateData;
-                }
-            }
-            return null;
+            CurrentPlayerIndex = CurrentPlayerIndex == (byte)0 ? (byte)1 : (byte)0;
         }
+
     }
 }

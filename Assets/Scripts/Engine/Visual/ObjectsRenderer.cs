@@ -75,7 +75,7 @@ namespace EDBG.Engine.Visual
                     Vector3 position = new Vector3(0, i * discHeight + initialHeightOffset + ((i != 0) ? fillerDiscHeight * i : 0), 0);
                     mainDisc.transform.localPosition = position;
                     // Apply Material based on disc color
-                    mainDisc.ApplyMaterial(visualManager.ColorManager.GetDiscMaterial(mainDisc.DiscData.DiscColor));
+                    mainDisc.ApplyMaterial(visualManager.ColorManager.GetDiscMaterial(mainDisc.DiscData.Owner.PlayerColor));
 
                     if (isAnimated == true)
                     {
@@ -92,7 +92,7 @@ namespace EDBG.Engine.Visual
                         float fillerYPos = position.y + discHeight;
                         fillerDisc.transform.localPosition = new Vector3(0, fillerYPos, 0);
                         fillerDisc.ApplyMaterial(visualManager.ColorManager.GetMaterial(
-                            discStack.GetItemByIndex(i + 1).DiscColor == GameLogic.Rules.PlayerColors.White ? "BlackFiller" : "WhiteFiller"));
+                            discStack.GetItemByIndex(i + 1).Owner.PlayerColor == GameLogic.Rules.PlayerColors.White ? "BlackFiller" : "WhiteFiller"));
                         if (isAnimated == true)
                         {
                             fillerDisc.AddComponent<PlaceDiscAnimation>();
@@ -101,15 +101,15 @@ namespace EDBG.Engine.Visual
                     }
                     if (i != 0 && isAnimated == true)
                         mainDisc.AddComponent<PlaceDiscAnimation>();
-                        //director.AddAnimationSimultanious(mainDisc.AnimatedObject, "PlaceDisc");
+                    //director.AddAnimationSimultanious(mainDisc.AnimatedObject, "PlaceDisc");
 
                 }
             }
         }
 
-        public void PlaceNewDisc(Disc disc, MapTile tileData, MapHolder mapHolder, bool isAnimated)
+        public void PlaceNewDisc(Disc disc, MapTile tileData, bool isAnimated)
         {
-            MapTileGameObject tileObject = mapHolder.GetTile(tileData.GamePosition);
+            MapTileGameObject tileObject = visualManager.MapHolder.GetTile(tileData.GamePosition);
             tileObject.TileData = tileData;
             DiscObject newDisc;
             float discHeight = DiscObject.DISC_HEIGHT * DiscObject.DISC_SCALE;
@@ -141,17 +141,14 @@ namespace EDBG.Engine.Visual
                     fillerDisc.transform.localPosition = new Vector3(0, newFillerHeight, 0);
 
                     fillerDisc.ApplyMaterial(visualManager.ColorManager.GetMaterial(
-                            disc.DiscColor ==
+                            disc.Owner.PlayerColor ==
                             GameLogic.Rules.PlayerColors.White ? "BlackFiller" : "WhiteFiller"));
                     newDiscHeight = newFillerHeight + fillerDiscHeight;
                     if (isAnimated)
                     {
                         fillerDisc.AddComponent<PlaceDiscAnimation>();
                     }
-
-
                 }
-
                 //Add regular disc
                 Vector3 position = new Vector3(0, newDiscHeight, 0);
                 newDisc = visualManager.ResourcesManager.PrefabManager.RetrievePoolObject<DiscObject>();
@@ -161,7 +158,7 @@ namespace EDBG.Engine.Visual
                 newDisc.transform.localScale = Vector3.one * DiscObject.DISC_SCALE;
                 newDisc.transform.localPosition = position;
                 // Apply Material based on disc color
-                newDisc.ApplyMaterial(visualManager.ColorManager.GetDiscMaterial(newDisc.DiscData.DiscColor));
+                newDisc.ApplyMaterial(visualManager.ColorManager.GetDiscMaterial(newDisc.DiscData.Owner.PlayerColor));
                 if (isAnimated)
                 {
                     newDisc.AddComponent<PlaceDiscAnimation>();
@@ -169,6 +166,27 @@ namespace EDBG.Engine.Visual
             }
         }
 
+        public void RemoveTopDisc(MapTile mapTile)
+        {
 
+            Transform stack = visualManager.MapHolder.GetTile(mapTile.GamePosition).StackContainer.GetChild(0);
+            if (stack != null)
+            {
+                int childCount = stack.childCount;
+                if (childCount > 0)
+                {
+                    //Remove filler disc if there are more than 1 disc
+                    if (childCount > 1)
+                    {
+                        visualManager.ResourcesManager.PrefabManager.ReturnPoolObject(stack.GetChild(childCount - 1).GetComponent<DiscObject>());
+                        childCount--;
+                    }
+                    //Remove disc
+                    visualManager.ResourcesManager.PrefabManager.ReturnPoolObject(stack.GetChild(childCount - 1).GetComponent<DiscObject>());
+                    childCount--;
+                }
+
+            }
+        }
     }
 }
