@@ -18,6 +18,13 @@ namespace EDBG.Engine.Visual
             this.visualManager = visualManager;
         }
 
+        //Adds animation to component and registers it in the animation manager
+        private void AddAnimation<T>(GameObject gameObject) where T : CodeAnimationBase
+        {
+            CodeAnimationBase anim = gameObject.AddComponent<T>();
+            anim.SetAnimationManager(visualManager.AnimationManager);
+        }
+
         public void RenderObjectsOnMap(MapTileGameObject[,] tiles, bool isAnimated)
         {
             foreach (MapTileGameObject tile in tiles)
@@ -80,7 +87,7 @@ namespace EDBG.Engine.Visual
                     if (isAnimated == true)
                     {
                         if (i == 0)
-                            mainDisc.AddComponent<PlaceDiscAnimation>();
+                            AddAnimation<PlaceDiscAnimation>(mainDisc.gameObject);
                     }
                     // Create filler disc
                     if (i < discStack.Count - 1)
@@ -95,12 +102,12 @@ namespace EDBG.Engine.Visual
                             discStack.GetItemByIndex(i + 1).Owner.PlayerColor == GameLogic.Rules.PlayerColors.White ? "BlackFiller" : "WhiteFiller"));
                         if (isAnimated == true)
                         {
-                            fillerDisc.AddComponent<PlaceDiscAnimation>();
+                            AddAnimation<PlaceDiscAnimation>(fillerDisc.gameObject);
                             //director.AddAnimationSimultanious(fillerDisc.AnimatedObject, "PlaceDisc");
                         }
                     }
                     if (i != 0 && isAnimated == true)
-                        mainDisc.AddComponent<PlaceDiscAnimation>();
+                        AddAnimation<PlaceDiscAnimation>(mainDisc.gameObject);
                     //director.AddAnimationSimultanious(mainDisc.AnimatedObject, "PlaceDisc");
 
                 }
@@ -146,7 +153,7 @@ namespace EDBG.Engine.Visual
                     newDiscHeight = newFillerHeight + fillerDiscHeight;
                     if (isAnimated)
                     {
-                        fillerDisc.AddComponent<PlaceDiscAnimation>();
+                        AddAnimation<PlaceDiscAnimation>(fillerDisc.gameObject);
                     }
                 }
                 //Add regular disc
@@ -161,7 +168,7 @@ namespace EDBG.Engine.Visual
                 newDisc.ApplyMaterial(visualManager.ColorManager.GetDiscMaterial(newDisc.DiscData.Owner.PlayerColor));
                 if (isAnimated)
                 {
-                    newDisc.AddComponent<PlaceDiscAnimation>();
+                    AddAnimation<PlaceDiscAnimation>(newDisc.gameObject);
                 }
             }
         }

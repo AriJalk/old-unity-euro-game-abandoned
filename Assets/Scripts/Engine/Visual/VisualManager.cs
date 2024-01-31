@@ -14,7 +14,7 @@ namespace EDBG.Engine.Visual
 
 
         public GameResourcesManager ResourcesManager { get; private set; }
-        public GameDirector Director { get; private set; }
+        public AnimationManager AnimationManager { get; private set; }
         public MapHolder MapHolder { get; private set; }
 
         public VisualManager(GameResourcesManager resourceManager, MapHolder mapHolder, Transform parent)
@@ -29,6 +29,8 @@ namespace EDBG.Engine.Visual
 
             ScreenManager = new GameObject("Screen Manager").AddComponent<ScreenManager>();
             ScreenManager.transform.SetParent(parent);
+
+            AnimationManager = new AnimationManager();
         }
     }
 }

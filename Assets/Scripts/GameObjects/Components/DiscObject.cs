@@ -1,12 +1,10 @@
 using UnityEngine;
 
 using EDBG.GameLogic.Components;
-using EDBG.Engine.Animation;
 
 public class DiscObject : MonoBehaviour
 {
     public Transform Model;
-    public AnimatedObject AnimatedObject;
 
     public const float DISC_DIAMETER = 0.1f;
     public const float DISC_HEIGHT = 0.03f;

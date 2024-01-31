@@ -9,7 +9,6 @@ using UnityEngine.UIElements;
 using System.Collections.Generic;
 using EDBG.Utilities.DataTypes;
 using EDBG.GameLogic.Components;
-using EDBG.Engine.Animation;
 using EDBG.Director;
 using Unity.VisualScripting;
 using EDBG.Commands;
@@ -26,7 +25,7 @@ namespace EDBG.GameLogic.Core
 
         public EngineManagerScpritableObject EngineManager;
 
-
+        public AnimationManager GameDirector { get; private set; }
 
 
 
@@ -49,7 +48,7 @@ namespace EDBG.GameLogic.Core
             LoadPrefabs();
             EngineManager.InputManager.InputEvents.SubscribeToAllEvents(MoveCamera, SelectObject, ZoomCamera);
             EngineManager.ScreenManager.ScreenChanged += ScreenChanged;
-
+            GameDirector = new AnimationManager();
 
 
             //Set new game
@@ -151,7 +150,7 @@ namespace EDBG.GameLogic.Core
                 Debug.Log(tile.parent.parent.parent.name);
             }
             */
-            if (NewDirector.Instance.IsGameLocked == false)
+            if (GameDirector.IsGameLocked == false)
             {
                 switch (currentState.RoundState)
                 {
@@ -176,7 +175,7 @@ namespace EDBG.GameLogic.Core
 
         private void ChooseTile(Vector2 position)
         {
-            if (!NewDirector.Instance.IsGameLocked)
+            if (!GameDirector.IsGameLocked)
             {
                 CameraRaycaster cameraRaycaster = MapCamera.GetComponentInChildren<CameraRaycaster>();
                 Transform tileTransform = cameraRaycaster.Raycast(position, LayerMask.GetMask("Tile"));
@@ -194,7 +193,7 @@ namespace EDBG.GameLogic.Core
 
         private void ChooseStack(Vector2 position)
         {
-            
+
 
         }
 
@@ -205,10 +204,11 @@ namespace EDBG.GameLogic.Core
 
         private void UndoState()
         {
-            if(commandStack.Count > 0)
+            if (commandStack.Count > 0)
             {
                 CommandBase command = commandStack.Pop();
                 command.UndoCommand();
+                currentState.SwapCurrentPlayer();
             }
         }
 

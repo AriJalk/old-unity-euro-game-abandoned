@@ -18,7 +18,6 @@ public class PlaceDiscAnimation : CodeAnimationBase
         targetPosition = transform.position;
         transform.position = targetPosition + Vector3.up * DropHeight;
         initialPosition = transform.position;
-        NewDirector.Instance.AddAnimation(this);
     }
 
     void Update()
@@ -39,7 +38,11 @@ public class PlaceDiscAnimation : CodeAnimationBase
         {
             // Animation complete, do cleanup or handle events
             enabled = false;
-            NewDirector.Instance.OnAnimationEnd(this);
+            if(gameDirector != null)
+            {
+                gameDirector.OnAnimationEnd(this);
+            }
+            
             Destroy(this);
         }
     }
@@ -58,6 +61,7 @@ public class PlaceDiscAnimation : CodeAnimationBase
     public override void StopAnimation()
     {
         transform.position = targetPosition;
+
         Destroy(this);
     }
 }

@@ -23,6 +23,16 @@ namespace EDBG.GameLogic.Rules
             set { _playerColor = value; }
         }
 
+        //TODO: decide filler from here
+        private PlayerColors _fillerColor;
+
+        public PlayerColors FillerColor
+        {
+            get { return _fillerColor; }
+            set { _fillerColor = value; }
+        }
+
+
 
         private Corporation _corporation;
 

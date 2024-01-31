@@ -12,7 +12,6 @@ public class BreathingAnimation : CodeAnimationBase
     void Start()
     {
         startTime = Time.time;
-        NewDirector.Instance.AddAnimation(this);
     }
 
     void Update()
@@ -51,7 +50,7 @@ public class BreathingAnimation : CodeAnimationBase
     public override void StopAnimation()
     {
         transform.localScale = Vector3.one;
-        NewDirector.Instance.OnAnimationEnd(this);
+        base.StopAnimation();
         Destroy(this);
     }
 }

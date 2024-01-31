@@ -27,8 +27,6 @@ public class JumpAnimation : CodeAnimationBase
             GameObject.Find("Game Manager").GetComponent<GameManager>().EngineManager.ResourcesManager.PrefabManager.ReturnPoolObject(disc);
         }
         transform.SetParent(TargetTile.StackContainer);
-        
-        NewDirector.Instance.AddAnimation(this);
     }
 
     void Update()
@@ -55,7 +53,7 @@ public class JumpAnimation : CodeAnimationBase
         {
             // Animation complete, do cleanup or handle events
             enabled = false;
-            NewDirector.Instance.OnAnimationEnd(this);
+            base.StopAnimation();
             Destroy(this);
         }
     }
@@ -74,6 +72,7 @@ public class JumpAnimation : CodeAnimationBase
     public override void StopAnimation()
     {
         transform.position = TargetTile.StackContainer.position;
+        base.StopAnimation();
         Destroy(this);
     }
 }

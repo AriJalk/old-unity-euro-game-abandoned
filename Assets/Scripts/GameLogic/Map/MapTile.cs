@@ -26,6 +26,7 @@ namespace EDBG.GameLogic.MapSystem
 
         public int DieFace { get; private set; }
 
+        //TODO: just disc stack, other components can wait
         public IGameComponent ComponentOnTile { get; set; }
 
         /// <summary>
