@@ -5,19 +5,19 @@ using UnityEngine;
 
 public abstract class CodeAnimationBase : MonoBehaviour
 {
-    protected AnimationManager gameDirector;
+    protected AnimationManager animationManager;
 
     public void SetAnimationManager(AnimationManager gameDirector)
     {
-        this.gameDirector = gameDirector;
+        this.animationManager = gameDirector;
         gameDirector.AddAnimation(this);
     }
     public abstract void PlayAnimation();
     public virtual void StopAnimation()
     {
-        if( gameDirector != null )
+        if( animationManager != null )
         {
-            gameDirector.OnAnimationEnd(this);
+            animationManager.OnAnimationEnd(this);
         }
     }
 }

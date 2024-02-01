@@ -1,11 +1,9 @@
 ﻿using EDBG.Commands;
-using EDBG.GameLogic.Components;
 using EDBG.GameLogic.Core;
 using EDBG.GameLogic.MapSystem;
-using EDBG.GameLogic.Rules;
 using EDBG.States;
 using System.Collections.Generic;
-using UnityEngine.Events;
+using UnityEngine;
 
 namespace EDBG.Director
 {
@@ -37,7 +35,8 @@ namespace EDBG.Director
         //TODO: further choice logic
         public void SelectTile(MapTile tile)
         {
-            if (tile != null)
+            // Empty or player owned tile
+            if (tile != null && tile.GetOwner() != LogicState.GetOtherPlayer())
             {
                 PlaceDiscsCommand command = new PlaceDiscsCommand(LogicState, tile, gameManager.EngineManager.VisualManager.ObjectsRenderer);
                 command.ExecuteCommand();
@@ -48,35 +47,35 @@ namespace EDBG.Director
                     gameManager.GameMessageEvent?.Invoke("Confirm Action");
                 }
             }
+            // Opponent controlled tile
+            else
+            {
+                ChooseOpponentStackCommand command = new ChooseOpponentStackCommand(LogicState, tile, gameManager.EngineManager.VisualManager.ObjectsRenderer);
+                if(command.Result == true)
+                {
+                    LogicState.RoundState = RoundStates.ChooseCaptureStack;
+                    commandStack.Push(command);
+                    command.ExecuteCommand();
+                    gameManager.GameMessageEvent?.Invoke($"{LogicState.CurrentPlayer.Name}, choose capture stack");
+                }
+            }
+        }
+
+        public void SelectStack(MapTile tile)
+        {
+            ChooseOpponentStackCommand command = commandStack.Peek() as ChooseOpponentStackCommand;
+            if(command != null)
+            {
+                if (command.LegalCaptureStackTiles.Contains(tile))
+                {
+                    command.UndoCommand();
+                    commandStack.Pop();
+                    //TODO: capture
+
+                }
+            }
         }
         
-
-
-                    /*
-
-                    List<MapTile> tiles = TileRulesLogic.GetTilesWithComponentInAllDirections(
-                    StateManager.CurrentState.MapGrid,
-                           chooseTile.SelectedTile, StateManager.CurrentState.GetCurrentPlayer(), true, true);
-                    if (tiles.Count > chooseTile.SelectedTile.GetComponentOnTile<GameStack<Disc>>().Count)
-                    {
-                        StateManager.PushCurrentState();
-                        int excess = tiles.Count - chooseTile.SelectedTile.GetComponentOnTile<GameStack<Disc>>().Count;
-                        while (excess > 0)
-                        {
-
-                            chooseTile.UpdateState(StateManager.CurrentState);
-                            TileRulesLogic.AddDiscToTile(chooseTile);
-                            //RenderDisc
-                            EngineManager.VisualManager.ObjectsRenderer.PlaceNewDisc(new Disc(StateManager.CurrentState.GetCurrentPlayer()), chooseTile.SelectedTile, MapHolder, true);
-                            excess--;
-                        }
-
-                        SwapPlayers();
-
-            */
-
-
-        //TODO: revert to correct state
         public void UndoState()
         {
             if (commandStack.Count > 0)

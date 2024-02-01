@@ -44,5 +44,6 @@ namespace EDBG.Director
             Debug.Log("Animation end: " + animation.GetType().Name);
             runningAnimations.Remove(animation);
         }
+
     }
 }

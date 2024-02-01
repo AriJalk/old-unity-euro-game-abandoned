@@ -195,5 +195,28 @@ namespace EDBG.GameLogic.Rules
             }
             return largerTiles;
         }
+
+        public static List<MapTile> GetBiggerOpponentStackTiles(MapTile chosenTile, LogicState state)
+        {
+            GameStack<Disc> originStack = chosenTile.DiscStack;
+            if (originStack == null)
+                return null;
+            int stackSize = originStack.Count;
+            Player player = state.GetCurrentPlayer();
+
+            List<MapTile> tiles = GetTilesWithComponentInAllDirections(state.MapGrid, chosenTile, player, true, true);
+            List<MapTile> largerTiles = new List<MapTile>();
+            if (tiles.Count > 0)
+            {
+                foreach (MapTile tile in tiles)
+                {
+
+                    GameStack<Disc> stack = tile.DiscStack as GameStack<Disc>;
+                    if (stack.Count > stackSize)
+                        largerTiles.Add(tile);
+                }
+            }
+            return largerTiles;
+        }
     }
 }

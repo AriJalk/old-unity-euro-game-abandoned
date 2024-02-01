@@ -38,9 +38,9 @@ public class PlaceDiscAnimation : CodeAnimationBase
         {
             // Animation complete, do cleanup or handle events
             enabled = false;
-            if(gameDirector != null)
+            if(animationManager != null)
             {
-                gameDirector.OnAnimationEnd(this);
+                animationManager.OnAnimationEnd(this);
             }
             
             Destroy(this);

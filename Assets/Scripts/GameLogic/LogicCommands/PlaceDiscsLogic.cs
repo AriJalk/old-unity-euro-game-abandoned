@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+//TODO: move to command
 namespace EDBG.GameLogic.Actions
 {
     public class PlaceDiscsLogic : CommandBase

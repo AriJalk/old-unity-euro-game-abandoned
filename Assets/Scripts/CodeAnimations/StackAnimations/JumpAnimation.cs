@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class JumpAnimation : CodeAnimationBase
 {
+    private PrefabManager prefabManager;
     public MapTileGameObject TargetTile;
     public float JumpHeight = 1.0f;
     public float Duration = 1.0f;
@@ -17,16 +18,16 @@ public class JumpAnimation : CodeAnimationBase
     {
         initialPosition = transform.position;
         //Swap stacks
-        Transform stack = TargetTile.StackContainer.Find("Stack");
+        Transform stack = TargetTile.Stack;
         
         stack.SetParent(transform.parent);
         stack.localPosition = Vector3.zero;
         
         foreach(DiscObject disc in stack.GetComponentsInChildren<DiscObject>())
         {
-            GameObject.Find("Game Manager").GetComponent<GameManager>().EngineManager.ResourcesManager.PrefabManager.ReturnPoolObject(disc);
+            prefabManager.ReturnPoolObject(disc);
         }
-        transform.SetParent(TargetTile.StackContainer);
+        transform.SetParent(TargetTile.Stack);
     }
 
     void Update()
@@ -40,10 +41,10 @@ public class JumpAnimation : CodeAnimationBase
         // Use a curve for the jump animation
         float jumpCurveValue = Mathf.Sin(normalizedTime * Mathf.PI);
 
-        Debug.Log("Vector - " + Vector3.Lerp(initialPosition, TargetTile.StackContainer.position, normalizedTime).ToString());
+        Debug.Log("Vector - " + Vector3.Lerp(initialPosition, TargetTile.Stack.position, normalizedTime).ToString());
 
         // Interpolate between initial and target positions
-        transform.position = Vector3.Lerp(initialPosition, TargetTile.StackContainer.position, normalizedTime) + Vector3.up * jumpCurveValue * JumpHeight;
+        transform.position = Vector3.Lerp(initialPosition, TargetTile.Stack.position, normalizedTime) + Vector3.up * jumpCurveValue * JumpHeight;
 
         // Update the elapsed time
         elapsedTime += Time.deltaTime;
@@ -56,6 +57,12 @@ public class JumpAnimation : CodeAnimationBase
             base.StopAnimation();
             Destroy(this);
         }
+    }
+
+    public void Initialize(PrefabManager prefabManager, MapTileGameObject targetTile)
+    {
+        this.prefabManager = prefabManager;
+        this.TargetTile = targetTile;
     }
 
     public override void PlayAnimation()
@@ -71,7 +78,7 @@ public class JumpAnimation : CodeAnimationBase
 
     public override void StopAnimation()
     {
-        transform.position = TargetTile.StackContainer.position;
+        transform.position = TargetTile.Stack.position;
         base.StopAnimation();
         Destroy(this);
     }

@@ -22,7 +22,7 @@ namespace EDBG.GameLogic.Core
     public class GameManager : MonoBehaviour
     {
         public UnityEvent<string> GameMessageEvent;
-        
+
         private TurnManager turnManager;
 
         public EngineManagerScpritableObject EngineManager;
@@ -47,7 +47,7 @@ namespace EDBG.GameLogic.Core
 
         void Start()
         {
-            
+
             MapCamera.Initialize();
             LoadPrefabs();
             EngineManager.InputManager.InputEvents.SubscribeToAllEvents(MoveCamera, MouseClicked, ZoomCamera);
@@ -58,7 +58,7 @@ namespace EDBG.GameLogic.Core
             //Set new game
             HumanPlayer human = new HumanPlayer("HumanPlayer", PlayerColors.Black, PlayerColors.Red, 10, new BeginnerCorporation(Ownership.HumanPlayer));
             BotPlayer bot = new BotPlayer("BotPlayer", PlayerColors.White, PlayerColors.Green, 10, new BeginnerCorporation(Ownership.BotPlayer));
-            turnManager = new TurnManager(this,GameBuilder.BuildInitialState(4, 4, human, bot));
+            turnManager = new TurnManager(this, GameBuilder.BuildInitialState(4, 4, human, bot));
             EngineManager.VisualManager.RenderGameState(true, turnManager.LogicState);
 
             OverlayUI.Initialize(this);
@@ -125,7 +125,7 @@ namespace EDBG.GameLogic.Core
 
         private void ActionSelected(UICommands command)
         {
-            if(command == UICommands.Confirm)
+            if (command == UICommands.Confirm)
             {
                 turnManager.Confirm();
             }
@@ -152,17 +152,21 @@ namespace EDBG.GameLogic.Core
         //TODO: move to UI
         private void MouseClicked(bool[] mouseButtons, Vector2 position)
         {
+            Transform hit;
             switch (turnManager.LogicState.RoundState)
             {
                 case RoundStates.GameStart:
                     break;
 
                 case RoundStates.ChooseTile:
-                    Transform hit = Raycast(position, LayerMask.GetMask("Tile"));
+                    hit = Raycast(position, LayerMask.GetMask("Tile"));
                     if (hit != null)
                         turnManager.SelectTile(hit.GetComponent<MapTileGameObject>().TileData);
                     break;
                 case RoundStates.ChooseCaptureStack:
+                    hit = Raycast(position, LayerMask.GetMask("Tile"));
+                    if (hit != null)
+                        turnManager.SelectStack(hit.GetComponent<MapTileGameObject>().TileData);
                     break;
                 default:
                     break;

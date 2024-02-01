@@ -11,6 +11,7 @@ namespace EDBG.Engine.Visual
 {
     public class ObjectsRenderer
     {
+        //TODO: revert to private
         private VisualManager visualManager;
 
         public ObjectsRenderer(VisualManager visualManager)
@@ -19,10 +20,27 @@ namespace EDBG.Engine.Visual
         }
 
         //Adds animation to component and registers it in the animation manager
-        private void AddAnimation<T>(GameObject gameObject) where T : CodeAnimationBase
+        public CodeAnimationBase AddAnimation<T>(GameObject gameObject) where T : CodeAnimationBase
         {
             CodeAnimationBase anim = gameObject.AddComponent<T>();
             anim.SetAnimationManager(visualManager.AnimationManager);
+            return anim;
+        }
+
+        public void RemoveAnimation<T>(GameObject gameObject) where T : CodeAnimationBase
+        {
+            gameObject.GetComponent<T>()?.StopAnimation();
+        }
+
+        public CodeAnimationBase AddAnimationToStack<T>(MapTile tile) where T : CodeAnimationBase
+        {
+            return AddAnimation<T>(visualManager.MapHolder.GetTile(tile.GamePosition).Stack.gameObject);
+        }
+
+
+        public void RemoveAnimationFromStack<T>(MapTile tile) where T : CodeAnimationBase
+        {
+            visualManager.MapHolder.GetTile(tile.GamePosition).Stack.GetComponent<T>().StopAnimation();
         }
 
         public void RenderObjectsOnMap(MapTileGameObject[,] tiles, bool isAnimated)
@@ -35,7 +53,7 @@ namespace EDBG.Engine.Visual
 
         public void RemoveTile(MapTileGameObject tile)
         {
-            Transform stack = tile.StackContainer.Find("Stack").transform;
+            Transform stack = tile.Stack;
             stack.localScale = Vector3.one;
             foreach (DiscObject disc in stack.GetComponentsInChildren<DiscObject>())
             {
@@ -47,14 +65,14 @@ namespace EDBG.Engine.Visual
         public void RenderObjectsOnTileObject(MapTileGameObject tile, bool isAnimated)
         {
             RemovePreviousDiscs(tile);
-            tile.StackContainer.Find("Stack").transform.localScale = Vector3.one;
+            tile.Stack.localScale = Vector3.one;
             CreateNewDiscs(tile, isAnimated);
         }
 
 
         private void RemovePreviousDiscs(MapTileGameObject tile)
         {
-            DiscObject[] discs = tile.StackContainer.Find("Stack").GetComponentsInChildren<DiscObject>();
+            DiscObject[] discs = tile.Stack.GetComponentsInChildren<DiscObject>();
             foreach (DiscObject disc in discs)
             {
                 visualManager.ResourcesManager.PrefabManager.ReturnPoolObject<DiscObject>(disc);
@@ -67,7 +85,7 @@ namespace EDBG.Engine.Visual
             float initialHeightOffset = 0.0f; // Adjust this value to control the initial height offset of the first disc
             float fillerDiscHeight = discHeight / DiscObject.FILLER_FACTOR;
 
-            Transform parentStack = tile.StackContainer.Find("Stack").transform;
+            Transform parentStack = tile.Stack;
             //float gridCellSize = MapTileGameObject.TILE_LENGTH / 3;
             if (tile.TileData.DiscStack is GameStack<Disc> discStack && discStack != null && discStack.Count > 0)
             {
@@ -77,7 +95,7 @@ namespace EDBG.Engine.Visual
                     DiscObject mainDisc = visualManager.ResourcesManager.PrefabManager.RetrievePoolObject<DiscObject>();
                     mainDisc.name = "Disc";
                     mainDisc.DiscData = discStack.GetItemByIndex(i);
-                    mainDisc.transform.SetParent(tile.StackContainer.Find("Stack").transform);
+                    mainDisc.transform.SetParent(tile.Stack);
                     mainDisc.transform.localScale = Vector3.one * DiscObject.DISC_SCALE;
                     Vector3 position = new Vector3(0, i * discHeight + initialHeightOffset + ((i != 0) ? fillerDiscHeight * i : 0), 0);
                     mainDisc.transform.localPosition = position;
@@ -93,7 +111,7 @@ namespace EDBG.Engine.Visual
                     if (i < discStack.Count - 1)
                     {
                         DiscObject fillerDisc = visualManager.ResourcesManager.PrefabManager.RetrievePoolObject<DiscObject>();
-                        fillerDisc.transform.SetParent(tile.StackContainer.Find("Stack").transform);
+                        fillerDisc.transform.SetParent(tile.Stack);
                         fillerDisc.transform.localScale = new Vector3(DiscObject.DISC_SCALE, DiscObject.DISC_SCALE / DiscObject.FILLER_FACTOR, DiscObject.DISC_SCALE);
                         fillerDisc.transform.name = "Filler Disc";
                         float fillerYPos = position.y + discHeight;
@@ -123,7 +141,7 @@ namespace EDBG.Engine.Visual
 
 
 
-            Transform stack = tileObject.StackContainer.Find("Stack");
+            Transform stack = tileObject.Stack;
             if (stack != null)
             {
                 byte discs = 0;
@@ -173,7 +191,7 @@ namespace EDBG.Engine.Visual
         public void RemoveTopDisc(MapTile mapTile)
         {
 
-            Transform stack = visualManager.MapHolder.GetTile(mapTile.GamePosition).StackContainer.GetChild(0);
+            Transform stack = visualManager.MapHolder.GetTile(mapTile.GamePosition).Stack;
             if (stack != null)
             {
                 int childCount = stack.childCount;

@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cff712146f9b13b4b84a1978b9cd8d3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StackContainer: {fileID: 6890145771779759211}
+  Stack: {fileID: 8114004595905763426}
 --- !u!65 &2481710394964462965
 BoxCollider:
   m_ObjectHideFlags: 0
