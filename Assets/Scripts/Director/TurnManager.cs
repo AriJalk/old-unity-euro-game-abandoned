@@ -40,10 +40,10 @@ namespace EDBG.Director
             if (tile != null)
             {
                 PlaceDiscsCommand command = new PlaceDiscsCommand(LogicState, tile, gameManager.EngineManager.VisualManager.ObjectsRenderer);
-                commandStack.Push(command);
                 command.ExecuteCommand();
                 if(command.Result == true)
                 {
+                    commandStack.Push(command);
                     LogicState.RoundState = RoundStates.Confirm;
                     gameManager.GameMessageEvent?.Invoke("Confirm Action");
                 }

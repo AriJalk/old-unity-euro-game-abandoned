@@ -28,13 +28,16 @@ namespace EDBG.GameLogic.Actions
         {
             if(MapTile.GetOwner() != logicState.GetOtherPlayer())
             {
-                Result = true;
                 List<MapTile> tiles = TileRulesLogic.GetTilesWithComponentInAllDirections(logicState.MapGrid, MapTile, ActivePlayer, true, true);
                 int excess;
                 if (tiles.Count == 0 && MapTile.DiscStack.Count == 0)
                     excess = 1;
                 else
                     excess = tiles.Count - MapTile.DiscStack.Count;
+                if(excess > 0)
+                {
+                    Result = true;
+                }
                 while(excess > 0)
                 {
                     DiscList.Add(TileRulesLogic.AddDiscToTile(MapTile, ActivePlayer));
