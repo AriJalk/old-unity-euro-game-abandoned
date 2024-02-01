@@ -72,9 +72,13 @@ namespace EDBG.GameLogic.Core
         void Update()
         {
 
-            if (Input.GetKeyDown(KeyCode.U))
+            if (Input.GetKeyDown(KeyCode.U) || Input.GetKeyDown(KeyCode.Z))
             {
                 turnManager.UndoState();
+            }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                turnManager.Confirm();
             }
         }
 

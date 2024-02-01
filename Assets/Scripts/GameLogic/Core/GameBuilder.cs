@@ -44,6 +44,7 @@ namespace EDBG.GameLogic.Core
                     else
                     {
                         tile = new MapTile(new GamePosition(i, j), faces.Pop(), tileColorsStack.Pop());
+                        tile.DiscStack = new GameStack<Disc>();
                     }
                     mapGrid.SetCell(tile);
                 }

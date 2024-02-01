@@ -3,15 +3,16 @@ using EDBG.Engine.Visual;
 using EDBG.GameLogic.Actions;
 using EDBG.GameLogic.MapSystem;
 using EDBG.GameLogic.Rules;
+using EDBG.States;
 
 public class PlaceDiscCommand : CommandBase
 {
     private readonly PlaceDiscLogic logicCommand;
     private readonly ObjectsRenderer renderer;
 
-    public PlaceDiscCommand(Player activePlayer, MapTile mapTile, ObjectsRenderer renderer) : base(activePlayer)
+    public PlaceDiscCommand(LogicState state, MapTile mapTile, ObjectsRenderer renderer) : base(state)
     {
-        logicCommand = new PlaceDiscLogic(activePlayer, mapTile); 
+        logicCommand = new PlaceDiscLogic(state, mapTile); 
         this.renderer = renderer;
     }
     public override void ExecuteCommand()
@@ -23,6 +24,7 @@ public class PlaceDiscCommand : CommandBase
 
     public override void UndoCommand()
     {
+        base.UndoCommand();
         logicCommand.UndoCommand();
         renderer.RemoveTopDisc(logicCommand.MapTile);
     }

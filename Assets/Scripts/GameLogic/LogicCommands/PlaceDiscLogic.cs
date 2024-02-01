@@ -3,6 +3,7 @@ using EDBG.Director;
 using EDBG.GameLogic.Components;
 using EDBG.GameLogic.MapSystem;
 using EDBG.GameLogic.Rules;
+using EDBG.States;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -16,7 +17,7 @@ namespace EDBG.GameLogic.Actions
 
         public Disc Disc { get; private set; }
 
-        public PlaceDiscLogic(Player activePlayer, MapTile mapTile) : base(activePlayer)
+        public PlaceDiscLogic(LogicState state, MapTile mapTile) : base(state)
         {
             MapTile = mapTile;
         }
@@ -28,6 +29,7 @@ namespace EDBG.GameLogic.Actions
 
         public override void UndoCommand()
         {
+            base.UndoCommand();
             TileRulesLogic.RemoveTopDiscFromTile(MapTile);
             ActivePlayer.DiscStock++;
         }

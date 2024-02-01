@@ -43,13 +43,13 @@ namespace EDBG.GameLogic.Rules
             while (map.GetNeighbor(originTile, direction) != null)
             {
                 originTile = map.GetNeighbor(originTile, direction) as MapTile;
-                if (originTile.DiscStack != null)
+                if (originTile.DiscStack.Count > 0)
                 {
-                    if (originTile.DiscStack.Owner == player ||
-                        (originTile.DiscStack.Owner != null && originTile.DiscStack.Owner != player && !isPlayerOwned))
+                    if (originTile.DiscStack.Owner == player)
                     {
                         tiles.Add(originTile);
                     }
+
                     if (canBlock)
                         break;
                 }
