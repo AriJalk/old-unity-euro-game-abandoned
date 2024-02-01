@@ -22,20 +22,37 @@ namespace EDBG.Director
             commandStack = new Stack<CommandBase>();
         }
 
+        public void Confirm()
+        {
+            if(LogicState.RoundState == RoundStates.Confirm)
+            {
+                LogicState.SwapCurrentPlayer();
+                LogicState.RoundState = RoundStates.ChooseTile;
+                gameManager.GameMessageEvent?.Invoke($"{LogicState.CurrentPlayer.Name} turn, {LogicState.RoundState}");
+            }
+        }
+
         //TODO: further choice logic
         public void SelectTile(MapTile tile)
         {
-            if(tile != null && LogicState.CurrentPlayer.DiscStock > 0)
+            if (tile != null && LogicState.CurrentPlayer.DiscStock > 0)
             {
-                PlaceDiscCommand command = new PlaceDiscCommand(tile, LogicState.CurrentPlayer, gameManager.EngineManager.VisualManager.ObjectsRenderer);
+                PlaceDiscCommand command = new PlaceDiscCommand(LogicState.CurrentPlayer, tile, gameManager.EngineManager.VisualManager.ObjectsRenderer);
                 commandStack.Push(command);
                 command.ExecuteCommand();
-                LogicState.SwapCurrentPlayer();
-                gameManager.GameMessageEvent.Invoke($"{LogicState.CurrentPlayer.Name} turn, select tile");
+                gameManager.GameMessageEvent?.Invoke($"Confirm Action");
+                LogicState.RoundState = RoundStates.Confirm;
+            }
+
+            if (tile != null)
+            {
+                
             }
         }
 
 
+
+        //TODO: revert to correct state
         public void UndoState()
         {
             if (commandStack.Count > 0)
@@ -43,7 +60,8 @@ namespace EDBG.Director
                 CommandBase command = commandStack.Pop();
                 command.UndoCommand();
                 //TODO: dont swap if dont need to
-                LogicState.SwapCurrentPlayer();
+                LogicState.SetCurrentPlayer(command.ActivePlayer);
+                gameManager.GameMessageEvent.Invoke($"{LogicState.CurrentPlayer.Name} turn, {LogicState.RoundState}");
             }
         }
 

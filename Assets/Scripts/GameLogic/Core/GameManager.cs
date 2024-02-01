@@ -57,11 +57,13 @@ namespace EDBG.GameLogic.Core
 
             //Set new game
             HumanPlayer human = new HumanPlayer("HumanPlayer", PlayerColors.Black, PlayerColors.Red, 10, new BeginnerCorporation(Ownership.HumanPlayer));
-            BotPlayer bot = new BotPlayer("BotPlayer", PlayerColors.White, PlayerColors.Black, 10, new BeginnerCorporation(Ownership.BotPlayer));
+            BotPlayer bot = new BotPlayer("BotPlayer", PlayerColors.White, PlayerColors.Green, 10, new BeginnerCorporation(Ownership.BotPlayer));
             turnManager = new TurnManager(this,GameBuilder.BuildInitialState(4, 4, human, bot));
             EngineManager.VisualManager.RenderGameState(true, turnManager.LogicState);
 
             OverlayUI.Initialize(this);
+            OverlayUI.ButtonEvent.AddListener(ActionSelected);
+
             GameMessageEvent.Invoke($"{turnManager.LogicState.CurrentPlayer.Name} Turn, select tile");
 
         }
@@ -117,20 +119,15 @@ namespace EDBG.GameLogic.Core
             EngineManager.ResourcesManager.PrefabManager.RegisterPrefab<DieObject>(diePrefab, 16);
         }
 
-        private void ActionSelected(UIAction action)
+        private void ActionSelected(UICommands command)
         {
-            if (action.name == "ConfirmAction")
+            if(command == UICommands.Confirm)
             {
-                Debug.Log("Confirm");
+                turnManager.Confirm();
             }
-            else if (action.name == "UndoCommand")
+            else if (command == UICommands.Undo)
             {
-                Debug.Log("Undo");
                 turnManager.UndoState();
-            }
-            else
-            {
-
             }
         }
         private void MoveCamera(Vector2 axis)
@@ -161,7 +158,6 @@ namespace EDBG.GameLogic.Core
                     if (hit != null)
                         turnManager.SelectTile(hit.GetComponent<MapTileGameObject>().TileData);
                     break;
-
                 case RoundStates.ChooseCaptureStack:
                     break;
                 default:

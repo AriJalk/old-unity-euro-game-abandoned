@@ -30,16 +30,16 @@ namespace EDBG.GameLogic.Core
                     if (i == 0 && j == 0)
                     {
                         tile = new MapTile(new GamePosition(i, j), faces.Pop(), TileColors.White);
-                        tile.ComponentOnTile = new GameStack<Disc>();
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(players[0]));
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(players[0]));
+                        tile.DiscStack = new GameStack<Disc>();
+                        tile.DiscStack.PushItem(new Disc(players[0]));
+                        tile.DiscStack.PushItem(new Disc(players[0]));
                     }
                     else if (i == 3 && j == 3)
                     {
                         tile = new MapTile(new GamePosition(i, j), faces.Pop(), TileColors.White);
-                        tile.ComponentOnTile = new GameStack<Disc>();
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(players[1]));
-                        ((GameStack<Disc>)tile.ComponentOnTile).PushItem(new Disc(players[1]));
+                        tile.DiscStack = new GameStack<Disc>();
+                        tile.DiscStack.PushItem(new Disc(players[1]));
+                        tile.DiscStack.PushItem(new Disc(players[1]));
                     }
                     else
                     {

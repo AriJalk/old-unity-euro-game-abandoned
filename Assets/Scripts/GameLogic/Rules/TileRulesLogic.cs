@@ -19,7 +19,7 @@ namespace EDBG.GameLogic.Rules
             int tilesWithPlayerDiscs = tiles.Count;
 
             // 2nd floor requires 1 additional disc from connected tile, 3 requires 2 etc
-            if (tilesWithPlayerDiscs < ((GameStack<Disc>)originTile.ComponentOnTile).Count + 1)
+            if (tilesWithPlayerDiscs < (originTile.DiscStack).Count + 1)
                 return false;
             return true;
         }
@@ -30,7 +30,7 @@ namespace EDBG.GameLogic.Rules
             List<MapTile> tiles = GetTilesWithComponentInAllDirections(map, originTile, player, true, true);
 
             // 2nd floor requires 1 additional disc from connected tile, 3 requires 2 etc
-            if (tiles.Count > originTile.GetComponentOnTile<GameStack<Disc>>().Count)
+            if (tiles.Count > originTile.DiscStack.Count)
                 return tiles;
 
 
@@ -43,10 +43,10 @@ namespace EDBG.GameLogic.Rules
             while (map.GetNeighbor(originTile, direction) != null)
             {
                 originTile = map.GetNeighbor(originTile, direction) as MapTile;
-                if (originTile.ComponentOnTile != null)
+                if (originTile.DiscStack != null)
                 {
-                    if (originTile.ComponentOnTile.Owner == player ||
-                        (originTile.ComponentOnTile.Owner != null && originTile.ComponentOnTile.Owner != player && !isPlayerOwned))
+                    if (originTile.DiscStack.Owner == player ||
+                        (originTile.DiscStack.Owner != null && originTile.DiscStack.Owner != player && !isPlayerOwned))
                     {
                         tiles.Add(originTile);
                     }
@@ -122,13 +122,13 @@ namespace EDBG.GameLogic.Rules
 
         public static bool IsTileValid(ChooseTile chooseTile)
         {
-            if (chooseTile.SelectedTile.ComponentOnTile == null)
+            if (chooseTile.SelectedTile.DiscStack == null)
             {
                 return true;
             }
             else if (
-                chooseTile.SelectedTile.ComponentOnTile.Owner == chooseTile.LogicState.GetCurrentPlayer() ||
-                chooseTile.SelectedTile.ComponentOnTile.Owner == null)
+                chooseTile.SelectedTile.DiscStack.Owner == chooseTile.LogicState.GetCurrentPlayer() ||
+                chooseTile.SelectedTile.DiscStack.Owner == null)
             {
                 return TileRulesLogic.IsNextFloorPossible(
                     chooseTile.LogicState.MapGrid,
@@ -143,9 +143,9 @@ namespace EDBG.GameLogic.Rules
 
         public static void AddDiscToTile(ChooseTile chooseTile)
         {
-            if (chooseTile.SelectedTile.ComponentOnTile == null)
-                chooseTile.SelectedTile.ComponentOnTile = new GameStack<Disc>();
-            ((GameStack<Disc>)chooseTile.SelectedTile.ComponentOnTile).PushItem(new Disc(chooseTile.LogicState.GetCurrentPlayer()));
+            if (chooseTile.SelectedTile.DiscStack == null)
+                chooseTile.SelectedTile.DiscStack = new GameStack<Disc>();
+            ((GameStack<Disc>)chooseTile.SelectedTile.DiscStack).PushItem(new Disc(chooseTile.LogicState.GetCurrentPlayer()));
         }
 
         public static Disc AddDiscToTile(MapTile mapTile, Player player)
@@ -155,8 +155,8 @@ namespace EDBG.GameLogic.Rules
             {
                 if (player.DiscStock > 0)
                 {
-                    mapTile.ComponentOnTile ??= new GameStack<Disc>();
-                    GameStack<Disc> stack = mapTile.GetComponentOnTile<GameStack<Disc>>();
+                    mapTile.DiscStack ??= new GameStack<Disc>();
+                    GameStack<Disc> stack = mapTile.DiscStack;
                     disc = new Disc(player);
                     stack.PushItem(disc);
                     player.DiscStock--;
@@ -169,13 +169,13 @@ namespace EDBG.GameLogic.Rules
         {
             if (mapTile != null)
             {
-                mapTile.GetComponentOnTile<GameStack<Disc>>().PopItem();
+                mapTile.DiscStack.PopItem();
             }
         }
 
         public static List<MapTile> GetBiggerOpponentStackTiles(ChooseTile chosenTile)
         {
-            GameStack<Disc> originStack = chosenTile.SelectedTile.ComponentOnTile as GameStack<Disc>;
+            GameStack<Disc> originStack = chosenTile.SelectedTile.DiscStack;
             if (originStack == null)
                 return null;
             int stackSize = originStack.Count;
@@ -188,7 +188,7 @@ namespace EDBG.GameLogic.Rules
                 foreach (MapTile tile in tiles)
                 {
 
-                    GameStack<Disc> stack = tile.ComponentOnTile as GameStack<Disc>;
+                    GameStack<Disc> stack = tile.DiscStack as GameStack<Disc>;
                     if (stack.Count > stackSize)
                         largerTiles.Add(tile);
                 }

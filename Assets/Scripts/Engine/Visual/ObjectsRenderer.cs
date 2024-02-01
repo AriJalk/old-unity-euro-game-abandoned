@@ -69,7 +69,7 @@ namespace EDBG.Engine.Visual
 
             Transform parentStack = tile.StackContainer.Find("Stack").transform;
             //float gridCellSize = MapTileGameObject.TILE_LENGTH / 3;
-            if (tile.TileData.ComponentOnTile is GameStack<Disc> discStack && discStack.Count > 0)
+            if (tile.TileData.DiscStack is GameStack<Disc> discStack && discStack != null && discStack.Count > 0)
             {
                 for (int i = 0; i < discStack.Count; i++)
                 {

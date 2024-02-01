@@ -27,7 +27,7 @@ namespace EDBG.GameLogic.MapSystem
         public int DieFace { get; private set; }
 
         //TODO: just disc stack, other components can wait
-        public IGameComponent ComponentOnTile { get; set; }
+        public GameStack<Disc> DiscStack { get; set; }
 
         /// <summary>
         /// Regular constructor
@@ -45,8 +45,8 @@ namespace EDBG.GameLogic.MapSystem
             TileColor = tile.TileColor;
             GamePosition = tile.GamePosition;
             DieFace = tile.DieFace;
-            if(tile.ComponentOnTile!= null)
-                ComponentOnTile = (IGameComponent)tile.ComponentOnTile.Clone();
+            if(tile.DiscStack!= null)
+                DiscStack = (GameStack<Disc>)tile.DiscStack.Clone();
         }
 
         public object Clone()
@@ -56,22 +56,11 @@ namespace EDBG.GameLogic.MapSystem
 
         public Player GetOwner()
         {
-            if(ComponentOnTile != null)
+            if(DiscStack != null)
             {
-                return ComponentOnTile.Owner;
+                return DiscStack.Owner;
             } 
             return null;
-        }
-
-
-        public T GetComponentOnTile<T>() where T: IGameComponent
-        {
-            return (T)ComponentOnTile;
-        }
-
-        public void SetComponentOnTile<T>(T component) where T: IGameComponent
-        {
-            ComponentOnTile = component;
         }
 
         public override string ToString()
@@ -82,7 +71,7 @@ namespace EDBG.GameLogic.MapSystem
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(GamePosition, _tileColor, TileColor, DieFace, ComponentOnTile);
+            return HashCode.Combine(GamePosition, _tileColor, TileColor, DieFace, DiscStack);
         }
 
         public override bool Equals(object obj)

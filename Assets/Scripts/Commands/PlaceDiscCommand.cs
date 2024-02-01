@@ -6,12 +6,12 @@ using EDBG.GameLogic.Rules;
 
 public class PlaceDiscCommand : CommandBase
 {
-    private PlaceDiscLogic logicCommand;
-    private ObjectsRenderer renderer;
+    private readonly PlaceDiscLogic logicCommand;
+    private readonly ObjectsRenderer renderer;
 
-    public PlaceDiscCommand(MapTile mapTile, Player player, ObjectsRenderer renderer)
+    public PlaceDiscCommand(Player activePlayer, MapTile mapTile, ObjectsRenderer renderer) : base(activePlayer)
     {
-        logicCommand = new PlaceDiscLogic(mapTile, player); 
+        logicCommand = new PlaceDiscLogic(activePlayer, mapTile); 
         this.renderer = renderer;
     }
     public override void ExecuteCommand()

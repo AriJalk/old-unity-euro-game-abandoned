@@ -41,6 +41,7 @@ namespace EDBG.UserInterface
         public void Initialize(GameManager manager)
         {
             gameManager = manager;
+
         }
 
 

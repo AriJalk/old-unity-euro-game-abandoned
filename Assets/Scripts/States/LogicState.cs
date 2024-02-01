@@ -9,6 +9,7 @@ namespace EDBG.States
     public enum RoundStates
     {
         GameStart,
+        Confirm,
         ChooseTile,
         ChooseCaptureStack,
     }
@@ -33,6 +34,10 @@ namespace EDBG.States
             get
             {
                 return PlayerList[CurrentPlayerIndex];
+            }
+            private set
+            {
+                CurrentPlayerIndex = (byte)PlayerList.IndexOf(value);
             }
         }
         public MapGrid MapGrid { get; set; }
@@ -87,6 +92,11 @@ namespace EDBG.States
         public Player GetOtherPlayer()
         {
             return CurrentPlayerIndex == 0 ? PlayerList[1] : PlayerList[0];
+        }
+
+        public void SetCurrentPlayer(Player player)
+        {
+            CurrentPlayer = player;
         }
 
         public void SwapCurrentPlayer()

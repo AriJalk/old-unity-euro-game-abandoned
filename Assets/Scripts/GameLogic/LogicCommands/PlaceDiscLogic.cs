@@ -12,27 +12,24 @@ namespace EDBG.GameLogic.Actions
     {
         public const string NAME = "Place Disc";
 
-        Player player;
-
         public MapTile MapTile { get; private set; }
 
         public Disc Disc { get; private set; }
 
-        public PlaceDiscLogic(MapTile mapTile, Player player)
+        public PlaceDiscLogic(Player activePlayer, MapTile mapTile) : base(activePlayer)
         {
             MapTile = mapTile;
-            this.player = player;
         }
 
         public override void ExecuteCommand()
         {
-            Disc = TileRulesLogic.AddDiscToTile(MapTile, player);
+            Disc = TileRulesLogic.AddDiscToTile(MapTile, ActivePlayer);
         }
 
         public override void UndoCommand()
         {
             TileRulesLogic.RemoveTopDiscFromTile(MapTile);
-            player.DiscStock++;
+            ActivePlayer.DiscStock++;
         }
     }
 }
