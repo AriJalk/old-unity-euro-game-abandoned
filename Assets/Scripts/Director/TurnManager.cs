@@ -1,6 +1,7 @@
 ﻿using EDBG.Commands;
 using EDBG.GameLogic.Core;
 using EDBG.GameLogic.MapSystem;
+using EDBG.GameLogic.Rules;
 using EDBG.States;
 using System.Collections.Generic;
 using UnityEngine;
@@ -66,12 +67,18 @@ namespace EDBG.Director
             ChooseOpponentStackCommand command = commandStack.Peek() as ChooseOpponentStackCommand;
             if(command != null)
             {
+                command.UndoCommand();
+                commandStack.Pop();
                 if (command.LegalCaptureStackTiles.Contains(tile))
                 {
-                    command.UndoCommand();
-                    commandStack.Pop();
+
                     //TODO: capture
 
+                }
+                // Switch target
+                else
+                {
+                    SelectTile(tile);
                 }
             }
         }

@@ -3,6 +3,7 @@ using EDBG.States;
 
 namespace EDBG.GameLogic.Rules
 {
+	//TODO: remove
     public struct ChooseTile
     {
 		private MapTile _selectedTile;
