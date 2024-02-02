@@ -34,7 +34,12 @@ namespace EDBG.GameLogic.Actions
                 if (tiles.Count == 0 && MapTile.DiscStack.Count == 0)
                     excess = 1;
                 else
+                {
                     excess = tiles.Count - MapTile.DiscStack.Count;
+                    //Make sure no more than available discs could be placed
+                    if(excess > logicState.CurrentPlayer.DiscStock)
+                        excess = logicState.CurrentPlayer.DiscStock;
+                }
                 if(excess > 0)
                 {
                     Result = true;
