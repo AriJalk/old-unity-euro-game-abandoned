@@ -6,6 +6,7 @@ using EDBG.Engine.ResourceManagement;
 using EDBG.GameLogic.MapSystem;
 using EDBG.Director;
 using Unity.VisualScripting;
+using EDBG.Utilities;
 
 namespace EDBG.Engine.Visual
 {
@@ -37,6 +38,22 @@ namespace EDBG.Engine.Visual
             return AddAnimation<T>(visualManager.MapHolder.GetTile(tile.GamePosition).Stack.gameObject);
         }
 
+        public void AddCaptureAnimation(MapTile capturingTile, MapTile targetTile)
+        {
+            JumpAnimation anim = AddAnimationToStack<JumpAnimation>(capturingTile) as JumpAnimation;
+            if(anim != null)
+            {
+                MapTileGameObject capturingObject = visualManager.MapHolder.GetTile(capturingTile.GamePosition);
+                MapTileGameObject targetObject = visualManager.MapHolder.GetTile(targetTile.GamePosition);
+                anim.Initialize(targetObject.Stack.position);
+                EngineUtilities.SwapTransformParents(capturingObject.Stack, targetObject.Stack);
+                //Update reference in tiles
+                Transform tempStack = capturingObject.Stack;
+                capturingObject.Stack = targetObject.Stack;
+                targetObject.Stack = tempStack;
+                capturingObject.Stack.localPosition = Vector3.zero;
+            }
+        }
 
         public void RemoveAnimationFromStack<T>(MapTile tile) where T : CodeAnimationBase
         {
@@ -69,6 +86,16 @@ namespace EDBG.Engine.Visual
             CreateNewDiscs(tile, isAnimated);
         }
 
+        public void RenderObjectsOnTileObject(MapTile tile, bool isAnimated)
+        {
+            MapTileGameObject tileObject = visualManager.MapHolder.GetTile(tile.GamePosition);
+            if(tileObject != null)
+            {
+                RemovePreviousDiscs(tileObject);
+                CreateNewDiscs(tileObject, isAnimated);   
+            }
+        }
+
 
         private void RemovePreviousDiscs(MapTileGameObject tile)
         {
@@ -86,6 +113,7 @@ namespace EDBG.Engine.Visual
             float fillerDiscHeight = discHeight / DiscObject.FILLER_FACTOR;
 
             Transform parentStack = tile.Stack;
+            parentStack.localPosition = Vector3.zero;
             //float gridCellSize = MapTileGameObject.TILE_LENGTH / 3;
             if (tile.TileData.DiscStack is GameStack<Disc> discStack && discStack != null && discStack.Count > 0)
             {

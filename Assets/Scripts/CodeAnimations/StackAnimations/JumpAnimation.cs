@@ -2,32 +2,25 @@
 using EDBG.Engine.Core;
 using EDBG.Engine.Visual;
 using EDBG.GameLogic.Core;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class JumpAnimation : CodeAnimationBase
 {
-    private PrefabManager prefabManager;
-    public MapTileGameObject TargetTile;
+
+    private Vector3 initialPosition;
+    private Vector3 targetPosition;
+    private float elapsedTime;
+
     public float JumpHeight = 1.0f;
     public float Duration = 1.0f;
 
-    private Vector3 initialPosition;
-    private float elapsedTime;
 
+
+    //TODO: move logic to renderer
     void Start()
     {
-        initialPosition = transform.position;
-        //Swap stacks
-        Transform stack = TargetTile.Stack;
         
-        stack.SetParent(transform.parent);
-        stack.localPosition = Vector3.zero;
-        
-        foreach(DiscObject disc in stack.GetComponentsInChildren<DiscObject>())
-        {
-            prefabManager.ReturnPoolObject(disc);
-        }
-        transform.SetParent(TargetTile.Stack);
     }
 
     void Update()
@@ -41,10 +34,10 @@ public class JumpAnimation : CodeAnimationBase
         // Use a curve for the jump animation
         float jumpCurveValue = Mathf.Sin(normalizedTime * Mathf.PI);
 
-        Debug.Log("Vector - " + Vector3.Lerp(initialPosition, TargetTile.Stack.position, normalizedTime).ToString());
+        Debug.Log("Vector - " + Vector3.Lerp(initialPosition, targetPosition, normalizedTime).ToString());
 
         // Interpolate between initial and target positions
-        transform.position = Vector3.Lerp(initialPosition, TargetTile.Stack.position, normalizedTime) + Vector3.up * jumpCurveValue * JumpHeight;
+        transform.position = Vector3.Lerp(initialPosition, targetPosition, normalizedTime) + Vector3.up * jumpCurveValue * JumpHeight;
 
         // Update the elapsed time
         elapsedTime += Time.deltaTime;
@@ -59,10 +52,10 @@ public class JumpAnimation : CodeAnimationBase
         }
     }
 
-    public void Initialize(PrefabManager prefabManager, MapTileGameObject targetTile)
+    public void Initialize(Vector3 targetPosition)
     {
-        this.prefabManager = prefabManager;
-        this.TargetTile = targetTile;
+        initialPosition = transform.position;
+        this.targetPosition = targetPosition;
     }
 
     public override void PlayAnimation()
@@ -78,7 +71,6 @@ public class JumpAnimation : CodeAnimationBase
 
     public override void StopAnimation()
     {
-        transform.position = TargetTile.Stack.position;
         base.StopAnimation();
         Destroy(this);
     }

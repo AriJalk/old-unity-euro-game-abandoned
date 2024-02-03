@@ -20,9 +20,15 @@ public class OverlayUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI StatusText;
     [SerializeField]
+    private TextMeshProUGUI PStock;
+    [SerializeField]
+    private TextMeshProUGUI HStock;
+
+    [SerializeField]
     private Button confirmButton;
     [SerializeField]
     private Button undoButton;
+
 
     private void OnDestroy()
     {
@@ -48,9 +54,20 @@ public class OverlayUI : MonoBehaviour
         StatusText.text = text;
         Debug.Log(text);
     }
+
+    private void UpdateStock(string text)
+    {
+        if (text.StartsWith("1"))
+            PStock.text = text;
+        if (text.StartsWith("2"))
+            HStock.text = text;
+
+    }
+
     public void Initialize(GameManager manager)
     {
-        manager.GameMessageEvent.AddListener(UpdateStatusText);
+        manager.StatusMessageEvent.AddListener(UpdateStatusText);
+        manager.StockChangedEvent.AddListener(UpdateStock);
         confirmButton.onClick.AddListener(delegate { OnButtonClick(confirmButton); });
         undoButton.onClick.AddListener(delegate { OnButtonClick(undoButton); });
         ButtonEvent = new UnityEvent<UICommands>();

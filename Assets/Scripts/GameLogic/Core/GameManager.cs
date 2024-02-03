@@ -21,7 +21,8 @@ namespace EDBG.GameLogic.Core
     /// </summary>
     public class GameManager : MonoBehaviour
     {
-        public UnityEvent<string> GameMessageEvent;
+        public UnityEvent<string> StatusMessageEvent;
+        public UnityEvent<string> StockChangedEvent;
 
         private TurnManager turnManager;
 
@@ -42,7 +43,8 @@ namespace EDBG.GameLogic.Core
         private void Awake()
         {
             EngineManager.InitializeScene(MapHolder);
-            GameMessageEvent = new UnityEvent<string>();
+            StatusMessageEvent = new UnityEvent<string>();
+            StockChangedEvent = new UnityEvent<string>();
         }
 
         void Start()
@@ -58,13 +60,15 @@ namespace EDBG.GameLogic.Core
             //Set new game
             HumanPlayer human = new HumanPlayer("HumanPlayer", PlayerColors.Black, PlayerColors.Red, 10, new BeginnerCorporation(Ownership.HumanPlayer));
             BotPlayer bot = new BotPlayer("BotPlayer", PlayerColors.White, PlayerColors.Green, 10, new BeginnerCorporation(Ownership.BotPlayer));
-            turnManager = new TurnManager(this, GameBuilder.BuildInitialState(4, 4, human, bot));
-            EngineManager.VisualManager.RenderGameState(true, turnManager.LogicState);
 
             OverlayUI.Initialize(this);
             OverlayUI.ButtonEvent.AddListener(ActionSelected);
 
-            GameMessageEvent.Invoke($"{turnManager.LogicState.CurrentPlayer.Name} Turn, select tile");
+            turnManager = new TurnManager(this, GameBuilder.BuildInitialState(4, 4, human, bot));
+            EngineManager.VisualManager.RenderGameState(true, turnManager.LogicState);
+            StatusMessageEvent.Invoke($"{turnManager.LogicState.CurrentPlayer.Name} Turn, select tile");
+            StockChangedEvent?.Invoke($"1-{turnManager.LogicState.CurrentPlayer.DiscStock}");
+            StockChangedEvent?.Invoke($"2-{turnManager.LogicState.CurrentPlayer.DiscStock}");
 
         }
 
@@ -91,6 +95,8 @@ namespace EDBG.GameLogic.Core
         {
             EngineManager.InputManager.InputEvents.UnsubscribeFromAllEvents(MoveCamera, MouseClicked, ZoomCamera);
             EngineManager.ScreenManager.ScreenChanged -= ScreenChanged;
+            StatusMessageEvent.RemoveAllListeners();
+
 
         }
 

@@ -16,20 +16,21 @@ namespace EDBG.Director
 
         public LogicState LogicState { get; private set; }
 
-        public TurnManager(GameManager gameManager, LogicState state) 
+        public TurnManager(GameManager gameManager, LogicState state)
         {
             this.gameManager = gameManager;
             LogicState = state;
             commandStack = new Stack<CommandBase>();
+
         }
 
         public void Confirm()
         {
-            if(LogicState.RoundState == RoundStates.Confirm)
+            if (LogicState.RoundState == RoundStates.Confirm)
             {
                 LogicState.SwapCurrentPlayer();
                 LogicState.RoundState = RoundStates.ChooseTile;
-                gameManager.GameMessageEvent?.Invoke($"{LogicState.CurrentPlayer.Name} turn, {LogicState.RoundState}");
+                gameManager.StatusMessageEvent?.Invoke($"{LogicState.CurrentPlayer.Name} turn, {LogicState.RoundState}");
             }
         }
 
@@ -41,23 +42,28 @@ namespace EDBG.Director
             {
                 PlaceDiscsCommand command = new PlaceDiscsCommand(LogicState, tile, gameManager.EngineManager.VisualManager.ObjectsRenderer);
                 command.ExecuteCommand();
-                if(command.Result == true)
+                if (command.Result == true)
                 {
                     commandStack.Push(command);
                     LogicState.RoundState = RoundStates.Confirm;
-                    gameManager.GameMessageEvent?.Invoke("Confirm Action");
+                    gameManager.StockChangedEvent?.Invoke($"{LogicState.CurrentPlayerIndex + 1}-{LogicState.CurrentPlayer.DiscStock}");
+                    gameManager.StatusMessageEvent?.Invoke("Confirm Action");
+                }
+                else
+                {
+
                 }
             }
             // Opponent controlled tile
             else
             {
                 ChooseOpponentStackCommand command = new ChooseOpponentStackCommand(LogicState, tile, gameManager.EngineManager.VisualManager.ObjectsRenderer);
-                if(command.Result == true)
+                if (command.Result == true)
                 {
                     LogicState.RoundState = RoundStates.ChooseCaptureStack;
                     commandStack.Push(command);
                     command.ExecuteCommand();
-                    gameManager.GameMessageEvent?.Invoke($"{LogicState.CurrentPlayer.Name}, choose capture stack");
+                    gameManager.StatusMessageEvent?.Invoke($"{LogicState.CurrentPlayer.Name}, choose capture stack");
                 }
             }
         }
@@ -65,14 +71,21 @@ namespace EDBG.Director
         public void SelectStack(MapTile tile)
         {
             ChooseOpponentStackCommand command = commandStack.Peek() as ChooseOpponentStackCommand;
-            if(command != null)
+            if (command != null)
             {
                 command.UndoCommand();
                 commandStack.Pop();
                 if (command.LegalCaptureStackTiles.Contains(tile))
                 {
-
-                    //TODO: capture
+                    CaptureStackCommand captureCommand = new CaptureStackCommand(
+                        LogicState, command.OpponentStack, tile,
+                        gameManager.EngineManager.VisualManager.ObjectsRenderer);
+                    captureCommand.ExecuteCommand();
+                    if (captureCommand.Result == true)
+                    {
+                        commandStack.Push(captureCommand);
+                        LogicState.SwapCurrentPlayer();
+                    }
 
                 }
                 // Switch target
@@ -82,14 +95,15 @@ namespace EDBG.Director
                 }
             }
         }
-        
+
         public void UndoState()
         {
             if (commandStack.Count > 0)
             {
                 CommandBase command = commandStack.Pop();
                 command.UndoCommand();
-                gameManager.GameMessageEvent.Invoke($"{LogicState.CurrentPlayer.Name} turn, {LogicState.RoundState}");
+                gameManager.StatusMessageEvent.Invoke($"{LogicState.CurrentPlayer.Name} turn, {LogicState.RoundState}");
+                gameManager.StockChangedEvent?.Invoke($"{LogicState.CurrentPlayerIndex + 1}-{LogicState.CurrentPlayer.DiscStock}");
             }
         }
 

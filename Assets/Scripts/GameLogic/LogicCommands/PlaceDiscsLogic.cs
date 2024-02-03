@@ -31,24 +31,28 @@ namespace EDBG.GameLogic.Actions
             {
                 List<MapTile> tiles = TileRulesLogic.GetTilesWithComponentInAllDirections(logicState.MapGrid, MapTile, ActivePlayer, true, true);
                 int excess;
-                if (tiles.Count == 0 && MapTile.DiscStack.Count == 0)
-                    excess = 1;
-                else
+                if(logicState.CurrentPlayer.DiscStock > 0)
                 {
-                    excess = tiles.Count - MapTile.DiscStack.Count;
-                    //Make sure no more than available discs could be placed
-                    if(excess > logicState.CurrentPlayer.DiscStock)
-                        excess = logicState.CurrentPlayer.DiscStock;
-                }
-                if(excess > 0)
-                {
-                    Result = true;
-                }
-                while(excess > 0)
-                {
-                    DiscList.Add(TileRulesLogic.AddDiscToTile(MapTile, ActivePlayer));
-                    excess--;
-                }
+                    // Place 1 disc if no legal neighbors
+                    if (tiles.Count == 0 && MapTile.DiscStack.Count == 0)
+                        excess = 1;
+                    else
+                    {
+                        excess = tiles.Count - MapTile.DiscStack.Count;
+                        //Make sure no more than available discs could be placed
+                        if (excess > logicState.CurrentPlayer.DiscStock)
+                            excess = logicState.CurrentPlayer.DiscStock;
+                    }
+                    if (excess > 0)
+                    {
+                        Result = true;
+                    }
+                    while (excess > 0)
+                    {
+                        DiscList.Add(TileRulesLogic.AddDiscToTile(MapTile, ActivePlayer));
+                        excess--;
+                    }
+                }      
             }
         }
 
