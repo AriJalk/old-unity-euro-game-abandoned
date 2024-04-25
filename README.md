@@ -14,6 +14,7 @@ As the mechanics became scattered, the codebase also became convoluted, coupled,
 This project was a very knowledgeable experience. Combined with extra materials, I learned how to do many things the "proper" way for future projects, including better design patterns for different situations, optimization techniques, and writing cleaner and more robust code, also some parts of the code I implemnted were used in other future projects due to their usefulness.
 
 ## Video Demonstration
+Demonstrates the Placement and Capture mechanic. Disc placement is based on direct line to other discs of the same color, so if a new disc is placed with direct line to 3 of its color, a stack of height 3 will be added on that tile if empty. If an opponent stack is chosen, the game will allow to choose a taller stack that could capture the opponent's stack.
 
 [![Video Demonstration](https://img.youtube.com/vi/w2-aWql5Czs/0.jpg)](https://www.youtube.com/watch?v=w2-aWql5Czs)
 
