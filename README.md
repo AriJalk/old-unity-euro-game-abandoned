@@ -1,4 +1,4 @@
-# Untitled Digital Euro Board Game (Abandoned)
+# Abandoned Euro-Style Solitaire Board-Game Project
 
 An abandoned Unity project, my first attempt at a "bigger" game, mainly used to learn how to implement turn-based mechanics in a real-time environment and as a test ground for various mechanics and engine features and also board-game design.
 
@@ -6,6 +6,8 @@ An abandoned Unity project, my first attempt at a "bigger" game, mainly used to 
 The main objective was to create a solitaire digital/physical Euro-Style Board Game with abstract strategy elements, inspired by Splotter Spellen games like The Great Zimbabwe with added asymetric player powers / tech-tree.
 
 The challenge was supposed to come from an automated opponent that is implemented through simple decision system that does not use AI or complex flow-charts, rather using board-game Automata ideas, like priority cards, or even the player actions themsleves, in ways that "break" the rules but maintain a fair playing field.
+
+The Wooden Disc-Stacks represent the player's and automated oponnent's corporations strength on the tile they are on, and in all iterations positioning on the board was key element.
 
 As development progressed, the project became directionless, with the core mechanic transformed countless times. It went from a Bag-Building mechanic to a Dice-Selection mechanic, as I experimented to find what would work best. The final state was a pure abstract, relying on a future tech-tree and supply-demand mechanics, which resulted in an unbalanced and broken game.
 
