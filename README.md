@@ -19,7 +19,7 @@ This project was a very knowledgeable experience. Combined with extra materials,
 
 Initially, a token builder was used, where the player would use a hand of tokens pulled from a bag to perform different actions.
 
-![Bag-Builder](ReadmeImages/EDBG_BagBuilding.png)
+![Bag-Builder](ReadmeImages/EDBG_BagBuilder.png)
 
 To simplify development and create a working prototype without being overwhelmed by designing a whole range of tokens and effects, I tried a simpler dice allocation game with unlockable power-ups.
 
