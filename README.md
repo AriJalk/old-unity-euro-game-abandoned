@@ -18,7 +18,7 @@ This project was a very knowledgeable experience. Combined with extra materials,
 ## Video Demonstration
 Demonstrates the Placement and Capture mechanic. Disc placement is based on direct line to other discs of the same color, so if a new disc is placed with direct line to 3 of its color, a stack of height 3 will be added on that tile if empty. If an opponent stack is chosen, the game will allow to choose a taller stack that could capture the opponent's stack.
 
-[![Video Demonstration](https://img.youtube.com/vi/w2-aWql5Czs/0.jpg)](https://www.youtube.com/watch?v=w2-aWql5Czs)
+[![Video Demonstration](https://img.youtube.com/vi/eLgzE8-fEH0/0.jpg)](https://www.youtube.com/watch?v=eLgzE8-fEH0)
 
 ## Changes throughout development with GUI mockups for the current ruleset of the physical game
 
